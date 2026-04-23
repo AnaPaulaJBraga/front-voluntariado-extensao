@@ -95,7 +95,6 @@ Passo a passo:
 
 ---
 
-Depois
 Quando terminar:
 - Criar um Pull Request (PR) no GitHub
 - Revisar código
