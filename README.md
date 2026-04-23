@@ -71,11 +71,13 @@ Passo a passo:
 ```
 
 4. Trabalhar normalmente
+
    Agora você pode:
-   editar código
-   criar arquivos
-   testar funcionalidades
-5. Salvar alterações
+
+   - editar código
+   - criar arquivos
+   - testar funcionalidades
+6. Salvar alterações
 
 ```bash
    git add .
@@ -95,6 +97,6 @@ Passo a passo:
 
 Depois
 Quando terminar:
-Criar um Pull Request (PR) no GitHub
-Revisar código
-Fazer merge na main
+- Criar um Pull Request (PR) no GitHub
+- Revisar código
+- Fazer merge na main
