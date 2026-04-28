@@ -1,0 +1,110 @@
+.home-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(96, 133, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(39, 198, 178, 0.12), transparent 30%),
+    #f0f3f9;
+}
+
+.home-page__layout {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 280px 1fr;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.home-page__content {
+  border-radius: 16px;
+  border: 1px solid #e5e9f2;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+}
+
+.home-page__title-wrap {
+  margin-bottom: 14px;
+}
+
+.home-page__title-wrap h1 {
+  margin: 0;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  color: #273347;
+  font-size: 1.9rem;
+}
+
+.home-page__title-wrap p {
+  margin: 4px 0 0;
+  font-family: "Nunito", "Verdana", sans-serif;
+  color: #697288;
+}
+
+.home-page__grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-page__empty {
+  padding: 28px;
+  border: 1px dashed #b7bfd6;
+  border-radius: 14px;
+  text-align: center;
+  color: #656f84;
+  font-family: "Nunito", "Verdana", sans-serif;
+}
+
+.home-page__anchor {
+  max-width: 1220px;
+  margin: 0 auto 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e5e9f2;
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-sizing: border-box;
+}
+
+.home-page__anchor h2 {
+  margin: 0 0 6px;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: 1.25rem;
+  color: #2e3950;
+}
+
+.home-page__anchor p {
+  margin: 0;
+  font-family: "Nunito", "Verdana", sans-serif;
+  color: #697288;
+}
+
+.home-page__link {
+  display: inline-block;
+  margin-right: 16px;
+  text-decoration: none;
+  color: #544de6;
+  font-weight: 700;
+  font-family: "Nunito", "Verdana", sans-serif;
+}
+
+@media (max-width: 1140px) {
+  .home-page__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .home-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page__title-wrap h1 {
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page__grid {
+    grid-template-columns: 1fr;
+  }
+}
