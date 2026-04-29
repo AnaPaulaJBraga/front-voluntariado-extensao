@@ -71,3 +71,16 @@
 .opportunity-card__button:hover {
   filter: brightness(1.05);
 }
+
+.app-header__user {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.app-header__user:hover {
+  opacity: 0.85;
+}
+
+.app-header__user:active {
+  transform: scale(0.97);
+}

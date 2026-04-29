@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import Header from "../components/HomeHeader/HomeHeader";
-import FilterSidebar from "../components/FilterSidebar/FilterSidebar";
-import OpportunityCard from "../components/OpportunityCard/OpportunityCard";
+import Header from "../../components/HomeHeader/HomeHeader";
+import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
+import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
 import "./Home.css";
 
 const OPPORTUNITIES = [
@@ -138,25 +138,6 @@ const Home = () => {
           )}
         </section>
       </main>
-
-      <section className="home-page__anchor" id="organizacoes">
-        <h2>Organizacoes</h2>
-        <p>Espaco reservado para listar ONGs e iniciativas parceiras.</p>
-      </section>
-
-      <section className="home-page__anchor" id="sobre">
-        <h2>Sobre nos</h2>
-        <p>Conectamos pessoas voluntarias a projetos com impacto real.</p>
-      </section>
-
-      <section className="home-page__anchor" id="login">
-        <a href="/login" className="home-page__link">
-          Ir para login
-        </a>
-        <a href="/cadastro" className="home-page__link">
-          Ir para cadastro
-        </a>
-      </section>
     </div>
   );
 };

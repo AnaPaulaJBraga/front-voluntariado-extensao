@@ -74,6 +74,44 @@
   font-size: 0.78rem;
 }
 
+.app-header__auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-header__auth-link {
+  text-decoration: none;
+  font-family: "Nunito", "Verdana", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: #4f5a70;
+  border: 1px solid #d6dce9;
+  background: #ffffff;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.app-header__auth-link:hover,
+.app-header__auth-link:focus-visible,
+.app-header__auth-link:active {
+  transform: translateY(-1px);
+  color: #ffffff;
+  background: #5b46e3;
+  border-color: #5b46e3;
+  box-shadow: 0 8px 18px rgba(91, 70, 227, 0.28);
+}
+
+.app-header__auth-link--primary {
+  background: #ffffff;
+}
+
 @media (max-width: 900px) {
   .app-header {
     flex-wrap: wrap;
@@ -87,4 +125,33 @@
     gap: 14px;
     flex-wrap: wrap;
   }
+
+  .app-header__auth {
+    width: 100%;
+    justify-content: center;
+  }
+}
+.app-header__user-wrapper {
+  position: relative;
+}
+
+.app-header__dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  padding: 8px 0;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
 }

@@ -2,7 +2,7 @@ import "./OpportunityCard.css";
 
 const OpportunityCard = ({ opportunity }) => {
   return (
-    <article className="opportunity-card">
+    <div className="opportunity-card">
       <img
         className="opportunity-card__image"
         src={opportunity.image}
@@ -23,11 +23,15 @@ const OpportunityCard = ({ opportunity }) => {
         <h3>{opportunity.title}</h3>
         <p className="opportunity-card__location">{opportunity.location}</p>
 
-        <button className="opportunity-card__button" type="button">
-          Quero ser voluntario
+        <button
+          className="btn btn-primary w-100"
+          type="button"
+          onClick={() => console.log("CLICOU > quero ser voluntário")}
+        >
+          Quero ser voluntário
         </button>
       </div>
-    </article>
+    </div>
   );
 };
 
