@@ -6,81 +6,54 @@ const Register = () => {
     return (
         <div>
         <h1>Cadastro</h1>
-    <>
+
+    <div className="background">
         <Header />
-        <div style={{ background: "#ffffff", minHeight: "100vh" }}>
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-            }}
-            >
-            <div
-            style={{
-                border: "1px solid #ccc",
-                padding: "20px",
-                borderRadius: "4px",
-                width: "350px",
-                height: "740px",
-                boxShadow: "0 8px 15px rgba(0,0,0,0.2)",
-                background: "white",
-                marginLeft: "750px",
-            }}
-            >
-            <h1 style={{ textAlign: "center", fontSize: 22, fontWeight: "bolder" }}>Criar conta</h1>
-            <h4
-                style={{
-                    textAlign: "center",
-                    fontWeight: "normal",
-                    marginTop: "10px",
-                    fontSize: 13
-                }}
-            >
-                Preencha os dados para se cadastrar
-            </h4>
-            <form>
-            <div className="form-container">
-                <label htmlFor="nome">Nome completo</label>
-                <input type="text" placeholder="Digite seu nome completo" />
 
-                <label htmlFor="email">Email</label>
-                <input type="email" placeholder="Digite seu email" />
+        <div className="container-central">
+            <div className="card"> 
 
-                <label htmlFor="nascimento">Data de nascimento</label>
-                <input type="date" placeholder="" />
+                <div className="card-title">
+                    <h1>Criar conta</h1>
+                    <h3>Preencha os dados para se cadastrar</h3>
+                </div>
 
-                <label htmlFor="senha">Senha</label>
-                <input type="password" placeholder="Digite sua senha" />
+                <form>
+                    <div className="form-container">
+                        <label htmlFor="nome">Nome completo</label>
+                        <input id="nome" type="text" placeholder="Digite seu nome completo" />
 
-                <label htmlFor="senha-confirmacao">Confirmar senha</label>
-                <input type="password" placeholder="Confirme sua senha" />
-            </div>
-            <CidadeEstado />
+                        <label htmlFor="email">Email</label>
+                        <input id="email" type="email" placeholder="Digite seu email" />
 
-                <button
-                className="button-criar"
-                type="submit"
-                >
-                Criar conta
-                </button>
+                        <label htmlFor="nascimento">Data de nascimento</label>
+                        <input id="nascimento" type="date" placeholder="" />
 
-                <h4 className="ja-possui-conta">
-                    Já possui uma conta?
-                </h4>
+                        <label htmlFor="senha">Senha</label>
+                        <input id="senha" type="password" placeholder="Digite sua senha" />
 
-                <button className="button-entrar">
-                    <h4 className="button-entrar">
-                        Entrar
+                        <label htmlFor="senha-confirmacao">Confirmar senha</label>
+                        <input id="senha-confirmacao" type="password" placeholder="Confirme sua senha" />
+                    </div>
+
+                    <CidadeEstado />
+
+                    <button type="submit" className="button-criar">
+                        Criar conta
+                    </button>
+
+                    <h4 className="ja-possui-conta">
+                        Já possui uma conta?
                     </h4>
-                </button>
+
+                    <a href="/login" className="button-entrar">
+                        Entrar
+                    </a>
+                </form>
                 
-            </form>
             </div>
         </div>
         </div>
-    </>
     </div>
     );
 };
