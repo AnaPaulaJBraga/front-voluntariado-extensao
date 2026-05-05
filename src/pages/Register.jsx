@@ -4,7 +4,6 @@ const Register = () => {
   return (
     <div>
       <RegisterHeader />
-      <h1>Cadastro</h1>
     </div>
   );
 };

@@ -1,14 +1,27 @@
 import Header from "../Header";
 import "./RegisterHeader.css";
 import CidadeEstado from "../CityState/CidadeEstado";
+import img from "../../assets/comunity.jpg";
 
 const Register = () => {
     return (
         <div>
-        <h1>Cadastro</h1>
 
-    <div className="background">
-        <Header />
+<Header />
+<div className="layout">
+    {/* ESQUERDA */}
+    <div className="lado-esquerdo">
+    <img src={img} alt="Comunidade" />
+
+    <h2>Junte-se à nossa comunidade</h2>
+    <p>
+        Conecte-se com organizações e faça a diferença na sua comunidade
+        através do voluntariado.
+    </p>
+        </div>
+
+    {/* DIREITA */}
+    <div className="lado-direito">
 
         <div className="container-central">
             <div className="card"> 
@@ -53,8 +66,9 @@ const Register = () => {
                 
             </div>
         </div>
-        </div>
     </div>
+    </div>
+</div>
     );
 };
 
