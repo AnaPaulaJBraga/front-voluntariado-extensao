@@ -1,0 +1,78 @@
+[33mcommit 33c6823f9875e561013f3c6a2b118626f411e137[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpedro[m[33m, [m[1;31morigin/pedro[m[33m)[m
+Merge: 452502f b4b224b
+Author: Pedro Porto <isoloquis@gmail.com>
+Date:   Wed Apr 29 21:17:10 2026 -0300
+
+    adicao de arquivos
+
+[33mcommit b4b224bfe32d59de458a74d1b599d8ca62512b80[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 15a4501 22da54a
+Author: Pedro <126778428+Pedro1Porto@users.noreply.github.com>
+Date:   Wed Apr 29 21:08:55 2026 -0300
+
+    Merge pull request #2 from AnaPaulaJBraga/pagina-home
+    
+    Pagina home
+
+[33mcommit 452502fae75b8649371b31ac9bcaf9f0c30c23c4[m
+Author: Pedro Porto <isoloquis@gmail.com>
+Date:   Wed Apr 29 20:19:29 2026 -0300
+
+    adicao json local
+
+[33mcommit 22da54a34fc7c0e69f175d009155106e152bc631[m[33m ([m[1;31morigin/pagina-home[m[33m)[m
+Author: Ana Paula Junqueira <ana.paula.braga@accenture.com>
+Date:   Wed Apr 29 20:14:50 2026 -0300
+
+    inicia criacao da home
+
+[33mcommit 000f1353343d755c99d10e13a05e8d363f201053[m
+Author: Ana Paula Junqueira <ana.paula.braga@accenture.com>
+Date:   Tue Apr 28 19:32:25 2026 -0300
+
+    inicia criacao da home
+
+[33mcommit 15a4501b8f3ea37b3f7d20f0f194048294e9c6c8[m
+Merge: f6dd639 1aa7edb
+Author: Ana Paula Junqueira Braga <85766859+AnaPaulaJBraga@users.noreply.github.com>
+Date:   Tue Apr 28 18:59:48 2026 -0300
+
+    Merge pull request #1 from AnaPaulaJBraga/lucas-henrique
+    
+    Lucas henrique
+
+[33mcommit 1aa7edb1871ba4b1db2c79b496a85153901ce9a7[m[33m ([m[1;31morigin/lucas-henrique[m[33m)[m
+Author: souzaedvaldo316-bit <souzaedvaldo316@gmail.com>
+Date:   Tue Apr 28 11:05:00 2026 -0300
+
+    feat: alteracoes na tela de login
+
+[33mcommit dbe0d4e79e74dbfd49366972bc3a4a11018db3d8[m
+Author: souzaedvaldo316-bit <souzaedvaldo316@gmail.com>
+Date:   Sat Apr 25 01:58:45 2026 -0300
+
+    feat: alteracoes na tela de login
+
+[33mcommit f6dd639bbccaa52e57a0d7c6aff1bb32644f5cd8[m
+Author: Ana Paula Junqueira Braga <85766859+AnaPaulaJBraga@users.noreply.github.com>
+Date:   Thu Apr 23 18:52:53 2026 -0300
+
+    readme
+
+[33mcommit b6e8b4c58fb1724bb7817fd734615b6a273b15a9[m
+Author: Ana Paula Junqueira Braga <85766859+AnaPaulaJBraga@users.noreply.github.com>
+Date:   Thu Apr 23 18:52:08 2026 -0300
+
+    readme
+
+[33mcommit 0351ae41bb68e125457bdccd326f10b8ce6c8cf3[m
+Author: Ana Paula Junqueira <ana.paula.braga@accenture.com>
+Date:   Thu Apr 23 18:49:30 2026 -0300
+
+    readme
+
+[33mcommit 892e1d1c6c24fb39e30a0213a77dfa11e35d6fb6[m
+Author: Ana Paula Junqueira <ana.paula.braga@accenture.com>
+Date:   Thu Apr 23 18:34:47 2026 -0300
+
+    inicia projeto
