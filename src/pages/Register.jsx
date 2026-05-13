@@ -1,3 +1,5 @@
+import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
+
 const Register = () => {
   return (
     <div //ficar tudo no meio
