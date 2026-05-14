@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import userIcon from "../../assets/user_icon.png";
+import clipboard from "../../assets/clipboard-form.png";
+import plusCircle from "../../assets/plus-circle.png";
+
 import "./HomeHeader.css";
 
-const HomeHeader = ({ userName = "Ana", userLoggedIn = false }) => {
+const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -74,16 +78,37 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = false }) => {
             >
               <div className="app-header__avatar">{userName.charAt(0)}</div>
               <div>
-                <p className="app-header__hello">Ola, {userName}!</p>
+                <p className="app-header__hello">Olá, {userName}!</p>
                 <p className="app-header__meta">Conta pessoal</p>
               </div>
             </div>
 
             {openMenu && (
               <div className="app-header__dropdown">
-                <div className="dropdown-item">Ver perfil</div>
-                <div className="dropdown-item">Solicitacoes</div>
-                <div className="dropdown-item">Cadastre sua ONG</div>
+                <div className="dropdown-item">
+                  <img
+                    src={userIcon}
+                    alt="Perfil"
+                    className="dropdown-item__icon"
+                  />
+                  Ver perfil
+                </div>
+                <div className="dropdown-item">
+                  <img
+                    src={clipboard}
+                    alt="Solicitações"
+                    className="dropdown-item__icon"
+                  />
+                  Solicitações
+                </div>
+                <div className="dropdown-item">
+                  <img
+                    src={plusCircle}
+                    alt="Perfil"
+                    className="dropdown-item__icon"
+                  />
+                  Cadastre sua ONG
+                </div>
               </div>
             )}
           </div>

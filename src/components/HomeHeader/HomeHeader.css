@@ -137,13 +137,13 @@
 
 .app-header__dropdown {
   position: absolute;
-  top: 60px;
+  top: 50px;
   right: 0;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   width: 200px;
-  padding: 8px 0;
+  padding: 8px;
   z-index: 10;
 }
 
@@ -154,4 +154,10 @@
 
 .dropdown-item:hover {
   background: #f5f5f5;
+}
+
+.dropdown-item__icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 }

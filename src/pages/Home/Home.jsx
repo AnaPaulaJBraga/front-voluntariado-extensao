@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import Header from "../../components/HomeHeader/HomeHeader";
+import HomeHeader from "../../components/HomeHeader/HomeHeader";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
 import "./Home.css";
@@ -103,7 +103,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      <Header />
+      <HomeHeader />
 
       <main className="home-page__layout">
         <FilterSidebar
@@ -119,7 +119,7 @@ const Home = () => {
         <section className="home-page__content" id="oportunidades">
           <header className="home-page__title-wrap">
             <h1>Oportunidades de Voluntariado</h1>
-            <p>Encontre a causa perfeita para voce</p>
+            <p>Encontre a causa perfeita para você</p>
           </header>
 
           {filteredOpportunities.length > 0 ? (
