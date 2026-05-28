@@ -33,7 +33,9 @@ const Register = () => {
       }}>Preencha os dados para se cadastrar</h2>
       </div>
 
-      <form style={{ display: "flex", gap: "2px", display: "flex", flexDirection: "column", gap: "15" }} >
+      <form style={{ display: "flex", gap: "2px", display: "flex", flexDirection: "column", gap: "15" }} 
+      id="formulario"
+      >
 
         <div //label encima e input embaixo
         style={{
@@ -62,7 +64,7 @@ const Register = () => {
         style={{
           fontSize: "15px"
         }}
-        for="nome" id="nome"
+        for="email" id="email"
         >
           E-mail
         </label>
@@ -73,45 +75,45 @@ const Register = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          marginBottom: "20px"
+          marginBottom: "10px"
         }}>
         <label
         style={{
           fontSize: "15px"
         }}
-        for="nome" id="nome"
+        for="senha" id="senha"
         >
           Senha
         </label>
         <input type="password" placeholder="Digite a sua senha"/>
         </div>
 
-        <span //linha que separa senha de confirmar senha, bem fraquinha
+        <div //label encima e input embaixo
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginBottom: "35px"
+        }}>
+        <label
+        style={{
+          fontSize: "15px"
+        }}
+        for="confirmaSenha" id="confirmaSenha"
+        >
+          Confirmar senha
+        </label>
+        <input type="password" placeholder="Confirme a sua senha"/>
+        </div>
+
+        <span //linha bem fraquinha
         style={{
           width: "100%",
           height: "2px",
           backgroundColor: "#000",
           opacity: ".25",
           display: "block",
-          marginBottom: "10px"
-        }}></span>
-
-        <div //label encima e input embaixo
-        style={{
-          display: "flex",
-          flexDirection: "column",
           marginBottom: "20px"
-        }}>
-        <label
-        style={{
-          fontSize: "15px"
-        }}
-        for="nome" id="nome"
-        >
-          Confirmar senha
-        </label>
-        <input type="password" placeholder="Confirme a sua senha"/>
-        </div>
+        }}></span>
 
         <button type="submit" //botao que preenche todo espaço horizontal
         style={{
@@ -129,5 +131,7 @@ const Register = () => {
     </div>
   );
 };
+
+<link rel="stylesheet" href="main.js" />
 
 export default Register;
