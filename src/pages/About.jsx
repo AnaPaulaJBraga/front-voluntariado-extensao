@@ -1,4 +1,4 @@
-import HomeHeader from "../components/HomeHeader/HomeHeader";
+import HomeHeader from "../components/HomeHeader/Header";
 
 const About = () => {
   return (

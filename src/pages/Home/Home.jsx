@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import Header from "../../components/HomeHeader/HomeHeader";
+import Header from "../../components/HomeHeader/Header";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
 import "./Home.css";
@@ -7,17 +7,17 @@ import "./Home.css";
 const OPPORTUNITIES = [
   {
     id: 1,
-    title: "Aulas de Reforco Escolar",
-    cause: "Educacao",
+    title: "Aulas de Reforço Escolar",
+    cause: "Educação",
     mode: "Presencial",
-    city: "Sao Paulo",
-    location: "Sao Paulo, SP",
+    city: "São Paulo",
+    location: "São Paulo, SP",
     image:
       "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 2,
-    title: "Plantio de Arvores",
+    title: "Plantio de Árvores",
     cause: "Meio Ambiente",
     mode: "Presencial",
     city: "Rio de Janeiro",
@@ -28,8 +28,8 @@ const OPPORTUNITIES = [
   {
     id: 3,
     title: "Apoio a Idosos",
-    cause: "Saude",
-    mode: "Hibrido",
+    cause: "Saúde",
+    mode: "Híbrido",
     city: "Belo Horizonte",
     location: "Belo Horizonte, MG",
     image:
@@ -37,8 +37,8 @@ const OPPORTUNITIES = [
   },
   {
     id: 4,
-    title: "Distribuicao de Alimentos",
-    cause: "Assistencia Social",
+    title: "Distribuição de Alimentos",
+    cause: "Assistência Social",
     mode: "Presencial",
     city: "Curitiba",
     location: "Curitiba, PR",
@@ -48,7 +48,7 @@ const OPPORTUNITIES = [
   {
     id: 5,
     title: "Mentoria Online",
-    cause: "Educacao",
+    cause: "Educação",
     mode: "Remoto",
     city: "Remoto",
     location: "Remoto - Todo Brasil",
@@ -60,7 +60,7 @@ const OPPORTUNITIES = [
     title: "Limpeza de Praias",
     cause: "Meio Ambiente",
     mode: "Presencial",
-    city: "Florianopolis",
+    city: "Florianópolis",
     location: "Florianopolis, SC",
     image:
       "https://images.unsplash.com/photo-1618477462146-050d2767eac4?auto=format&fit=crop&w=900&q=80",
@@ -119,7 +119,7 @@ const Home = () => {
         <section className="home-page__content" id="oportunidades">
           <header className="home-page__title-wrap">
             <h1>Oportunidades de Voluntariado</h1>
-            <p>Encontre a causa perfeita para voce</p>
+            <p>Encontre a causa perfeita para você</p>
           </header>
 
           {filteredOpportunities.length > 0 ? (
