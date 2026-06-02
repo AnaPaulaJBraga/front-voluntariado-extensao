@@ -1,4 +1,4 @@
-import Header from "../Header";
+import Header from "../HomeHeader/Header";
 import "./RegisterHeader.css";
 import CidadeEstado from "../CityState/CidadeEstado";
 import img from "../../assets/comunity.jpg";
