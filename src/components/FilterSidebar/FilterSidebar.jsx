@@ -1,13 +1,13 @@
 import "./FilterSidebar.css";
 
 const CAUSE_OPTIONS = [
-  "Educacao",
+  "Educação",
   "Meio Ambiente",
-  "Saude",
-  "Assistencia Social",
+  "Saúde",
+  "Assistência Social",
 ];
 
-const ACTIVITY_OPTIONS = ["Presencial", "Remoto", "Hibrido"];
+const ACTIVITY_OPTIONS = ["Presencial", "Remoto", "Híbrido"];
 
 const FilterSidebar = ({
   selectedCauses,
