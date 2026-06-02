@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import HomeHeader from "../../components/HomeHeader/HomeHeader";
+import Header from "../../components/Header/Header";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
-import "./Home.css";
-import { api } from "../../services/api";
+import "./Opportunities.css";
 
 const OPPORTUNITIES = [
   {
@@ -68,7 +67,7 @@ const OPPORTUNITIES = [
   },
 ];
 
-const Home = () => {
+const Opportunities = () => {
   const [selectedCauses, setSelectedCauses] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState("Presencial");
   const [city, setCity] = useState("");
@@ -102,28 +101,9 @@ const Home = () => {
     setCity("");
   };
 
-  const handleTestApi = async () => {
-    const body = {
-      nome: "Ana",
-      email: "teste@teste.com",
-      senha: "senha123",
-      data_nasc: "2026-05-15",
-      cidade: "Cidade de Teste",
-      uf: "SP",
-      admin: false,
-    };
-
-    try {
-      const response = await api.post("/auth/register", body);
-      console.log("Teste API resposta:", response);
-    } catch (error) {
-      console.error("Erro ao testar API:", error);
-    }
-  };
-
   return (
     <div className="home-page">
-      <HomeHeader />
+      <Header />
 
       <main className="home-page__layout">
         <FilterSidebar
@@ -141,16 +121,6 @@ const Home = () => {
             <h1>Oportunidades de Voluntariado</h1>
             <p>Encontre a causa perfeita para você</p>
           </header>
-
-          <section className="home-page__api-test">
-            <button
-              type="button"
-              className="home-page__api-button"
-              onClick={handleTestApi}
-            >
-              Testar API
-            </button>
-          </section>
 
           {filteredOpportunities.length > 0 ? (
             <div className="home-page__grid">
@@ -172,4 +142,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Opportunities;

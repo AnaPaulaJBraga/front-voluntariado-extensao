@@ -4,15 +4,38 @@ import userIcon from "../../assets/user_icon.png";
 import clipboard from "../../assets/clipboard-form.png";
 import plusCircle from "../../assets/plus-circle.png";
 
-import "./HomeHeader.css";
+import "./Header.css";
 
-const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
+const Header = ({ userName, userLoggedIn }) => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
 
+  const token = localStorage.getItem("access_token");
+  const storedUser = localStorage.getItem("user");
+
+  let parsedUser = null;
+
+  if (storedUser) {
+    try {
+      parsedUser = JSON.parse(storedUser);
+    } catch {
+      parsedUser = storedUser;
+    }
+  }
+
+  const rawName =
+    userName ||
+    parsedUser?.nome ||
+    parsedUser?.name ||
+    parsedUser?.fullName ||
+    (typeof parsedUser === "string" ? parsedUser : "");
+
+  const sessionUserName = rawName.trim().split(/\s+/)[0] || "";
+  const isLoggedIn = Boolean(token && storedUser && sessionUserName);
+
   const getActivePage = () => {
     if (location.pathname === "/inicio") return "inicio";
-    if (location.pathname === "/home") return "home";
+    if (location.pathname === "/oportunidades") return "oportunidades";
     if (location.pathname === "/organizacoes") return "organizacoes";
     if (location.pathname === "/sobre") return "sobre";
     return "";
@@ -26,7 +49,7 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
 
   return (
     <header className="app-header">
-      <div className="app-header__brand">Voluntarios em Acao</div>
+      <div className="app-header__brand">Voluntários em Ação</div>
 
       <nav className="app-header__nav" aria-label="Navegacao principal">
         <NavLink
@@ -35,13 +58,13 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
             activePage === "inicio" ? "app-header__link--active" : ""
           }`}
         >
-          Inicio
+          Início
         </NavLink>
 
         <NavLink
-          to="/home"
+          to="/oportunidades"
           className={`app-header__link ${
-            activePage === "home" ? "app-header__link--active" : ""
+            activePage === "oportunidades" ? "app-header__link--active" : ""
           }`}
         >
           Oportunidades
@@ -53,7 +76,7 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
             activePage === "organizacoes" ? "app-header__link--active" : ""
           }`}
         >
-          Organizacoes
+          Organizações
         </NavLink>
 
         <NavLink
@@ -62,11 +85,11 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
             activePage === "sobre" ? "app-header__link--active" : ""
           }`}
         >
-          Sobre nos
+          Sobre nós
         </NavLink>
       </nav>
 
-      {userLoggedIn && (
+      {(userLoggedIn ?? isLoggedIn) && (
         <>
           <div className="app-header__user-wrapper">
             <div
@@ -76,46 +99,59 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
               tabIndex={0}
               onClick={toggleMenu}
             >
-              <div className="app-header__avatar">{userName.charAt(0)}</div>
+              <div className="app-header__avatar">
+                {(sessionUserName || userName || "U").charAt(0)}
+              </div>
               <div>
-                <p className="app-header__hello">Olá, {userName}!</p>
+                <p className="app-header__hello">
+                  Olá, {sessionUserName || userName}!
+                </p>
                 <p className="app-header__meta">Conta pessoal</p>
               </div>
             </div>
 
             {openMenu && (
-              <div className="app-header__dropdown">
-                <div className="dropdown-item">
+              <div className="app-header__dropdown dropdown-menu show">
+                <button
+                  type="button"
+                  className="app-header__dropdown-item dropdown-item"
+                >
                   <img
                     src={userIcon}
                     alt="Perfil"
                     className="dropdown-item__icon"
                   />
                   Ver perfil
-                </div>
-                <div className="dropdown-item">
+                </button>
+                <button
+                  type="button"
+                  className="app-header__dropdown-item dropdown-item"
+                >
                   <img
                     src={clipboard}
                     alt="Solicitações"
                     className="dropdown-item__icon"
                   />
                   Solicitações
-                </div>
-                <div className="dropdown-item">
+                </button>
+                <button
+                  type="button"
+                  className="app-header__dropdown-item dropdown-item"
+                >
                   <img
                     src={plusCircle}
                     alt="Perfil"
                     className="dropdown-item__icon"
                   />
                   Cadastre sua ONG
-                </div>
+                </button>
               </div>
             )}
           </div>
         </>
       )}
 
-      {!userLoggedIn && (
+      {!(userLoggedIn ?? isLoggedIn) && (
         <div className="app-header__auth">
           <NavLink
             to="/login"
@@ -135,4 +171,4 @@ const HomeHeader = ({ userName = "Ana", userLoggedIn = true }) => {
   );
 };
 
-export default HomeHeader;
+export default Header;
