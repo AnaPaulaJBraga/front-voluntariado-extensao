@@ -1,5 +1,5 @@
 import { useState } from "react";
-import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
+import Header from "../components/Header";
 import {
   isValidEmail,
   isValidPassword,
@@ -12,7 +12,11 @@ import {
   isValidCPF,
 } from "../utils/validations";
 
+// IA: Importo validações e máscaras de validations.js para centralizar regras de negócio.
+// IA: Isso evita duplicação e mantém a lógica de validação fora do componente.
 const Register = () => {
+  // IA: Componente de página de cadastro.
+  // IA: formData guarda os valores do formulário e setFormData atualiza cada campo.
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -25,8 +29,11 @@ const Register = () => {
     state: "",
   });
 
+  // IA: errors armazena mensagens de validação específicas para cada campo.
   const [errors, setErrors] = useState({});
 
+  // IA: handleInputChange atualiza o estado do formulário e aplica máscaras quando necessário.
+  // IA: Também limpa o erro do campo assim que o usuário começa a digitar.
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let maskedValue = value;
@@ -51,6 +58,8 @@ const Register = () => {
     }
   };
 
+  // IA: validateForm verifica cada campo usando helpers importados de validations.js.
+  // IA: Se algum campo for inválido, preenche newErrors e impede o envio do formulário.
   const validateForm = () => {
     const newErrors = {};
 
@@ -90,6 +99,8 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // IA: handleSubmit previne o envio padrão do formulário e chama validateForm.
+  // IA: Só prossegue se todos os dados estiverem válidos.
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -99,14 +110,23 @@ const Register = () => {
     }
   };
 
+  // IA: Explico o fluxo geral do componente Register.
+  // IA: useState gerencia formData e errors, handleInputChange aplica máscaras e limpa erros,
+  // IA: validateForm usa validações centralizadas de validations.js e handleSubmit submete o formulário.
   return (
-    <div //container principal com dois lados
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-      }}
-    >
-      <div //lado esquerdo com ilustração
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
+      {/* IA: O Header é um componente compartilhado usado em todas as páginas. */}
+      {/* principal com dois lados */}
+      <div
+        style={{
+          display: "flex",
+          flex: "1",
+        }}
+      >
+      {/* IA: Layout principal dividido em duas colunas, com apresentação à esquerda e formulário à direita. */}
+      {/* esquerdo com ilustração */}
+      <div
         style={{
           flex: "0 0 60%",
           backgroundColor: "#f5f5f5",
@@ -147,7 +167,10 @@ const Register = () => {
         </p>
       </div>
 
-      <div //lado direito com card
+      {/* IA: Seção direita do layout onde o formulário de cadastro é exibido dentro de um card. */}
+      {/* direito com card */}
+
+      <div
         style={{
           flex: "0 0 40%",
           display: "flex",
@@ -158,7 +181,9 @@ const Register = () => {
         }}
       >
 
-    <div //este é um card
+    {/* é um card */}
+
+    <div
     style={{
       width: "100%",
       maxWidth: "400px",
@@ -172,7 +197,9 @@ const Register = () => {
     }}
     >
 
-      <div //ambos ficarem organizados no meio
+      {/* ficarem organizados no meio */}
+
+      <div
       style={{
         textAlign: "center",
       }}>
@@ -187,8 +214,11 @@ const Register = () => {
       </div>
 
       <form style={{ display: "flex", flexDirection: "column", gap: "15px" }} onSubmit={handleSubmit}>
+        {/* IA: Formulário com validação no submit. handleSubmit controla o fluxo e chama validateForm. */}
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -219,7 +249,9 @@ const Register = () => {
         {errors.fullName && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.fullName}</span>}
         </div>
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -250,7 +282,9 @@ const Register = () => {
         {errors.email && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.email}</span>}
         </div>
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -282,7 +316,9 @@ const Register = () => {
         {errors.birthDate && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.birthDate}</span>}
         </div>
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -314,7 +350,9 @@ const Register = () => {
         {errors.cpf && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.cpf}</span>}
         </div>
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -345,7 +383,9 @@ const Register = () => {
         {errors.password && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.password}</span>}
         </div>
 
-        <span //linha que separa senha de confirmar senha
+        {/* linha que separa senha de confirmar senha */}
+
+        <span
         style={{
           width: "100%",
           height: "1px",
@@ -355,7 +395,9 @@ const Register = () => {
           margin: "10px 0"
         }}></span>
 
-        <div //label encima e input embaixo
+        {/* encima e input embaixo */}
+
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -387,7 +429,8 @@ const Register = () => {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-          <div //label encima e input embaixo
+          {/* encima e input embaixo */}
+          <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -418,7 +461,9 @@ const Register = () => {
           {errors.city && <span style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "4px" }}>{errors.city}</span>}
           </div>
 
-          <div //label encima e input embaixo
+          {/* encima e input embaixo */}
+
+          <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -452,7 +497,9 @@ const Register = () => {
           </div>
         </div>
 
-        <button type="submit" //botao que preenche todo espaço horizontal
+        {/* botao que preenche todo espaço horizontal */}
+
+        <button type="submit"
         style={{
           width: "100%",
           padding: "12px",
@@ -473,7 +520,8 @@ const Register = () => {
     </div>
       </div>
     </div>
-  );
-};
+  </div>
+  ); // IA: Fecho o JSX principal do componente Register.
+}; // IA: Fecho a declaração do componente Register.
 
-export default Register;
+export default Register; // IA: Exporto o componente para uso nas rotas da aplicação.
