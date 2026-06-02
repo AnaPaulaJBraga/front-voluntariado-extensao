@@ -452,6 +452,8 @@ const Register = () => {
             onChange={handleInputChange}
             placeholder="Sua cidade"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
               padding: "10px",
               border: errors.city ? "1px solid #ff6b6b" : "1px solid #ddd",
               borderRadius: "6px",
@@ -486,6 +488,8 @@ const Register = () => {
             placeholder="SP, RJ, MG..."
             maxLength="2"
             style={{
+              width: "100%",
+              boxSizing: "border-box",
               padding: "10px",
               border: errors.state ? "1px solid #ff6b6b" : "1px solid #ddd",
               borderRadius: "6px",
