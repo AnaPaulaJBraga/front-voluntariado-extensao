@@ -1,3 +1,4 @@
+import Header from "../components/HomeHeader/Header";
 import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
 
 const Register = () => {

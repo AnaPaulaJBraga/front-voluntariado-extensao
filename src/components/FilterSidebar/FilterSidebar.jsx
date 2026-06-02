@@ -1,13 +1,13 @@
 import "./FilterSidebar.css";
 
 const CAUSE_OPTIONS = [
-  "Educacao",
+  "Educação",
   "Meio Ambiente",
-  "Saude",
-  "Assistencia Social",
+  "Saúde",
+  "Assistência Social",
 ];
 
-const ACTIVITY_OPTIONS = ["Presencial", "Remoto", "Hibrido"];
+const ACTIVITY_OPTIONS = ["Presencial", "Remoto", "Híbrido"];
 
 const FilterSidebar = ({
   selectedCauses,
@@ -42,7 +42,7 @@ const FilterSidebar = ({
       </div>
 
       <div className="filter-sidebar__section">
-        <h3>Localizacao</h3>
+        <h3>Localização</h3>
         <input
           className="filter-sidebar__input"
           type="text"
