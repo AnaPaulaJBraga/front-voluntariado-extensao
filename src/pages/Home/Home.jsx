@@ -3,6 +3,7 @@ import HomeHeader from "../../components/HomeHeader/HomeHeader";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
 import "./Home.css";
+import { api } from "../../services/api";
 
 const OPPORTUNITIES = [
   {
@@ -101,6 +102,25 @@ const Home = () => {
     setCity("");
   };
 
+  const handleTestApi = async () => {
+    const body = {
+      nome: "Ana",
+      email: "teste@teste.com",
+      senha: "senha123",
+      data_nasc: "2026-05-15",
+      cidade: "Cidade de Teste",
+      uf: "SP",
+      admin: false,
+    };
+
+    try {
+      const response = await api.post("/auth/register", body);
+      console.log("Teste API resposta:", response);
+    } catch (error) {
+      console.error("Erro ao testar API:", error);
+    }
+  };
+
   return (
     <div className="home-page">
       <HomeHeader />
@@ -121,6 +141,16 @@ const Home = () => {
             <h1>Oportunidades de Voluntariado</h1>
             <p>Encontre a causa perfeita para você</p>
           </header>
+
+          <section className="home-page__api-test">
+            <button
+              type="button"
+              className="home-page__api-button"
+              onClick={handleTestApi}
+            >
+              Testar API
+            </button>
+          </section>
 
           {filteredOpportunities.length > 0 ? (
             <div className="home-page__grid">
