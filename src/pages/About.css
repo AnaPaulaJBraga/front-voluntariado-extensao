@@ -1,0 +1,371 @@
+/* IA: Container principal da página About
+   Metodologia: Background gradient para efeito visual suave
+   Serves para criar camada de fundo e estruturar página inteira */
+.about-page {
+  width: 100%;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+/* IA: Seção específica do carousel e frases de impacto
+   Metodologia: Background gradient separado cria transição visual entre seções
+   Serves para destacar carousel como elemento principal */
+.about-carousel-section {
+  width: 100%;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+/* IA: Grid responsivo para frases de impacto
+   Metodologia: CSS Grid com auto-fit e minmax para fluidez em qualquer resolução
+   Serves para criar layout automático que se adapta ao tamanho da tela
+   Funciona: Mínimo 250px por coluna, máximo 1fr (espaço disponível) */
+.impact-phrases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 0 20px;
+}
+
+/* IA: Card individual de frase de impacto
+   Metodologia: Sombra e bordas para profundidade visual, animação hover para interação
+   Serves para destacar cada frase e criar efeito de elevação ao passar mouse */
+.impact-item {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #4a90e2;  /* IA: Barra azul à esquerda - marca branding */
+  transition: all 0.3s ease;       /* IA: Transição suave para hover */
+}
+
+/* IA: Animação hover - eleva o card quando passa mouse
+   Serves para feedback visual e melhorar interatividade */
+.impact-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* IA: Texto das frases de impacto
+   Metodologia: Line-height aumentado para legibilidade
+   Serves para tornar o conteúdo lido de forma clara e acessível */
+.impact-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  line-height: 1.6;
+  display: block;
+}
+
+/* IA: Seção de conteúdo principal com estrutura centrada
+   Metodologia: Max-width + margin auto centraliza conteúdo
+   Serves para manter legibilidade limitando largura de linha */
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* IA: Título principal (h1) com sublinha decorativa usando ::after
+   Metodologia: Pseudo-elemento ::after para efeito visual sem adicionar DOM
+   Serves para criar hierarquia visual e marca branding com linha azul */
+.about-title {
+  font-size: 48px;
+  font-weight: 700;
+  text-align: center;
+  color: #1a202c;
+  margin-bottom: 50px;
+  letter-spacing: -0.5px;           /* IA: Espaçamento negativo - torna mais compacto */
+  position: relative;
+  padding-bottom: 20px;
+}
+
+/* IA: Sublinha decorativa - pseudo-elemento ::after
+   Serves para adicionar efeito visual sem alterar HTML */
+.about-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #4a90e2, #357abd);  /* IA: Gradiente branding */
+  border-radius: 2px;
+}
+
+/* IA: Títulos secundários (h2) - tamanho menor que h1
+   Metodologia: Classe separada permite estilização diferente
+   Serves para criar hierarquia visual com tamanho menor */
+.about-title-secondary {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  color: #1a202c;
+  margin-top: 70px;
+  margin-bottom: 40px;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+/* IA: Sublinha secundária - menor que a principal
+   Serves para manter padrão visual entre todas as seções */
+.about-title-secondary::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  border-radius: 2px;
+}
+
+/* IA: Container de parágrafos com espaçamento entre eles
+   Metodologia: Gap em flex column para espaçamento uniforme
+   Serves para organizar múltiplos parágrafos com espaçamento consistente */
+.about-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* IA: Estilo dos parágrafos
+   Metodologia: Line-height 1.8 para legibilidade aumentada (acessibilidade)
+   Serves para melhorar conforto visual na leitura de textos longos */
+.about-paragraphs p {
+  font-size: 18px;
+  line-height: 1.8;                /* IA: Altura de linha grande - acessibilidade */
+  color: #4a5568;
+  text-align: justify;              /* IA: Justificado - distribuição uniforme */
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* IA: Elemento <strong> - negrito semântico
+   Serves para destacar informações importantes com peso maior */
+.about-paragraphs strong {
+  font-weight: 700;
+  color: #2d3748;                   /* IA: Cor mais escura - maior contraste */
+}
+
+/* IA: Elemento <mark> - grifado/highlighted
+   Metodologia: Background gradient + borda + padding para efeito visual
+   Serves para destacar conceitos-chave de forma elegante
+   Funciona: Gradiente azul suave para não ofuscar texto */
+.about-paragraphs mark {
+  background: linear-gradient(120deg, rgba(74, 144, 226, 0.2) 0%, rgba(53, 122, 189, 0.2) 100%);
+  color: #357abd;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* IA: Seção de informações - agrupa categorias de dados
+   Metodologia: Gap e padding para separação visual entre seções
+   Serves para organizar dados temáticos de forma clara */
+.info-section {
+  margin-top: 60px;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #4a90e2;
+}
+
+/* IA: Destaque especial para seção de motivação
+   Serves para destacar visualmente a seção "Por Que Participar" */
+.info-section-highlight {
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(53, 122, 189, 0.05) 100%);
+  border-left-color: #2d5a8f;
+}
+
+/* IA: Título da categoria de informações
+   Metodologia: Emoji + texto para identificação rápida
+   Serves para separar temas e melhorar escanabilidade */
+.info-category-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 30px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* IA: Container dos itens de informação
+   Metodologia: Grid responsivo para distribuição equilibrada
+   Serves para organizar múltiplos itens de forma fluida */
+.info-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* IA: Item individual de informação com link
+   Metodologia: Card com sombra e borda para destaque
+   Serves para apresentar cada dado de forma independente e clicável */
+.info-item {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* IA: Hover do item - eleva e aumenta sombra
+   Serves para feedback visual ao passar mouse */
+.info-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.15);
+  border-color: #4a90e2;
+}
+
+/* IA: Strong dentro do item - título do dado
+   Serves para destacar o ponto principal de cada informação */
+.info-item strong {
+  color: #2d3748;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* IA: Parágrafo descritivo dentro do item
+   Serves para complementar o título com contexto */
+.info-item p {
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* IA: Link de ação dentro do item
+   Metodologia: Display block + hover para indicar clicabilidade
+   Serves para levar usuário ao artigo ou estudo completo */
+.info-link {
+  display: inline-block;
+  color: #4a90e2;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+  margin-top: 8px;
+}
+
+/* IA: Hover do link - sublinha aparece
+   Serves para indicar interação */
+.info-link:hover {
+  color: #357abd;
+  border-bottom-color: #357abd;
+  padding-left: 4px;
+}
+
+/* IA: Media query consolidada para tablets (768px e menor)
+   Serves para ajustar layout em telas médias */
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 36px;
+    margin-bottom: 40px;
+  }
+
+  .about-title-secondary {
+    font-size: 28px;
+  }
+
+  .about-paragraphs p {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .impact-phrases {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .impact-item {
+    padding: 18px;
+  }
+
+  .impact-text {
+    font-size: 15px;
+  }
+
+  .info-section {
+    padding: 24px;
+    margin-top: 40px;
+  }
+
+  .info-category-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .info-items {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .info-item {
+    padding: 18px;
+  }
+}
+
+/* IA: Media query consolidada para celulares (480px e menor)
+   Serves para otimizar layout em telas muito pequenas */
+@media (max-width: 480px) {
+  .about-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .about-title-secondary {
+    font-size: 22px;
+  }
+
+  .about-content {
+    padding: 40px 16px;
+  }
+
+  .about-paragraphs p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .info-section {
+    padding: 16px;
+    margin-top: 30px;
+    border-left-width: 3px;
+  }
+
+  .info-category-title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .info-item {
+    padding: 16px;
+  }
+
+  .info-item strong {
+    font-size: 14px;
+  }
+
+  .info-item p {
+    font-size: 13px;
+  }
+
+  .info-link {
+    font-size: 12px;
+  }
+}
