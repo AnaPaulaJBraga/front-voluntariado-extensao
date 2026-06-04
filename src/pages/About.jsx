@@ -1,4 +1,4 @@
-import HomeHeader from "../components/HomeHeader/Header";
+import Header from "../components/Header/Header";
 
 // IA: Este componente About é a página principal de informações
 // Serve para apresentar o objetivo, soluções e funcionamento da plataforma

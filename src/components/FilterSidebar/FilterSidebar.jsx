@@ -22,7 +22,11 @@ const FilterSidebar = ({
     <aside className="filter-sidebar" aria-label="Filtros de oportunidades">
       <div className="filter-sidebar__head">
         <h2>Filtros</h2>
-        <button className="filter-sidebar__clear" type="button" onClick={onClear}>
+        <button
+          className="filter-sidebar__clear"
+          type="button"
+          onClick={onClear}
+        >
           Limpar filtros
         </button>
       </div>
