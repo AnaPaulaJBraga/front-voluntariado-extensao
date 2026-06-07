@@ -1,7 +1,8 @@
 import Select from "react-select";
-import { useState } from "react";
 
-// Estados
+// IA: Lista de estados exibida no primeiro select.
+// Metodologia: react-select espera opções no formato { value, label }.
+// Função: value guarda o código usado na lógica e label guarda o texto visto pelo usuário.
 const estados = [
   { value: "SP", label: "São Paulo" },
   { value: "RJ", label: "Rio de Janeiro" },
@@ -9,7 +10,9 @@ const estados = [
   { value: "PR", label: "Paraná" },
 ];
 
-// Cidades por estado (você pode aumentar depois)
+// IA: Relação simples de cidades por UF.
+// Metodologia: objeto indexado pelo value do estado para buscar a lista rapidamente.
+// Função: alimentar o select de cidades de acordo com o estado escolhido.
 const cidadesPorEstado = {
   SP: ["São Paulo", "Registro", "Santos", "Campinas"],
   RJ: ["Rio de Janeiro", "Niterói"],
@@ -17,42 +20,66 @@ const cidadesPorEstado = {
   PR: ["Curitiba", "Londrina"],
 };
 
-export default function CidadeEstado() {
-  const [cidades, setCidades] = useState([]);
-  const [estadoSelecionado, setEstadoSelecionado] = useState(null);
+// IA: Transforma strings de cidades no formato aceito pelo react-select.
+// Metodologia: manter a formatação em helper evita repetir map dentro do JSX.
+// Função: devolver opções com value e label para o select de cidades.
+const formatarCidades = (estado) => {
+  const lista = cidadesPorEstado[estado?.value] || [];
 
-  // Quando escolhe estado
+  return lista.map((cidade) => ({
+    value: cidade,
+    label: cidade,
+  }));
+};
+
+// IA: Componente responsável pelos campos Estado e Cidade.
+// Metodologia: recebe valores e callbacks do Register para o formulário validar tudo em um único lugar.
+// Função: habilitar o select de cidade somente depois que um estado for escolhido.
+export default function CidadeEstado({
+  estadoSelecionado,
+  cidadeSelecionada,
+  onEstadoChange,
+  onCidadeChange,
+  errors = {},
+}) {
+  const cidades = formatarCidades(estadoSelecionado);
+
+  // IA: Função chamada quando o usuário seleciona um estado.
+  // Metodologia: avisa o formulário principal e limpa a cidade quando o estado muda.
+  // Função: evitar que uma cidade antiga fique selecionada em outro estado.
   const handleEstado = (estado) => {
-    setEstadoSelecionado(estado);
-
-    const lista = cidadesPorEstado[estado.value] || [];
-
-    const formatado = lista.map((cidade) => ({
-      value: cidade,
-      label: cidade,
-    }));
-
-    setCidades(formatado);
+    onEstadoChange(estado);
+    onCidadeChange(null);
   };
 
   return (
     <div className="form-container-UF">
       
-      {/* ESTADO */}
+      {/* IA: Select de estado.
+          Função: define qual lista de cidades será carregada. */}
       <div className="campo">
-        <label>Estado</label>
+        <label htmlFor="estado">Estado</label>
         <Select
+          inputId="estado"
+          classNamePrefix="register-select"
+          value={estadoSelecionado}
           options={estados}
           onChange={handleEstado}
           placeholder="Escolha o estado"
         />
+        {errors.state && <span className="register-error">{errors.state}</span>}
       </div>
 
-      {/* CIDADE */}
+      {/* IA: Select de cidade.
+          Função: fica desabilitado até haver estado selecionado para evitar escolhas inconsistentes. */}
       <div className="campo">
-        <label>Cidade</label>
+        <label htmlFor="cidade">Cidade</label>
         <Select
+          inputId="cidade"
+          classNamePrefix="register-select"
+          value={cidadeSelecionada}
           options={cidades}
+          onChange={onCidadeChange}
           placeholder={
             estadoSelecionado
               ? "Escolha a cidade"
@@ -60,6 +87,7 @@ export default function CidadeEstado() {
           }
           isDisabled={!estadoSelecionado}
         />
+        {errors.city && <span className="register-error">{errors.city}</span>}
       </div>
 
     </div>

@@ -1,4 +1,5 @@
 import HomeHeader from "../components/HomeHeader/Header";
+import Carousel from "../components/Carousel/Carousel";
 
 // IA: Este componente About é a página principal de informações
 // Serve para apresentar o objetivo, soluções e funcionamento da plataforma
