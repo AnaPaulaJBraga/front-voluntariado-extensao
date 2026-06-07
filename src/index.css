@@ -28,3 +28,29 @@ p {
 #root {
   min-height: 100vh;
 }
+
+/* Button Styles */
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #6c63ff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #5a52d5;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.w-100 {
+  width: 100%;
+}

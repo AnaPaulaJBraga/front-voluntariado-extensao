@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import HomeHeader from "../components/HomeHeader/Header";
 import Carousel from "../components/Carousel/Carousel";
+=======
+import Header from "../components/Header/Header";
+>>>>>>> c28b464f11624243579533661901bdbc94ff84ff
 
 // IA: Este componente About é a página principal de informações
 // Serve para apresentar o objetivo, soluções e funcionamento da plataforma

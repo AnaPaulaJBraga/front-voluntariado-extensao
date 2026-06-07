@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import Header from "../../components/HomeHeader/Header";
+import Header from "../../components/Header/Header";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
-import "./Home.css";
+import "./Opportunities.css";
 
 const OPPORTUNITIES = [
   {
@@ -67,7 +67,7 @@ const OPPORTUNITIES = [
   },
 ];
 
-const Home = () => {
+const Opportunities = () => {
   const [selectedCauses, setSelectedCauses] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState("Presencial");
   const [city, setCity] = useState("");
@@ -142,4 +142,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Opportunities;
