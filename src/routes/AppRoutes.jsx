@@ -4,6 +4,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register";
 import About from "../pages/About";
 import Organizations from "../pages/Organizations/Organizations";
+import EditProfile from "../pages/EditProfile/editProfile";
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
       <Route path="/oportunidades" element={<Opportunities />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Register />} />
+      <Route path="/editar-perfil" element={<EditProfile />} />
       <Route path="/sobre" element={<About />} />
       <Route path="/inicio" element={<Register />} />
       <Route path="/organizacoes" element={<Organizations />} />

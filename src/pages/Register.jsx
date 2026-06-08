@@ -194,7 +194,6 @@ const Register = () => {
         "Ocorreu um erro ao criar a conta. Tente novamente.";
 
       setMessage({ type: "error", text: backendMessage });
-      console.error("Erro:", error);
     } finally {
       setIsLoading(false);
     }

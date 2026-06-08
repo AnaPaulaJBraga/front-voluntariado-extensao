@@ -1,6 +1,8 @@
 import "./OpportunityCard.css";
 
 const OpportunityCard = ({ opportunity }) => {
+  const isLoggedIn = Boolean(localStorage.getItem("access_token"));
+
   return (
     <div className="opportunity-card">
       <img
@@ -23,13 +25,25 @@ const OpportunityCard = ({ opportunity }) => {
         <h3>{opportunity.title}</h3>
         <p className="opportunity-card__location">{opportunity.location}</p>
 
-        <button
-          className="btn btn-primary w-100"
-          type="button"
-          onClick={() => console.log("CLICOU > quero ser voluntário")}
-        >
-          Quero ser voluntário
-        </button>
+        {isLoggedIn ? (
+          <button
+            className="btn btn-primary w-100"
+            type="button"
+            onClick={() => console.log("CLICOU > quero ser voluntário")}
+          >
+            Quero ser voluntário
+          </button>
+        ) : (
+          <button
+            className="btn btn-primary w-100"
+            type="button"
+            onClick={() => {
+              window.location.href = "/login";
+            }}
+          >
+            Faça login para ser voluntário
+          </button>
+        )}
       </div>
     </div>
   );
