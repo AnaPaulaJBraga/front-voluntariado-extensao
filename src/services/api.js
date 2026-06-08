@@ -1,29 +1,41 @@
-import axios from "axios";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
-export const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
-});
+const request = async (method, path, body) => {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
 
-api.interceptors.response.use(
-  (response) => {
-    console.log("[API RESPONSE]", {
-      method: response.config?.method?.toUpperCase(),
-      url: response.config?.url,
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json")
+    ? await response.json()
+    : await response.text();
+
+  if (!response.ok) {
+    const error = new Error("Erro na requisicao.");
+    error.response = {
       status: response.status,
-      data: response.data,
-    });
+      data,
+    };
+    throw error;
+  }
 
-    return response;
-  },
-  (error) => {
-    console.error("[API ERROR]", {
-      method: error.config?.method?.toUpperCase(),
-      url: error.config?.url,
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message,
-    });
+  console.log("[API RESPONSE]", {
+    method,
+    url: path,
+    status: response.status,
+    data,
+  });
 
-    return Promise.reject(error);
-  },
-);
+  return {
+    data,
+    status: response.status,
+  };
+};
+
+export const api = {
+  post: (path, body) => request("POST", path, body),
+};

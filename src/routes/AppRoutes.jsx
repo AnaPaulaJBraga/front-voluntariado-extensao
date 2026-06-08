@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import Opportunities from "../pages/Opportunities/Opportunities";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register";
@@ -8,6 +8,7 @@ import Organizations from "../pages/Organizations/Organizations";
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/inicio" replace />} />
       <Route path="/oportunidades" element={<Opportunities />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Register />} />

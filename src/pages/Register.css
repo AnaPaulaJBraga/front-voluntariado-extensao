@@ -188,11 +188,24 @@
 }
 
 .register-submit-message {
-  margin: 12px 0 0;
-  color: #5d5fe8;
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
   text-align: center;
+}
+
+.register-submit-message--success {
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  background: #d4edda;
+}
+
+.register-submit-message--error {
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  background: #f8d7da;
 }
 
 .button-criar {
@@ -205,6 +218,7 @@
   color: #ffffff;
   cursor: pointer;
   font-weight: 800;
+  text-align: center;
   transition:
     transform 0.15s ease,
     box-shadow 0.2s ease,
@@ -212,13 +226,25 @@
     border-color 0.2s ease;
 }
 
-.button-criar:hover,
-.button-criar:focus-visible,
-.button-criar:active {
+.button-criar:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-criar:not(:disabled):hover,
+.button-criar:not(:disabled):focus-visible,
+.button-criar:not(:disabled):active {
   transform: translateY(-1px);
   background-color: #5b46e3;
   border-color: #5b46e3;
   box-shadow: 0 8px 18px rgba(91, 70, 227, 0.28);
+}
+
+.button-criar--link {
+  display: block;
+  text-decoration: none;
 }
 
 .ja-possui-conta {

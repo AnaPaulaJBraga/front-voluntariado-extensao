@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import slide1 from "../../assets/slidesCarousel/1.png";
+import slide2 from "../../assets/slidesCarousel/2.png";
+import slide3 from "../../assets/slidesCarousel/3.png";
 import "./Carousel.css";
 
 // IA: Componente Carousel - Slideshow automático com navegação manual
@@ -12,11 +15,7 @@ const Carousel = () => {
   // IA: Array de slides - cada elemento é um caminho de imagem
   // Metodologia: Dados em array facilita iteração e reutilização
   // Serves para centralizar fonte de dados das imagens
-  const slides = [
-    "/src/assets/slidesCarousel/1.png",
-    "/src/assets/slidesCarousel/2.png",
-    "/src/assets/slidesCarousel/3.png",
-  ];
+  const slides = [slide1, slide2, slide3];
 
   // IA: Hook useEffect para autoplay do carousel
   // Metodologia: useEffect com intervalo para atualizar slide a cada 4500ms

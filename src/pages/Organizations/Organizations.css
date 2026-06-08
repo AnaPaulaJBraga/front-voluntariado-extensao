@@ -1,0 +1,348 @@
+.organizations-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(96, 133, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 85% 10%, rgba(39, 198, 178, 0.12), transparent 30%),
+    #f0f3f9;
+}
+
+.organizations-page__layout {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 18px 40px;
+}
+
+.organizations-page__hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #e5e9f2;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 24px;
+}
+
+.organizations-page__hero h1 {
+  margin: 0;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  color: #273347;
+  font-size: 2rem;
+}
+
+.organizations-page__hero p {
+  max-width: 680px;
+  margin: 8px 0 0;
+  color: #697288;
+  line-height: 1.6;
+}
+
+.organizations-page__summary {
+  min-width: 150px;
+  border-radius: 12px;
+  background: #eef0ff;
+  padding: 16px;
+  text-align: center;
+  color: #4d46d9;
+}
+
+.organizations-page__summary strong,
+.organizations-page__summary span {
+  display: block;
+}
+
+.organizations-page__summary strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.organizations-page__summary span {
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.organizations-page__filters {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px 16px;
+  align-items: center;
+  margin-top: 18px;
+  border: 1px solid #e5e9f2;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+}
+
+.organizations-page__filters label {
+  font-weight: 800;
+  color: #384152;
+}
+
+.organizations-page__filters input {
+  min-height: 42px;
+  border: 1px solid #ccd3df;
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: #243043;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.organizations-page__filters input:hover,
+.organizations-page__filters input:focus {
+  border-color: #5d5fe8;
+  box-shadow: 0 0 0 3px rgba(93, 95, 232, 0.12);
+  transform: translateY(-1px);
+}
+
+.organizations-page__cause-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.organizations-page__cause {
+  border: 1px solid #d6dce9;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4f5a70;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 8px 14px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.organizations-page__cause:hover,
+.organizations-page__cause:focus-visible,
+.organizations-page__cause--active {
+  transform: translateY(-1px);
+  color: #ffffff;
+  background: #5b46e3;
+  border-color: #5b46e3;
+  box-shadow: 0 8px 18px rgba(91, 70, 227, 0.22);
+}
+
+.organizations-page__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.organization-card {
+  display: flex;
+  gap: 16px;
+  border: 1px solid #e5e9f2;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 18px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.organization-card:hover {
+  transform: translateY(-2px);
+  border-color: #d5daf0;
+  box-shadow: 0 14px 28px rgba(39, 51, 71, 0.1);
+}
+
+.organization-card__avatar {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #6d75ff, #5b46e3);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.organization-card__content {
+  min-width: 0;
+}
+
+.organization-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.organization-card__heading h2 {
+  margin: 0;
+  color: #273347;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: 1.15rem;
+}
+
+/* IA: Container das etiquetas de categoria no card.
+   Intuito: exibir várias áreas de atuação da mesma organização em linha, quebrando quando necessário.
+   Aplicação: usado pelo map de organization.categories no JSX. */
+.organization-card__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* IA: Estilo visual de cada etiqueta (pill) de categoria.
+   Intuito: diferenciar categorias da localização (meta) com cor roxa suave, padrão da página. */
+.organization-card__categories span {
+  border-radius: 999px;
+  background: #eef0ff;
+  color: #4d46d9;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.organization-card p {
+  margin: 10px 0 0;
+  color: #697288;
+  line-height: 1.55;
+}
+
+.organization-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.organization-card__meta span {
+  border-radius: 999px;
+  background: #f3f5fa;
+  color: #4f5a70;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* IA: Botão/link "Ver organização".
+   Intuito: reutilizar o mesmo visual tanto em <button> quanto em <a> (link externo).
+   display: inline-block + text-decoration: none garantem aparência de botão no anchor. */
+.organization-card__button {
+  display: inline-block;
+  margin-top: 16px;
+  border: 1px solid #5d5fe8;
+  border-radius: 999px;
+  background: #5d5fe8;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 9px 16px;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.organization-card__button:hover,
+.organization-card__button:focus-visible {
+  transform: translateY(-1px);
+  background: #5b46e3;
+  box-shadow: 0 8px 18px rgba(91, 70, 227, 0.24);
+}
+
+/* IA: Estado visual quando a organização não possui site público (COOREV, GAAR).
+   Intuito: indicar indisponibilidade sem parecer um botão clicável.
+   cursor: not-allowed e hover sem efeito evitam confusão com links ativos. */
+.organization-card__button--disabled {
+  display: inline-block;
+  border-color: #ccd3df;
+  background: #eef1f6;
+  color: #7a8498;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.organization-card__button--disabled:hover,
+.organization-card__button--disabled:focus-visible {
+  transform: none;
+  background: #eef1f6;
+  box-shadow: none;
+}
+
+/* IA: Bloco da seção de referências bibliográficas (ABNT).
+   Intuito: separar visualmente as fontes do documento do grid de organizações. */
+.organizations-page__references {
+  margin-top: 28px;
+  border: 1px solid #e5e9f2;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 24px;
+}
+
+.organizations-page__references h2 {
+  margin: 0;
+  color: #273347;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: 1.25rem;
+}
+
+/* IA: Lista ordenada das referências.
+   Intuito: manter numeração ABNT legível com espaçamento entre itens. */
+.organizations-page__references-list {
+  margin: 16px 0 0;
+  padding-left: 1.4rem;
+  color: #4f5a70;
+  line-height: 1.7;
+}
+
+/* IA: Espaço entre referências consecutivas sem margin no primeiro item. */
+.organizations-page__references-list li + li {
+  margin-top: 12px;
+}
+
+/* IA: Links dentro das referências.
+   Intuito: destacar URLs longas sem estourar o layout do card (word-break). */
+.organizations-page__references-list a {
+  color: #4d46d9;
+  word-break: break-all;
+}
+
+.organizations-page__empty {
+  margin-top: 18px;
+  padding: 28px;
+  border: 1px dashed #b7bfd6;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  text-align: center;
+  color: #656f84;
+}
+
+@media (max-width: 900px) {
+  .organizations-page__hero,
+  .organization-card__heading {
+    flex-direction: column;
+  }
+
+  .organizations-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .organizations-page__filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .organization-card {
+    flex-direction: column;
+  }
+}

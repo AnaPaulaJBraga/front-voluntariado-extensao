@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-import HomeHeader from "../components/HomeHeader/Header";
-import Carousel from "../components/Carousel/Carousel";
-=======
 import Header from "../components/Header/Header";
->>>>>>> c28b464f11624243579533661901bdbc94ff84ff
+import Carousel from "../components/Carousel/Carousel";
+import "./About.css";
 
 // IA: Este componente About é a página principal de informações
 // Serve para apresentar o objetivo, soluções e funcionamento da plataforma
@@ -22,7 +19,7 @@ const About = () => {
     // IA: Wrapper principal da página com classe "about-page"
     // Funciona como container para toda estrutura e aplica background e estilos globais
     <div className="about-page">
-      <HomeHeader />
+      <Header />
       
       {/* IA: Seção dedicada ao carousel e frases de impacto
           Metodologia: Separação de concerns - carousel, frases e conteúdo em seções distintas
