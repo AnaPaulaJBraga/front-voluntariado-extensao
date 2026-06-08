@@ -129,7 +129,7 @@ const REFERENCES = [
 // sort: ordena alfabeticamente; "Todas" fica fixa no início para limpar o filtro.
 const categories = [
   "Todas",
-  ...new Set(ORGANIZATIONS.flatMap((item) => item.categories)).sort(),
+  ...[...new Set(ORGANIZATIONS.flatMap((item) => item.categories))].sort(),
 ];
 
 const Organizations = () => {
