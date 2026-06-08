@@ -189,9 +189,9 @@ const Register = () => {
       setCidadeSelecionada(null);
     } catch (error) {
       const backendMessage =
-        error?.response?.data?.mensagem ||
+        error?.response?.data?.detail ||
         error?.response?.data?.message ||
-        "Erro de conexão. Verifique se o servidor está online.";
+        "Ocorreu um erro ao criar a conta. Tente novamente.";
 
       setMessage({ type: "error", text: backendMessage });
       console.error("Erro:", error);
@@ -208,7 +208,10 @@ const Register = () => {
         {/* IA: Coluna de apresentação.
             Metodologia: separar contexto institucional do formulário reduz ruído visual.
             Função: explicar rapidamente a proposta da plataforma. */}
-        <section className="register-intro" aria-labelledby="register-intro-title">
+        <section
+          className="register-intro"
+          aria-labelledby="register-intro-title"
+        >
           <img src={img} alt="Comunidade reunida em ação voluntária" />
 
           <h2 id="register-intro-title">Junte-se à nossa comunidade</h2>
@@ -221,7 +224,10 @@ const Register = () => {
         {/* IA: Coluna do formulário.
             Metodologia: card compacto com campos agrupados, validação inline e feedback geral.
             Função: coletar dados para criação de conta. */}
-        <section className="register-panel" aria-labelledby="register-form-title">
+        <section
+          className="register-panel"
+          aria-labelledby="register-form-title"
+        >
           <div className="register-card">
             <div className="register-card__title">
               <h1 id="register-form-title">Criar conta</h1>
@@ -229,7 +235,10 @@ const Register = () => {
             </div>
 
             {message.text && (
-              <p className={`register-submit-message register-submit-message--${message.type}`} role="status">
+              <p
+                className={`register-submit-message register-submit-message--${message.type}`}
+                role="status"
+              >
                 {message.text}
               </p>
             )}
@@ -239,7 +248,11 @@ const Register = () => {
                 Ir para login
               </Link>
             ) : (
-              <form className="register-form" onSubmit={handleSubmit} noValidate>
+              <form
+                className="register-form"
+                onSubmit={handleSubmit}
+                noValidate
+              >
                 <div className="form-container">
                   <label htmlFor="fullName">Nome completo</label>
                   <input
@@ -251,7 +264,9 @@ const Register = () => {
                     placeholder="Digite seu nome completo"
                     className={errors.fullName ? "input-error" : ""}
                   />
-                  {errors.fullName && <span className="register-error">{errors.fullName}</span>}
+                  {errors.fullName && (
+                    <span className="register-error">{errors.fullName}</span>
+                  )}
 
                   <label htmlFor="email">Email</label>
                   <input
@@ -263,7 +278,9 @@ const Register = () => {
                     placeholder="Digite seu email"
                     className={errors.email ? "input-error" : ""}
                   />
-                  {errors.email && <span className="register-error">{errors.email}</span>}
+                  {errors.email && (
+                    <span className="register-error">{errors.email}</span>
+                  )}
 
                   <label htmlFor="birthDate">Data de nascimento</label>
                   <input
@@ -276,7 +293,9 @@ const Register = () => {
                     maxLength="10"
                     className={errors.birthDate ? "input-error" : ""}
                   />
-                  {errors.birthDate && <span className="register-error">{errors.birthDate}</span>}
+                  {errors.birthDate && (
+                    <span className="register-error">{errors.birthDate}</span>
+                  )}
 
                   <label htmlFor="cpf">CPF</label>
                   <input
@@ -289,7 +308,9 @@ const Register = () => {
                     maxLength="14"
                     className={errors.cpf ? "input-error" : ""}
                   />
-                  {errors.cpf && <span className="register-error">{errors.cpf}</span>}
+                  {errors.cpf && (
+                    <span className="register-error">{errors.cpf}</span>
+                  )}
 
                   <label htmlFor="password">Senha</label>
                   <input
@@ -301,7 +322,9 @@ const Register = () => {
                     placeholder="Digite sua senha"
                     className={errors.password ? "input-error" : ""}
                   />
-                  {errors.password && <span className="register-error">{errors.password}</span>}
+                  {errors.password && (
+                    <span className="register-error">{errors.password}</span>
+                  )}
 
                   <label htmlFor="confirmPassword">Confirmar senha</label>
                   <input
@@ -313,7 +336,11 @@ const Register = () => {
                     placeholder="Confirme sua senha"
                     className={errors.confirmPassword ? "input-error" : ""}
                   />
-                  {errors.confirmPassword && <span className="register-error">{errors.confirmPassword}</span>}
+                  {errors.confirmPassword && (
+                    <span className="register-error">
+                      {errors.confirmPassword}
+                    </span>
+                  )}
                 </div>
 
                 <CidadeEstado
@@ -324,7 +351,11 @@ const Register = () => {
                   errors={errors}
                 />
 
-                <button type="submit" className="button-criar" disabled={isLoading}>
+                <button
+                  type="submit"
+                  className="button-criar"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Criando conta..." : "Criar conta"}
                 </button>
 

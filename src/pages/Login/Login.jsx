@@ -61,8 +61,9 @@ const Login = () => {
         window.location.href = "/oportunidades";
       }, 2000);
     } catch (error) {
+      console.error("Erro de login:", error?.response);
       const backendMessage =
-        error?.response?.data?.mensagem ||
+        error?.response?.data?.detail ||
         error?.response?.data?.message ||
         "Não foi possível fazer login. Tente novamente.";
 
