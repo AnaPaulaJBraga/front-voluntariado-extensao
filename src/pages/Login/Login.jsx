@@ -3,6 +3,32 @@ import Header from "../../components/Header/Header";
 import { api } from "../../services/api";
 import "./Login.css";
 
+const getLoginErrorMessage = (data) => {
+  if (Array.isArray(data)) {
+    return "Não foi possível fazer login. Tente novamente.";
+  }
+
+  if (typeof data === "string") {
+    return data;
+  }
+
+  if (data && typeof data === "object") {
+    if (typeof data.detail === "string") {
+      return data.detail;
+    }
+
+    if (typeof data.message === "string") {
+      return data.message;
+    }
+
+    if (Array.isArray(data.detail) || Array.isArray(data.message)) {
+      return "Não foi possível fazer login. Tente novamente.";
+    }
+  }
+
+  return "Não foi possível fazer login. Tente novamente.";
+};
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -62,10 +88,7 @@ const Login = () => {
       }, 2000);
     } catch (error) {
       console.error("Erro de login:", error?.response);
-      const backendMessage =
-        error?.response?.data?.detail ||
-        error?.response?.data?.message ||
-        "Não foi possível fazer login. Tente novamente.";
+      const backendMessage = getLoginErrorMessage(error?.response?.data);
 
       setMessage({
         type: "error",

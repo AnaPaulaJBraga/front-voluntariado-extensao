@@ -6,7 +6,7 @@ import plusCircle from "../../assets/plus-circle.png";
 
 import "./Header.css";
 
-const Header = ({ userName, userLoggedIn }) => {
+const Header = ({ userName }) => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -31,7 +31,8 @@ const Header = ({ userName, userLoggedIn }) => {
     (typeof parsedUser === "string" ? parsedUser : "");
 
   const sessionUserName = rawName.trim().split(/\s+/)[0] || "";
-  const isLoggedIn = Boolean(token && storedUser && sessionUserName);
+  const displayName = sessionUserName || "Usuario";
+  const isLoggedIn = Boolean(token);
 
   const getActivePage = () => {
     if (location.pathname === "/inicio") return "inicio";
@@ -89,7 +90,7 @@ const Header = ({ userName, userLoggedIn }) => {
         </NavLink>
       </nav>
 
-      {(userLoggedIn ?? isLoggedIn) && (
+      {isLoggedIn && (
         <>
           <div className="app-header__user-wrapper">
             <div
@@ -99,13 +100,9 @@ const Header = ({ userName, userLoggedIn }) => {
               tabIndex={0}
               onClick={toggleMenu}
             >
-              <div className="app-header__avatar">
-                {(sessionUserName || userName || "U").charAt(0)}
-              </div>
+              <div className="app-header__avatar">{displayName.charAt(0)}</div>
               <div>
-                <p className="app-header__hello">
-                  Olá, {sessionUserName || userName}!
-                </p>
+                <p className="app-header__hello">Olá, {displayName}!</p>
                 <p className="app-header__meta">Conta pessoal</p>
               </div>
             </div>
@@ -115,6 +112,9 @@ const Header = ({ userName, userLoggedIn }) => {
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
+                  onClick={() => {
+                    window.location.href = "/editar-perfil";
+                  }}
                 >
                   <img
                     src={userIcon}
@@ -162,7 +162,7 @@ const Header = ({ userName, userLoggedIn }) => {
         </>
       )}
 
-      {!(userLoggedIn ?? isLoggedIn) && (
+      {!isLoggedIn && (
         <div className="app-header__auth">
           <NavLink
             to="/login"
