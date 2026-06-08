@@ -145,6 +145,17 @@ const Header = ({ userName, userLoggedIn }) => {
                   />
                   Cadastre sua ONG
                 </button>
+                <button
+                  type="button"
+                  className="app-header__dropdown-item dropdown-item"
+                  onClick={() => {
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("user");
+                    window.location.href = "/inicio";
+                  }}
+                >
+                  Sair
+                </button>
               </div>
             )}
           </div>
