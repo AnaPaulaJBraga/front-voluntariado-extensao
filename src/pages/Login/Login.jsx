@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { api } from "../../services/api";
 import "./Login.css";
 
 const getLoginErrorMessage = (data) => {
   if (Array.isArray(data)) {
+    console.log(data)
     return "Não foi possível fazer login. Tente novamente.";
   }
 
@@ -61,11 +63,11 @@ const Login = () => {
 
     try {
       const body = {
-        email: formData.email,
-        senha: formData.senha,
+        username: formData.email,
+        password: formData.senha,
       };
 
-      const response = await api.post("/auth/login", body);
+      const response = await api.post("/auth/login", body, true);
       const { access_token, refresh_token, token_type, user } = response.data;
 
       // Armazenar tokens no localStorage
@@ -115,9 +117,17 @@ const Login = () => {
                   color: message.type === "success" ? "#1b5e20" : "#b71c1c",
                   marginBottom: "12px",
                   fontSize: "14px",
+                  alignSelf: "center"
                 }}
               >
                 {message.text}
+                {message.type === "error" &&
+                message.text === "Confirme seu e-mail para fazer login" && (
+                  <>
+                    <br/>
+                    <Link style={{color: "#b71c1c"}} to="/reenviar-confirmacao">Clique aqui para reenviar a confirmação de e-mail</Link>
+                  </>
+                )}
               </p>
             )}
 

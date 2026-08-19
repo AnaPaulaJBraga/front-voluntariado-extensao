@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("access_token");
@@ -11,15 +11,22 @@ const getAuthHeaders = () => {
   return headers;
 };
 
-const request = async (method, path, body, useAuth = false) => {
-  const headers = useAuth
-    ? getAuthHeaders()
-    : { "Content-Type": "application/json" };
+const request = async (method, path, body, useAuth = false, isLogin) => {
+
+  const headers = isLogin
+  ? {"Content-Type": "application/x-www-form-urlencoded"}
+  : useAuth ? getAuthHeaders() : {"Content-Type": "application/json"};
+
+  const requestBody = body
+  ? isLogin
+    ? new URLSearchParams(body).toString()
+    : JSON.stringify(body)
+  : undefined;
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: requestBody,
   });
 
   const contentType = response.headers.get("content-type") || "";
@@ -28,7 +35,7 @@ const request = async (method, path, body, useAuth = false) => {
     : await response.text();
 
   if (!response.ok) {
-    const error = new Error("Erro na requisicao.");
+    const error = new Error("Erro na requisição.");
     error.response = {
       status: response.status,
       data,
@@ -50,7 +57,7 @@ const request = async (method, path, body, useAuth = false) => {
 };
 
 export const api = {
-  post: (path, body) => request("POST", path, body),
+  post: (path, body, isLogin=false) => request("POST", path, body, false, isLogin),
   get: (path, useAuth = false) => request("GET", path, undefined, useAuth),
   patch: (path, body, useAuth = false) => request("PATCH", path, body, useAuth),
 };

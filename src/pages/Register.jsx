@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
 import CidadeEstado from "../components/CityState/CidadeEstado";
-import img from "../assets/comunity.jpg";
+import img from "../assets/wallpaper.png";
 import { api } from "../services/api";
 import {
   isValidCPF,
@@ -168,14 +168,13 @@ const Register = () => {
 
     try {
       const body = {
-        nome: formData.fullName,
-        email: formData.email,
+        name: formData.fullName,
         cpf: formData.cpf.replace(/\D/g, ""),
-        senha: formData.password,
-        data_nasc: formatBirthDateForApi(formData.birthDate),
-        cidade: cidadeSelecionada.value,
+        email: formData.email,
+        password: formData.password,
+        birth_date: formatBirthDateForApi(formData.birthDate),
+        city: cidadeSelecionada.value,
         uf: estadoSelecionado.value,
-        admin: false,
       };
 
       await api.post("/auth/register", body);
