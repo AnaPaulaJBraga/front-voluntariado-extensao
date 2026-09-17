@@ -57,7 +57,7 @@ const request = async (method, path, body, useAuth = false, isLogin) => {
 };
 
 export const api = {
-  post: (path, body, isLogin=false) => request("POST", path, body, false, isLogin),
+  post: (path, body, isLogin=false, useAuth=false) => request("POST", path, body, useAuth, isLogin),
   get: (path, useAuth = false) => request("GET", path, undefined, useAuth),
   patch: (path, body, useAuth = false) => request("PATCH", path, body, useAuth),
 };

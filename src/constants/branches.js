@@ -1,0 +1,16 @@
+export const branches = [
+  { value: "animals", label: "Animais" },
+  { value: "environment", label: "Meio ambiente" },
+  { value: "education", label: "Educação" },
+  { value: "health", label: "Saúde" },
+  { value: "social_assistance", label: "Assistência Social" },
+  { value: "elderly", label: "Idosos" },
+  { value: "children_and_teens", label: "Crianças e Adolescentes" },
+  { value: "inclusion", label: "Inclusão social" },
+  { value: "culture_and_art", label: "Cultura e Arte" },
+  { value: "sports", label: "Esportes" },
+  { value: "technology", label: "Tecnologia" },
+  { value: "humanitarian_aid", label: "Ajuda Humanitária" },
+  { value: "community", label: "Comunidade" },
+  { value: "events", label: "Eventos" },
+];

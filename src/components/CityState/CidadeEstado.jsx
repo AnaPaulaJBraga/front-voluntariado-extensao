@@ -1,30 +1,18 @@
 import Select from "react-select";
+import { estados } from "../../constants/estados";
+import municipiosPorUf from "../../constants/municipiosPorUf.json";
 
 // IA: Lista de estados exibida no primeiro select.
 // Metodologia: react-select espera opções no formato { value, label }.
 // Função: value guarda o código usado na lógica e label guarda o texto visto pelo usuário.
-const estados = [
-  { value: "SP", label: "São Paulo" },
-  { value: "RJ", label: "Rio de Janeiro" },
-  { value: "MG", label: "Minas Gerais" },
-  { value: "PR", label: "Paraná" },
-];
-
-// IA: Relação simples de cidades por UF.
-// Metodologia: objeto indexado pelo value do estado para buscar a lista rapidamente.
-// Função: alimentar o select de cidades de acordo com o estado escolhido.
-const cidadesPorEstado = {
-  SP: ["São Paulo", "Registro", "Santos", "Campinas"],
-  RJ: ["Rio de Janeiro", "Niterói"],
-  MG: ["Belo Horizonte", "Uberlândia"],
-  PR: ["Curitiba", "Londrina"],
-};
+// Municípios do IBGE, agrupados por UF em um arquivo local.
+// Fonte (consulta em 16/09/2026): https://servicodados.ibge.gov.br/api/v1/localidades/municipios
 
 // IA: Transforma strings de cidades no formato aceito pelo react-select.
 // Metodologia: manter a formatação em helper evita repetir map dentro do JSX.
 // Função: devolver opções com value e label para o select de cidades.
 const formatarCidades = (estado) => {
-  const lista = cidadesPorEstado[estado?.value] || [];
+  const lista = municipiosPorUf[estado?.value] || [];
 
   return lista.map((cidade) => ({
     value: cidade,

@@ -53,6 +53,18 @@ export const maskEmail = (value) => {
   return value.trim();
 };
 
+// Normaliza slugs enquanto o usuário digita.
+// Remove acentos, converte para minúsculas e troca espaços por hífens.
+export const normalizeSlug = (value) => {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9_.-]/g, "")
+    .replace(/-+/g, "-");
+};
+
 // Máscara para telefone (XX) XXXXX-XXXX
 export const maskPhone = (value) => {
   let masked = value.replace(/\D/g, "");

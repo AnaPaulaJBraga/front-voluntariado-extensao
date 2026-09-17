@@ -10,6 +10,7 @@
   border-bottom: 1px solid #e7e8ee;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(8px);
+  width: 100%;
 }
 
 .app-header__brand {
@@ -137,9 +138,8 @@
 
 .app-header__dropdown {
   position: absolute;
-  top: 40px;
-  left: auto;
-  right: -30px;
+  top: 50px;
+  left: -40px;
   background: #fff;
   border: 0 !important;
   outline: 0;
