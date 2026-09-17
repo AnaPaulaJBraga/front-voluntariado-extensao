@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { api } from "../../services/api";
+import { clearActiveContext } from "../../utils/activeContext";
 import "./Login.css";
 
 const getLoginErrorMessage = (data) => {
@@ -70,6 +71,7 @@ const Login = () => {
       const response = await api.post("/auth/login", body, true);
       const { access_token, refresh_token, token_type, user } = response.data;
 
+      clearActiveContext();
       // Armazenar tokens no localStorage
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
@@ -84,9 +86,9 @@ const Login = () => {
         text: "Login realizado com sucesso.",
       });
 
-      // Redirecionar para /oportunidades após 2 segundos
+      // A página inicial consulta a entidade associada a esta conta.
       setTimeout(() => {
-        window.location.href = "/oportunidades";
+        window.location.href = "/inicio";
       }, 2000);
     } catch (error) {
       console.error("Erro de login:", error?.response);

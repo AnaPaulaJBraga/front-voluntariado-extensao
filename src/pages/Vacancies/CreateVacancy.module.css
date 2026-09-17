@@ -1,0 +1,22 @@
+.registerPage {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+}
+
+
+.form {
+    width: min(500px, calc(100% - 32px));
+    margin: auto;
+    padding: 24px;
+    display: flex;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}

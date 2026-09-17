@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { api } from "../../services/api";
+import { getActiveContext, saveActiveContext, clearActiveContext } from "../../utils/activeContext";
 import userIcon from "../../assets/user_icon.png";
 import clipboard from "../../assets/clipboard-form.png";
 import plusCircle from "../../assets/plus-circle.png";
+import logo from "../../assets/logo.png";
 
 import "./Header.css";
 
 const Header = ({ userName }) => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
+  const [membership, setMembership] = useState(undefined);
+  const activeContext = getActiveContext();
 
   const token = localStorage.getItem("access_token");
   const storedUser = localStorage.getItem("user");
+
+  useEffect(() => {
+    if (!token) return;
+    let isCurrentPage = true;
+    api.get("/entities/me", true)
+      .then((response) => {
+        if (isCurrentPage) setMembership(response.data);
+      })
+      .catch(() => {});
+    return () => { isCurrentPage = false; };
+  }, [token]);
 
   let parsedUser = null;
 
@@ -34,6 +50,11 @@ const Header = ({ userName }) => {
   const displayName = sessionUserName || "Usuario";
   const isLoggedIn = Boolean(token);
 
+  const switchMode = (mode) => {
+    saveActiveContext(mode, mode === "entity" ? membership.entity.id : null);
+    window.location.href = "/inicio";
+  };
+
   const getActivePage = () => {
     if (location.pathname === "/inicio") return "inicio";
     if (location.pathname === "/oportunidades") return "oportunidades";
@@ -50,7 +71,10 @@ const Header = ({ userName }) => {
 
   return (
     <header className="app-header">
-      <div className="app-header__brand">Voluntários em Ação</div>
+      <div className="app-header__brand" style={{display: "flex", alignItems: "center", gap: "10px"}}>
+        <img src={logo} alt="logo" style={{ width: "40px", height: "auto" }} />
+        Voluntários em Ação
+        </div>
 
       <nav className="app-header__nav" aria-label="Navegacao principal">
         <NavLink
@@ -103,7 +127,11 @@ const Header = ({ userName }) => {
               <div className="app-header__avatar">{displayName.charAt(0)}</div>
               <div>
                 <p className="app-header__hello">Olá, {displayName}!</p>
-                <p className="app-header__meta">Conta pessoal</p>
+                <p className="app-header__meta">
+                  {activeContext?.mode === "entity" && membership
+                    ? membership.entity.name
+                    : "Conta pessoal"}
+                </p>
               </div>
             </div>
 
@@ -134,9 +162,21 @@ const Header = ({ userName }) => {
                   />
                   Solicitações
                 </button>
+                {membership && (
+                  <>
+                    <button type="button" className="app-header__dropdown-item dropdown-item"
+                      onClick={() => switchMode("user")}>Conta pessoal</button>
+                    <button type="button" className="app-header__dropdown-item dropdown-item"
+                      onClick={() => switchMode("entity")}>Minha entidade</button>
+                  </>
+                )}
+                {membership === null && (
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
+                  onClick={() => {
+                    window.location.href = "/entidade/cadastro";
+                  }}
                 >
                   <img
                     src={plusCircle}
@@ -145,12 +185,14 @@ const Header = ({ userName }) => {
                   />
                   Cadastre sua ONG
                 </button>
+                )}
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
                   onClick={() => {
                     localStorage.removeItem("access_token");
                     localStorage.removeItem("user");
+                    clearActiveContext();
                     window.location.href = "/inicio";
                   }}
                 >

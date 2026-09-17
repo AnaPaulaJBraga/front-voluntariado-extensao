@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import RegisterHeader from "../../components/RegisterHeader/RegisterHeader";
 import CidadeEstado from "../../components/CityState/CidadeEstado";
+import { getEstadoOption } from "../../constants/estados";
 import { api } from "../../services/api";
 import {
   isValidDate,
@@ -76,18 +77,18 @@ const EditProfile = () => {
         const user = response.data;
 
         setFormData({
-          fullName: user.nome ?? "",
+          fullName: user.name ?? "",
           email: user.email ?? "",
           cpf: user.cpf ? maskCPF(String(user.cpf)) : "",
-          birthDate: formatDateFromApi(user.data_nasc),
+          birthDate: formatDateFromApi(user.birth_date) ?? "",
         });
 
         if (user.uf) {
-          setEstadoSelecionado({ value: user.uf, label: user.uf });
+          setEstadoSelecionado(getEstadoOption(user.uf));
         }
 
-        if (user.cidade) {
-          setCidadeSelecionada({ value: user.cidade, label: user.cidade });
+        if (user.city) {
+          setCidadeSelecionada({ value: user.city, label: user.city });
         }
       } catch (error) {
         console.error("Erro ao carregar perfil:", error);
@@ -244,13 +245,13 @@ const EditProfile = () => {
       }
 
       const body = {
-        nome: formData.fullName,
-        data_nasc: formatBirthDateForApi(formData.birthDate),
-        cidade: cidadeSelecionada.value,
+        name: formData.fullName,
+        birth_date: formatBirthDateForApi(formData.birthDate),
+        city: cidadeSelecionada.value,
         uf: estadoSelecionado.value,
       };
 
-      await api.patch(`/user/me/${token}`, body, true);
+      await api.patch(`/user/me`, body, true);
 
       setMessage({
         type: "success",
@@ -296,12 +297,12 @@ const EditProfile = () => {
       }
 
       const body = {
-        senha_atual: passwordData.currentPassword,
-        nova_senha: passwordData.newPassword,
-        confirmar_nova_senha: passwordData.confirmPassword,
+        current_password: passwordData.currentPassword,
+        new_password: passwordData.newPassword,
+        new_password_confirmation: passwordData.confirmPassword,
       };
 
-      await api.patch(`/user/me/senha/${token}`, body, true);
+      await api.patch(`/user/me/password`, body, true);
 
       setMessage({
         type: "success",

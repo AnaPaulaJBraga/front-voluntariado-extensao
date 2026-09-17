@@ -7,6 +7,11 @@ import ResendConfirmation from "../pages/ResendConfirmation/ResendConfirmation";
 import About from "../pages/About";
 import Organizations from "../pages/Organizations/Organizations";
 import EditProfile from "../pages/EditProfile/editProfile";
+import Entity from "../pages/Entity/Entity";
+import Home from "../pages/Home/Home";
+import ListVacancies from "../pages/Vacancies/ListVacancies";
+import CreateVacancy from "../pages/Vacancies/CreateVacancy";
+import EditVacancy from "../pages/Vacancies/EditVacancy";
 
 const AppRoutes = () => {
   return (
@@ -19,8 +24,12 @@ const AppRoutes = () => {
       <Route path="/reenviar-confirmacao" element={<ResendConfirmation />} />
       <Route path="/editar-perfil" element={<EditProfile />} />
       <Route path="/sobre" element={<About />} />
-      <Route path="/inicio" element={<Register />} />
+      <Route path="/inicio" element={<Home />} />
       <Route path="/organizacoes" element={<Organizations />} />
+      <Route path="/entidade/cadastro" element={<Entity />} />
+      <Route path="/vagas" element={<ListVacancies />} />
+      <Route path="/vagas/cadastro" element={<CreateVacancy />} />
+      <Route path="/vagas/:id/editar" element={<EditVacancy />} />
     </Routes>
   );
 };

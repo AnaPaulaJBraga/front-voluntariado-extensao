@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
 import CidadeEstado from "../components/CityState/CidadeEstado";
+import Header from "../components/Header/Header";
 import img from "../assets/wallpaper.png";
 import { api } from "../services/api";
 import {
@@ -200,7 +201,7 @@ const Register = () => {
 
   return (
     <div className="register-page">
-      <RegisterHeader />
+      <Header />
 
       <main className="register-layout">
         {/* IA: Coluna de apresentação.
