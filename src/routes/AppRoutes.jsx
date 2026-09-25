@@ -12,6 +12,7 @@ import Home from "../pages/Home/Home";
 import ListVacancies from "../pages/Vacancies/ListVacancies";
 import CreateVacancy from "../pages/Vacancies/CreateVacancy";
 import EditVacancy from "../pages/Vacancies/EditVacancy";
+import VacancyDetail from "../pages/Vacancies/VacancyDetail";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/entidade/cadastro" element={<Entity />} />
       <Route path="/vagas" element={<ListVacancies />} />
       <Route path="/vagas/cadastro" element={<CreateVacancy />} />
+      <Route path="/vagas/:id" element={<VacancyDetail />} />
       <Route path="/vagas/:id/editar" element={<EditVacancy />} />
     </Routes>
   );
