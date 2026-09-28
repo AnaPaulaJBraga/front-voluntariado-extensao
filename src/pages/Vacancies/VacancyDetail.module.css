@@ -1,0 +1,102 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(96, 133, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(39, 198, 178, 0.12), transparent 30%),
+    #f0f3f9;
+}
+
+.layout {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 18px;
+  box-sizing: border-box;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #5d5fe8;
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.status {
+  color: #5f6b80;
+  font-weight: 700;
+}
+
+.statusError {
+  color: #b33a3a;
+}
+
+.card {
+  border: 1px solid #e5e9f2;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.header {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid #e5e9f2;
+}
+
+.title {
+  margin: 0 0 14px;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  color: #273347;
+  font-size: 1.6rem;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.branch,
+.modality {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.branch {
+  background: #f3f5fa;
+  color: #4f5a70;
+}
+
+.modalityRemote {
+  background: #eaf0ff;
+  color: #405ecf;
+}
+
+.modalityOnsite {
+  background: #e8f8f0;
+  color: #1f8d5b;
+}
+
+.body {
+  padding: 24px;
+}
+
+.sectionTitle {
+  margin: 0 0 12px;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  color: #273347;
+  font-size: 1rem;
+}
+
+.desc {
+  margin: 0;
+  color: #3d4658;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
