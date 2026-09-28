@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import Header from "../../components/Header/Header";
 import CidadeEstado from "../../components/CityState/CidadeEstado";
 import { branches } from "../../constants/branches";
+import { modalities } from "../../constants/modalities";
 import { getEstadoOption } from "../../constants/estados";
 import { api } from "../../services/api";
+import { saveActiveContext } from "../../utils/activeContext";
 import style from "./CreateVacancy.module.css";
-
-const modalities = [
-  { value: "remote", label: "Remoto" },
-  { value: "in_person", label: "Presencial" },
-];
 
 const initialFormData = {
   title: "", description: "", startsAt: "", endsAt: "",
@@ -25,11 +22,9 @@ const getBackendMessage = (error) => {
   return "Não foi possível criar a vaga. Tente novamente.";
 };
 
-const formatDate = (dateString) => new Intl.DateTimeFormat("pt-BR", {
-  dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo",
-}).format(new Date(dateString));
-
 const CreateVacancy = () => {
+  const navigate = useNavigate();
+
   // Os campos de texto ficam juntos, como no formulário de registro.
   const [formData, setFormData] = useState(initialFormData);
   const [selectedBranch, setSelectedBranch] = useState(null);
@@ -42,7 +37,6 @@ const CreateVacancy = () => {
   const [accessError, setAccessError] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
-  const [createdVacancy, setCreatedVacancy] = useState(null);
 
   const canCreate = membership?.position === "admin" || membership?.position === "editor";
   const isInPerson = selectedModality?.value === "in_person";
@@ -163,8 +157,9 @@ const CreateVacancy = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await api.post("/vacancies", body, false, true);
-      setCreatedVacancy(response.data);
+      await api.post("/vacancies", body, false, true);
+      saveActiveContext("entity", membership.entity.id);
+      navigate("/inicio", { replace: true });
     } catch (error) {
       setMessage(getBackendMessage(error));
     } finally {
@@ -176,95 +171,183 @@ const CreateVacancy = () => {
     <div className={style.registerPage}>
       <Header />
       {isLoadingEntity ? (
-        <main className={style.form}><p>Carregando sua entidade...</p></main>
+        <main className={style.form}>
+          <p className={style.statusText}>Carregando sua entidade...</p>
+        </main>
       ) : !canCreate ? (
         <main className={style.form}>
-          <p role="alert">{accessError || (membership
+          <p className={`${style.feedback} ${style.feedbackError}`} role="alert">{accessError || (membership
             ? "Somente administradores e editores podem criar vagas."
             : "Você precisa participar de uma entidade para criar vagas.")}</p>
-          <Link to="/inicio">Voltar ao início</Link>
-        </main>
-      ) : createdVacancy ? (
-        <main className={style.form} role="status">
-          <h1>Vaga criada com sucesso!</h1>
-          <p>Vaga #{createdVacancy.id}: {createdVacancy.title}</p>
-          <p>Ramo: {branches.find((item) => item.value === createdVacancy.branch)?.label}</p>
-          <p>Modalidade: {modalities.find((item) => item.value === createdVacancy.modality)?.label}</p>
-          <p>Início: {formatDate(createdVacancy.starts_at)}</p>
-          <p>Término: {formatDate(createdVacancy.ends_at)}</p>
-          {createdVacancy.modality === "in_person" && (
-            <p>Local: {createdVacancy.thoroughfare}, {createdVacancy.city}/{createdVacancy.uf}</p>
-          )}
-          <Link to="/inicio">Ver vagas da entidade</Link>
+          <Link className={style.secondaryLink} to="/inicio">Voltar ao início</Link>
         </main>
       ) : (
         <form className={style.form} onSubmit={handleSubmit} noValidate>
-          <h1>Criar vaga voluntária</h1>
-          {message && <p style={{color: "red"}} role="alert">{message}</p>}
+          <h1 className={style.title}>Criar vaga voluntária</h1>
+          <p className={style.subtitle}>Preencha os campos para publicar uma nova oportunidade da sua entidade.</p>
+          {message && <p className={`${style.feedback} ${style.feedbackError}`} role="alert">{message}</p>}
 
-          <label htmlFor="title">Título da vaga:</label>
-          <input id="title" type="text" name="title" maxLength={100}
-            value={formData.title} onChange={handleInputChange} placeholder="Título da vaga" />
-          {errors.title && <span>{errors.title}</span>}
+          <div className={style.field}>
+            <label className={style.label} htmlFor="title">Título da vaga</label>
+            <input
+              className={`${style.input} ${errors.title ? style.inputError : ""}`}
+              id="title"
+              type="text"
+              name="title"
+              maxLength={100}
+              value={formData.title}
+              onChange={handleInputChange}
+              placeholder="Título da vaga"
+            />
+            {errors.title && <span className={style.errorText}>{errors.title}</span>}
+          </div>
 
-          <label htmlFor="description">Descrição da vaga:</label>
-          <textarea id="description" name="description" maxLength={255}
-            value={formData.description} onChange={handleInputChange} placeholder="Descrição da vaga" />
-          {errors.description && <span>{errors.description}</span>}
+          <div className={style.field}>
+            <label className={style.label} htmlFor="description">Descrição da vaga</label>
+            <textarea
+              className={`${style.input} ${style.textarea} ${errors.description ? style.inputError : ""}`}
+              id="description"
+              name="description"
+              maxLength={255}
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Descrição da vaga"
+            />
+            <span className={`${style.charCount} ${255 - formData.description.length <= 20 ? style.charCountWarning : ""}`}>
+              {255 - formData.description.length} caracteres restantes
+            </span>
+            {errors.description && <span className={style.errorText}>{errors.description}</span>}
+          </div>
 
-          <div style={{ display: "flex" }}>
-            <div>
-              <label htmlFor="startsAt">Data de início:</label>
-              <input id="startsAt" type="datetime-local" name="startsAt"
-                value={formData.startsAt} onChange={handleInputChange} />
-              {errors.startsAt && <span>{errors.startsAt}</span>}
+          <div className={style.rowTwoCols}>
+            <div className={style.field}>
+              <label className={style.label} htmlFor="startsAt">Data de início</label>
+              <input
+                className={`${style.input} ${errors.startsAt ? style.inputError : ""}`}
+                id="startsAt"
+                type="datetime-local"
+                name="startsAt"
+                value={formData.startsAt}
+                onChange={handleInputChange}
+              />
+              {errors.startsAt && <span className={style.errorText}>{errors.startsAt}</span>}
             </div>
-            <div>
-              <label htmlFor="endsAt">Data de término:</label>
-              <input id="endsAt" type="datetime-local" name="endsAt"
-                value={formData.endsAt} onChange={handleInputChange} />
-              {errors.endsAt && <span>{errors.endsAt}</span>}
+
+            <div className={style.field}>
+              <label className={style.label} htmlFor="endsAt">Data de término</label>
+              <input
+                className={`${style.input} ${errors.endsAt ? style.inputError : ""}`}
+                id="endsAt"
+                type="datetime-local"
+                name="endsAt"
+                value={formData.endsAt}
+                onChange={handleInputChange}
+              />
+              {errors.endsAt && <span className={style.errorText}>{errors.endsAt}</span>}
             </div>
           </div>
 
-          <label htmlFor="branch">Ramo:</label>
-          <Select inputId="branch" classNamePrefix="register-select"
-            options={branches} value={selectedBranch} onChange={handleBranchChange}
-            placeholder="Escolha um ramo" />
-          {errors.branch && <span>{errors.branch}</span>}
+          <div className={style.field}>
+            <label className={style.label} htmlFor="branch">Ramo</label>
+            <Select
+              inputId="branch"
+              classNamePrefix="register-select"
+              options={branches}
+              value={selectedBranch}
+              onChange={handleBranchChange}
+              placeholder="Escolha um ramo"
+            />
+            {errors.branch && <span className={style.errorText}>{errors.branch}</span>}
+          </div>
 
-          <label htmlFor="modality">Modalidade:</label>
-          <Select inputId="modality" classNamePrefix="register-select"
-            options={modalities} value={selectedModality} onChange={handleModalityChange}
-            placeholder="Escolha uma modalidade" />
-          {errors.modality && <span>{errors.modality}</span>}
+          <div className={style.field}>
+            <label className={style.label} htmlFor="modality">Modalidade</label>
+            <Select
+              inputId="modality"
+              classNamePrefix="register-select"
+              options={modalities}
+              value={selectedModality}
+              onChange={handleModalityChange}
+              placeholder="Escolha uma modalidade"
+            />
+            {errors.modality && <span className={style.errorText}>{errors.modality}</span>}
+          </div>
 
           {isInPerson && (
-            <div>
-              <CidadeEstado estadoSelecionado={estadoSelecionado} cidadeSelecionada={cidadeSelecionada}
-                onEstadoChange={handleEstadoChange} onCidadeChange={handleCidadeChange} errors={errors} />
+            <section className={style.addressSection}>
+              <h2 className={style.addressTitle}>Endereço da vaga presencial</h2>
+              <CidadeEstado
+                estadoSelecionado={estadoSelecionado}
+                cidadeSelecionada={cidadeSelecionada}
+                onEstadoChange={handleEstadoChange}
+                onCidadeChange={handleCidadeChange}
+                errors={errors}
+              />
 
-              <label htmlFor="cep">CEP (opcional):</label>
-              <input id="cep" type="text" name="cep" inputMode="numeric" maxLength={8}
-                value={formData.cep} onChange={handleInputChange} placeholder="CEP" />
-              {errors.cep && <span>{errors.cep}</span>}
+              <div className={style.rowTwoCols}>
+                <div className={style.field}>
+                  <label className={style.label} htmlFor="cep">CEP (opcional)</label>
+                  <input
+                    className={`${style.input} ${errors.cep ? style.inputError : ""}`}
+                    id="cep"
+                    type="text"
+                    name="cep"
+                    inputMode="numeric"
+                    maxLength={8}
+                    value={formData.cep}
+                    onChange={handleInputChange}
+                    placeholder="CEP"
+                  />
+                  {errors.cep && <span className={style.errorText}>{errors.cep}</span>}
+                </div>
 
-              <label htmlFor="number">Número (opcional):</label>
-              <input id="number" type="text" name="number" maxLength={50}
-                value={formData.number} onChange={handleInputChange} placeholder="Número" />
+                <div className={style.field}>
+                  <label className={style.label} htmlFor="number">Número (opcional)</label>
+                  <input
+                    className={style.input}
+                    id="number"
+                    type="text"
+                    name="number"
+                    maxLength={50}
+                    value={formData.number}
+                    onChange={handleInputChange}
+                    placeholder="Número"
+                  />
+                </div>
+              </div>
 
-              <label htmlFor="thoroughfare">Logradouro:</label>
-              <input id="thoroughfare" type="text" name="thoroughfare" maxLength={100}
-                value={formData.thoroughfare} onChange={handleInputChange} placeholder="Nome da rua ou avenida" />
-              {errors.thoroughfare && <span>{errors.thoroughfare}</span>}
+              <div className={style.field}>
+                <label className={style.label} htmlFor="thoroughfare">Logradouro</label>
+                <input
+                  className={`${style.input} ${errors.thoroughfare ? style.inputError : ""}`}
+                  id="thoroughfare"
+                  type="text"
+                  name="thoroughfare"
+                  maxLength={100}
+                  value={formData.thoroughfare}
+                  onChange={handleInputChange}
+                  placeholder="Nome da rua ou avenida"
+                />
+                {errors.thoroughfare && <span className={style.errorText}>{errors.thoroughfare}</span>}
+              </div>
 
-              <label htmlFor="details">Complemento (opcional):</label>
-              <input id="details" type="text" name="details" maxLength={100}
-                value={formData.details} onChange={handleInputChange} placeholder="Complemento" />
-            </div>
+              <div className={style.field}>
+                <label className={style.label} htmlFor="details">Complemento (opcional)</label>
+                <input
+                  className={style.input}
+                  id="details"
+                  type="text"
+                  name="details"
+                  maxLength={100}
+                  value={formData.details}
+                  onChange={handleInputChange}
+                  placeholder="Complemento"
+                />
+              </div>
+            </section>
           )}
 
-          <button type="submit" disabled={isSubmitting}>
+          <button className={style.submitButton} type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Criando vaga..." : "Criar vaga"}
           </button>
         </form>
