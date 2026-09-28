@@ -200,7 +200,7 @@ const CreateVacancy = () => {
       ) : (
         <form className={style.form} onSubmit={handleSubmit} noValidate>
           <h1>Criar vaga voluntária</h1>
-          {message && <p role="alert">{message}</p>}
+          {message && <p style={{color: "red"}} role="alert">{message}</p>}
 
           <label htmlFor="title">Título da vaga:</label>
           <input id="title" type="text" name="title" maxLength={100}

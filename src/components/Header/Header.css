@@ -171,8 +171,22 @@
   background: #f5f5f5;
 }
 
-.dropdown-item__icon {
-  width: 18px;
-  height: 18px;
+.dropdown-item__icon,
+.spcd-dropdown-item__icon
+{
+  width: 22px;
+  height: auto;
   margin-right: 10px;
 }
+
+.spcd-dropdown-item__icon {
+  margin-left: 15px;
+}
+
+.icons {
+  width: 25px;
+  height: auto;
+  margin-right: 5px;
+  align-items: center;
+}
+
