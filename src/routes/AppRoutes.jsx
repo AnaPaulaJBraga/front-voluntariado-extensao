@@ -8,6 +8,7 @@ import ResendConfirmation from "../pages/ResendConfirmation/ResendConfirmation";
 import Home from "../pages/Home/Home";
 import About from "../pages/About";
 import Organizations from "../pages/Organizations/Organizations";
+import Configurations from "../pages/Configurations/Configurations";
 
 import EditProfile from "../pages/EditProfile/editProfile";
 import Invitations from "../pages/Invitations/Invitations";
@@ -39,6 +40,8 @@ const AppRoutes = () => {
       <Route path="/inicio" element={<Home />} />
       <Route path="/organizacoes" element={<Organizations />} />
       <Route path="/oportunidades" element={<Opportunities />} />
+      <Route path="/configuracoes" element={<Configurations />} />
+      
 
       <Route path="/entidade/cadastro" element={<Entity />} />
       <Route path="/entidade/sobre" element={<Informations />} />

@@ -227,7 +227,7 @@ const Header = ({ userName }) => {
                     <button
                         type="button"
                         className="app-header__dropdown-item dropdown-item"
-                        onClick={() => {window.location.href = "/vagas";}}>
+                        onClick={() => {window.location.href = "/entidade/vagas";}}>
                       <img
                         src={volunteering}
                         alt="Vagas"
@@ -239,7 +239,7 @@ const Header = ({ userName }) => {
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
-                  onClick={() => {window.location.href = "/inicio";}}
+                  onClick={() => {window.location.href = "/configuracoes";}}
                   style={{marginTop: "10px"}}>
                   <img
                     src={config}

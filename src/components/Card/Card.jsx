@@ -34,8 +34,8 @@ const BRANCH_IMAGE_BY_KEY = {
         "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80",
 };
 
-const Card = ({ id, title, desc, branch, modality }) => {
-    const branchImage = BRANCH_IMAGE_BY_KEY[branch] || "";
+const Card = ({ id, title, desc, branch, modality, image }) => {
+    const branchImage = image || BRANCH_IMAGE_BY_KEY[branch] || "";
     const branchLabel = branches.find((b) => b.value === branch)?.label ?? branch;
     const modalityLabel = modalities.find((m) => m.value === modality)?.label ?? modality;
     const isRemote = modality === "remote";
