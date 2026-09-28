@@ -7,35 +7,36 @@ import { modalities } from "../../constants/modalities";
 import { api } from "../../services/api";
 import "./Opportunities.css";
 
+import animalsImagem from "../../assets/branches/animals.png";
+import children_and_teens from "../../assets/branches/children_and_teens.png";
+import community from "../../assets/branches/community.png";
+import culture_and_art from "../../assets/branches/culture_and_art.png";
+import education from "../../assets/branches/education.png";
+import elderly from "../../assets/branches/elderly.png";
+import environment from "../../assets/branches/environment.png";
+import events from "../../assets/branches/events.png";
+import health from "../../assets/branches/health.png";
+import humanitarian_aid from "../../assets/branches/humanitarian_aid.png";
+import inclusion from "../../assets/branches/inclusion.png";
+import social_assistance from "../../assets/branches/social_assistance.png";
+import sports from "../../assets/branches/sports.png";
+import technology from "../../assets/branches/technology.png";
+
 const BRANCH_IMAGE = {
-  animals:
-    "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=900&q=80",
-  environment:
-    "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=80",
-  education:
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
-  health:
-    "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=900&q=80",
-  social_assistance:
-    "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=900&q=80",
-  elderly:
-    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80",
-  children_and_teens:
-    "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=900&q=80",
-  inclusion:
-    "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=900&q=80",
-  culture_and_art:
-    "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=900&q=80",
-  sports:
-    "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80",
-  technology:
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
-  humanitarian_aid:
-    "https://images.unsplash.com/photo-1469571486292-b53601020b73?auto=format&fit=crop&w=900&q=80",
-  community:
-    "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
-  events:
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80",
+  animals: animalsImagem,
+  environment: environment,
+  education: education,
+  health: health,
+  social_assistance: social_assistance,
+  elderly: elderly,
+  children_and_teens: children_and_teens,
+  inclusion: inclusion,
+  culture_and_art: culture_and_art,
+  sports: sports,
+  technology: technology,
+  humanitarian_aid: humanitarian_aid,
+  community: community,
+  events: events,
 };
 
 const ACTIVITY_TO_MODALITY = {

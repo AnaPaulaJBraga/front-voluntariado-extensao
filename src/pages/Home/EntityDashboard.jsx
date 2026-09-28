@@ -5,6 +5,38 @@ import Card from "../../components/Card/Card";
 import { api } from "../../services/api";
 import "./EntityDashboard.css";
 
+import animalsImagem from "../../assets/branches/animals.png";
+import children_and_teens from "../../assets/branches/children_and_teens.png";
+import community from "../../assets/branches/community.png";
+import culture_and_art from "../../assets/branches/culture_and_art.png";
+import education from "../../assets/branches/education.png";
+import elderly from "../../assets/branches/elderly.png";
+import environment from "../../assets/branches/environment.png";
+import events from "../../assets/branches/events.png";
+import health from "../../assets/branches/health.png";
+import humanitarian_aid from "../../assets/branches/humanitarian_aid.png";
+import inclusion from "../../assets/branches/inclusion.png";
+import social_assistance from "../../assets/branches/social_assistance.png";
+import sports from "../../assets/branches/sports.png";
+import technology from "../../assets/branches/technology.png";
+
+const BRANCH_IMAGE = {
+  animals: animalsImagem,
+  environment: environment,
+  education: education,
+  health: health,
+  social_assistance: social_assistance,
+  elderly: elderly,
+  children_and_teens: children_and_teens,
+  inclusion: inclusion,
+  culture_and_art: culture_and_art,
+  sports: sports,
+  technology: technology,
+  humanitarian_aid: humanitarian_aid,
+  community: community,
+  events: events,
+};
+
 const EntityDashboard = ({ membership }) => {
   const [vacancies, setVacancies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,6 +108,7 @@ const EntityDashboard = ({ membership }) => {
                     branch={vacancy.branch}
                     desc={vacancy.description}
                     modality={vacancy.modality}
+                    image={BRANCH_IMAGE[vacancy.branch] ?? ""}
                   />
                 ))}
               </div>

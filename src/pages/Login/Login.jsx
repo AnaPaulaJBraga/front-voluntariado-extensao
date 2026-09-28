@@ -69,12 +69,11 @@ const Login = () => {
       };
 
       const response = await api.post("/auth/login", body, true);
-      const { access_token, refresh_token, token_type, user } = response.data;
+      const { access_token, token_type, user } = response.data;
 
       clearActiveContext();
       // Armazenar tokens no localStorage
       localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
       localStorage.setItem("token_type", token_type);
       localStorage.setItem(
         "user",
