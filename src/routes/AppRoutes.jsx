@@ -44,7 +44,7 @@ const AppRoutes = () => {
       
 
       <Route path="/entidade/cadastro" element={<Entity />} />
-      <Route path="/entidade/sobre" element={<Informations />} />
+      <Route path="/entidade/:slug/sobre" element={<Informations />} />
       <Route path="/entidade/solicitacoes" element={<Requests />} />
       <Route path="/entidade/membros" element={<Members />} />
       <Route path="/entidade/vagas" element={<Volunteering />} />
