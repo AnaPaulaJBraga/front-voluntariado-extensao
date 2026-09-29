@@ -2,17 +2,15 @@ import { useMemo, useState, useEffect } from "react";
 import { api } from "../../services/api";
 import Header from "../../components/Header/Header";
 import "./Organizations.css";
+import { Link } from "react-router-dom";
 
-// IA: Lista estática das organizações do Vale do Ribeira.
-// Intuito: substituir os dados fictícios pelas 7 instituições do documento do projeto.
-// Aplicação: cada objeto alimenta um card na grade; categories é array porque uma org pode ter várias áreas de atuação.
-const ORGANIZATIONS = [
+const STATIC_ORGANIZATIONS = [
   {
     id: 1,
     name: "Instituto Linha D'Água",
     categories: ["Meio Ambiente", "Cultura"],
     city: "Cananéia",
-    state: "SP",
+    uf: "SP",
     description:
       "Atuamos na conservação marinha e costeira do estuário, promovendo o fortalecimento de comunidades tradicionais e caiçaras através da pesca artesanal sustentável.",
     website: "https://www.linhadagua.org.br/",
@@ -22,7 +20,7 @@ const ORGANIZATIONS = [
     name: "Quilombo Ivaporunduva (ACTC)",
     categories: ["Cultura", "Direitos Humanos"],
     city: "Eldorado",
-    state: "SP",
+    uf: "SP",
     description:
       "Preservamos a cultura quilombola tradicional e organizamos mutirões de agricultura orgânica de banana e pupunha, além de ações voltadas ao turismo comunitário.",
     website: "http://www.quilomboivaporunduva.org.br/",
@@ -32,7 +30,7 @@ const ORGANIZATIONS = [
     name: "Instituto Socioambiental (ISA)",
     categories: ["Meio Ambiente", "Assistência Social"],
     city: "Registro",
-    state: "SP",
+    uf: "SP",
     description:
       "Apoiamos povos indígenas e comunidades quilombolas do Vale no manejo florestal, regularização de territórios e comercialização justa de sementes nativas. Atua também em outras localidades da região.",
     website: "https://www.socioambiental.org/",
@@ -42,7 +40,7 @@ const ORGANIZATIONS = [
     name: "COOREV (Reciclagem)",
     categories: ["Meio Ambiente", "Assistência Social"],
     city: "Cajati",
-    state: "SP",
+    uf: "SP",
     description:
       "Promovemos a coleta seletiva e a inclusão social de catadores de materiais recicláveis, realizando também oficinas de educação ambiental em escolas locais.",
   },
@@ -51,7 +49,7 @@ const ORGANIZATIONS = [
     name: "Instituto de Pesquisas Cananéia (IPeC)",
     categories: ["Animais", "Meio Ambiente"],
     city: "Cananéia",
-    state: "SP",
+    uf: "SP",
     description:
       "Desenvolvemos a pesquisa científica e o monitoramento de praias para a reabilitação de animais marinhos, como tartarugas, pinguins e o boto-cinza.",
     website: "http://www.ipecpesquisa.org.br/",
@@ -61,7 +59,7 @@ const ORGANIZATIONS = [
     name: "COOPERQUIVALE",
     categories: ["Cooperativa", "Cultura"],
     city: "Iporanga",
-    state: "SP",
+    uf: "SP",
     description:
       "Reunimos agricultores quilombolas para escoar a produção da roça tradicional, distribuindo alimentos saudáveis e orgânicos para redes de merenda escolar.",
     website: "https://www.socioambiental.org/",
@@ -71,7 +69,7 @@ const ORGANIZATIONS = [
     name: "Grupo de Apoio à Adoção de Registro (GAAR)",
     categories: ["Animais", "ONG"],
     city: "Registro",
-    state: "SP",
+    uf: "SP",
     description:
       "Atuamos no resgate, tratamento e castração de cães e gatos abandonados, organizando feiras frequentes e campanhas digitais para a adoção responsável.",
   },
@@ -123,21 +121,18 @@ const REFERENCES = [
   },
 ];
 
-// IA: Monta automaticamente os botões de filtro por categoria.
-// Intuito: evitar manter categorias duplicadas manualmente quando novas organizações forem adicionadas.
-// flatMap: junta todos os arrays de categories em uma lista única.
-// new Set: remove duplicatas (ex.: "Meio Ambiente" aparece em várias orgs).
-// sort: ordena alfabeticamente; "Todas" fica fixa no início para limpar o filtro.
-const categories = [
-  "Todas",
-  ...[...new Set(ORGANIZATIONS.flatMap((item) => item.categories))].sort(),
-];
+const getEntityCategories = (entity) => {
+  if (Array.isArray(entity.categories)) return entity.categories;
+  return entity.sector ? [entity.sector] : [];
+};
 
 const Organizations = () => {
   // IA: Estado da categoria selecionada no filtro de botões.
   // Intuito: controlar qual área de atuação está ativa; "Todas" exibe todas as organizações.
   const [selectedCategory, setSelectedCategory] = useState("Todas");
-  const [entities, setEntities] = useState([])
+  const [entities, setEntities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // IA: Estado do campo de busca textual.
   // Intuito: filtrar em tempo real conforme o usuário digita no input.
@@ -150,16 +145,50 @@ const Organizations = () => {
     .then((response) => {
       if (isCurrentPage) {
         setEntities(response.data);
+        setIsLoading(false);
+        
       }
-    })
+    }).then(() => console.log(entities))
     .catch((error) => {
-      console.error(error)
+      if (isCurrentPage) {
+        console.error(error);
+        setErrorMessage("Não foi possível carregar as organizações.");
+        setIsLoading(false);
+      }
     });
 
     return () => {
       isCurrentPage = false;
     };
   }, []);
+
+  const allOrganizations = useMemo(
+    () => [
+      ...entities.map((entity) => ({
+        ...entity,
+        source: "api",
+      })),
+      ...STATIC_ORGANIZATIONS.map((organization) => ({
+        ...organization,
+        source: "static",
+      })),
+    ],
+    [entities],
+  );
+
+  const categories = useMemo(
+    () => [
+      "Todas",
+      ...[
+        ...new Set(
+          allOrganizations.flatMap((organization) =>
+            getEntityCategories(organization),
+          ),
+        ),
+      ].sort(),
+    ],
+    [allOrganizations],
+  );
 
   // IA: Lista derivada que combina filtro por categoria e busca por texto.
   // Intuito: recalcular a grade só quando search ou selectedCategory mudam (useMemo evita trabalho desnecessário a cada render).
@@ -168,22 +197,21 @@ const Organizations = () => {
     // trim + toLowerCase: ignora espaços extras e diferença de maiúsculas/minúsculas na busca.
     const normalizedSearch = search.trim().toLowerCase();
 
-    return ORGANIZATIONS.filter((organization) => {
-      // categoryOk: aceita tudo se "Todas" estiver selecionada; senão verifica se a categoria está no array da org.
+    return allOrganizations.filter((organization) => {
+      const entityCategories = getEntityCategories(organization);
       const categoryOk =
         selectedCategory === "Todas" ||
-        organization.categories.includes(selectedCategory);
+        entityCategories.includes(selectedCategory);
 
-      // searchOk: se o campo estiver vazio, não restringe; senão busca no nome, cidade, UF, categorias e descrição.
       const searchOk = normalizedSearch
-        ? `${organization.name} ${organization.city} ${organization.state} ${organization.categories.join(" ")} ${organization.description}`
+        ? `${organization.name} ${organization.city} ${organization.uf} ${organization.sector ?? ""} ${organization.description}`
             .toLowerCase()
             .includes(normalizedSearch)
         : true;
 
       return categoryOk && searchOk;
     });
-  }, [search, selectedCategory]);
+  }, [allOrganizations, search, selectedCategory]);
 
   return (
     <div className="organizations-page">
@@ -200,7 +228,7 @@ const Organizations = () => {
           </div>
 
           <div className="organizations-page__summary" aria-label="Resumo das organizações">
-            <strong>{ORGANIZATIONS.length}</strong>
+            <strong>{allOrganizations.length}</strong>
             <span>organizações ativas</span>
           </div>
         </section>
@@ -236,48 +264,25 @@ const Organizations = () => {
           </div>
         </section>
 
-        {filteredOrganizations.length > 0 ? (
+        {isLoading && (
+          <section className="organizations-page__empty">
+            <p>Carregando organizações...</p>
+          </section>
+        )}
+
+        {errorMessage && (
+          <section className="organizations-page__empty" role="alert">
+            <p>{errorMessage}</p>
+          </section>
+        )}
+
+        {!isLoading && !errorMessage && filteredOrganizations.length > 0 ? (
           <section className="organizations-page__grid" aria-label="Lista de organizações">
-            {entities && entities.map((entity) => (
-              <article className="organization-card" key={entity.id}>
-                <div className="organization-card__avatar" aria-hidden="true">
-                  {entity.name.charAt(0)}
-                </div>
-                <div className="organization-card__content">
-                  <div className="organization-card__heading">
-                    <h2>{entity.name}</h2>
-                  </div>
-                  <div className="organization-card__categories">
-                    <span>{entity.sector}</span>
-                  </div>
-
-                  <p>{entity.description}</p>
-
-                  <div className="organization-card__meta">
-                    <span>
-                      {entity.city}, {entity.uf}
-                    </span>
-                  </div>
-
-                  {entity.website ? (
-                    <a
-                      href={entity.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="organization-card__button"
-                    >
-                      Ver organização
-                    </a>
-                  ) : (
-                    <span className="organization-card__button organization-card__button--disabled">
-                      Site indisponível
-                    </span>
-                  )}
-                </div>
-              </article>
-            ))}
             {filteredOrganizations.map((organization) => (
-              <article className="organization-card" key={organization.id}>
+              <article
+                className="organization-card"
+                key={`${organization.source}-${organization.id}`}
+              >
                 <div className="organization-card__avatar" aria-hidden="true">
                   {organization.name.charAt(0)}
                 </div>
@@ -287,11 +292,8 @@ const Organizations = () => {
                     <h2>{organization.name}</h2>
                   </div>
 
-                  {/* IA: Exibe todas as categorias da organização como etiquetas (pills).
-                      Intuito: refletir o documento, onde cada org pode ter mais de uma área de atuação.
-                      map: renderiza um <span> por item do array organization.categories. */}
                   <div className="organization-card__categories">
-                    {organization.categories.map((category) => (
+                    {getEntityCategories(organization).map((category) => (
                       <span key={category}>{category}</span>
                     ))}
                   </div>
@@ -300,14 +302,10 @@ const Organizations = () => {
 
                   <div className="organization-card__meta">
                     <span>
-                      {organization.city}, {organization.state}
+                      {organization.city}, {organization.uf}
                     </span>
                   </div>
 
-                  {/* IA: Link externo condicional para o site da organização.
-                      Intuito: abrir o site oficial quando o documento informa URL; COOREV e GAAR não têm site público.
-                      website truthy: renderiza <a> com target="_blank" (nova aba) e rel="noopener noreferrer" (segurança).
-                      website ausente: exibe estado desabilitado em vez de botão quebrado. */}
                   {organization.website ? (
                     <a
                       href={organization.website}
@@ -322,15 +320,18 @@ const Organizations = () => {
                       Site indisponível
                     </span>
                   )}
+                  {organization.source === "api" && (
+                    <Link className="organization-card__button" to={`/entidade/${organization.slug}/sobre`}>Visualizar informações</Link>
+                  )}
                 </div>
               </article>
             ))}
           </section>
-        ) : (
+        ) : !isLoading && !errorMessage ? (
           <section className="organizations-page__empty">
             <p>Nenhuma organização encontrada com esses filtros.</p>
           </section>
-        )}
+        ) : null}
 
         {/* IA: Seção de referências bibliográficas (ABNT) do documento do projeto.
             Intuito: dar crédito às fontes das informações das organizações.
