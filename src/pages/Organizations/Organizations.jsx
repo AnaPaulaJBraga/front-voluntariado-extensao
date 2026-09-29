@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { api } from "../../services/api";
 import Header from "../../components/Header/Header";
 import "./Organizations.css";
 
@@ -136,10 +137,29 @@ const Organizations = () => {
   // IA: Estado da categoria selecionada no filtro de botões.
   // Intuito: controlar qual área de atuação está ativa; "Todas" exibe todas as organizações.
   const [selectedCategory, setSelectedCategory] = useState("Todas");
+  const [entities, setEntities] = useState([])
 
   // IA: Estado do campo de busca textual.
   // Intuito: filtrar em tempo real conforme o usuário digita no input.
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    let isCurrentPage = true;
+
+    api.get("/entities/near-me", true)
+    .then((response) => {
+      if (isCurrentPage) {
+        setEntities(response.data);
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    });
+
+    return () => {
+      isCurrentPage = false;
+    };
+  }, []);
 
   // IA: Lista derivada que combina filtro por categoria e busca por texto.
   // Intuito: recalcular a grade só quando search ou selectedCategory mudam (useMemo evita trabalho desnecessário a cada render).
@@ -218,6 +238,44 @@ const Organizations = () => {
 
         {filteredOrganizations.length > 0 ? (
           <section className="organizations-page__grid" aria-label="Lista de organizações">
+            {entities && entities.map((entity) => (
+              <article className="organization-card" key={entity.id}>
+                <div className="organization-card__avatar" aria-hidden="true">
+                  {entity.name.charAt(0)}
+                </div>
+                <div className="organization-card__content">
+                  <div className="organization-card__heading">
+                    <h2>{entity.name}</h2>
+                  </div>
+                  <div className="organization-card__categories">
+                    <span>{entity.sector}</span>
+                  </div>
+
+                  <p>{entity.description}</p>
+
+                  <div className="organization-card__meta">
+                    <span>
+                      {entity.city}, {entity.uf}
+                    </span>
+                  </div>
+
+                  {entity.website ? (
+                    <a
+                      href={entity.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="organization-card__button"
+                    >
+                      Ver organização
+                    </a>
+                  ) : (
+                    <span className="organization-card__button organization-card__button--disabled">
+                      Site indisponível
+                    </span>
+                  )}
+                </div>
+              </article>
+            ))}
             {filteredOrganizations.map((organization) => (
               <article className="organization-card" key={organization.id}>
                 <div className="organization-card__avatar" aria-hidden="true">
