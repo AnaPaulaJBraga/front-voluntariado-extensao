@@ -38,13 +38,18 @@
 }
 
 .opportunity-card__tag--cause {
-  background: #e6eeff;
-  color: #416ac7;
+  background: #f3f5fa;
+  color: #4f5a70;
 }
 
-.opportunity-card__tag--mode {
-  background: #dcf4e6;
-  color: #2f8d5a;
+.opportunity-card__tag--remote {
+  background: #eaf0ff;
+  color: #405ecf;
+}
+
+.opportunity-card__tag--onsite {
+  background: #e8f8f0;
+  color: #1f8d5b;
 }
 
 .opportunity-card h3 {

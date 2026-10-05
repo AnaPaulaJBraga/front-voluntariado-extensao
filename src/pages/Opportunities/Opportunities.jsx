@@ -1,103 +1,131 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "../../components/Header/Header";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
+import { branches } from "../../constants/branches";
+import { modalities } from "../../constants/modalities";
+import { api } from "../../services/api";
 import "./Opportunities.css";
 
-const OPPORTUNITIES = [
-  {
-    id: 1,
-    title: "Aulas de Reforço Escolar",
-    cause: "Educação",
-    mode: "Presencial",
-    city: "São Paulo",
-    location: "São Paulo, SP",
-    image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: 2,
-    title: "Plantio de Árvores",
-    cause: "Meio Ambiente",
-    mode: "Presencial",
-    city: "Rio de Janeiro",
-    location: "Rio de Janeiro, RJ",
-    image:
-      "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: 3,
-    title: "Apoio a Idosos",
-    cause: "Saúde",
-    mode: "Híbrido",
-    city: "Belo Horizonte",
-    location: "Belo Horizonte, MG",
-    image:
-      "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: 4,
-    title: "Distribuição de Alimentos",
-    cause: "Assistência Social",
-    mode: "Presencial",
-    city: "Curitiba",
-    location: "Curitiba, PR",
-    image:
-      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: 5,
-    title: "Mentoria Online",
-    cause: "Educação",
-    mode: "Remoto",
-    city: "Remoto",
-    location: "Remoto - Todo Brasil",
-    image:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    id: 6,
-    title: "Limpeza de Praias",
-    cause: "Meio Ambiente",
-    mode: "Presencial",
-    city: "Florianópolis",
-    location: "Florianopolis, SC",
-    image:
-      "https://images.unsplash.com/photo-1618477462146-050d2767eac4?auto=format&fit=crop&w=900&q=80",
-  },
-];
+import animalsImagem from "../../assets/branches/animals.png";
+import children_and_teens from "../../assets/branches/children_and_teens.png";
+import community from "../../assets/branches/community.png";
+import culture_and_art from "../../assets/branches/culture_and_art.png";
+import education from "../../assets/branches/education.png";
+import elderly from "../../assets/branches/elderly.png";
+import environment from "../../assets/branches/environment.png";
+import events from "../../assets/branches/events.png";
+import health from "../../assets/branches/health.png";
+import humanitarian_aid from "../../assets/branches/humanitarian_aid.png";
+import inclusion from "../../assets/branches/inclusion.png";
+import social_assistance from "../../assets/branches/social_assistance.png";
+import sports from "../../assets/branches/sports.png";
+import technology from "../../assets/branches/technology.png";
+
+const BRANCH_IMAGE = {
+  animals: animalsImagem,
+  environment: environment,
+  education: education,
+  health: health,
+  social_assistance: social_assistance,
+  elderly: elderly,
+  children_and_teens: children_and_teens,
+  inclusion: inclusion,
+  culture_and_art: culture_and_art,
+  sports: sports,
+  technology: technology,
+  humanitarian_aid: humanitarian_aid,
+  community: community,
+  events: events,
+};
+
+const ACTIVITY_TO_MODALITY = {
+  Presencial: "in_person",
+  Remota: "remote",
+};
+
+const toOpportunityProps = (vacancy) => ({
+  id: vacancy.id,
+  title: vacancy.title,
+  cause:
+    branches.find((b) => b.value === vacancy.branch)?.label ?? vacancy.branch,
+  mode:
+    modalities.find((m) => m.value === vacancy.modality)?.label ??
+    vacancy.modality,
+  city: vacancy.city ?? "Remoto",
+  location: vacancy.city
+    ? `${vacancy.city}, ${vacancy.uf}`
+    : "Remoto - Todo Brasil",
+  image: BRANCH_IMAGE[vacancy.branch] ?? "",
+});
 
 const Opportunities = () => {
   const [selectedCauses, setSelectedCauses] = useState([]);
-  const [selectedActivity, setSelectedActivity] = useState("Presencial");
+  const [selectedActivity, setSelectedActivity] = useState("");
   const [city, setCity] = useState("");
+  const [debouncedCity, setDebouncedCity] = useState("");
+  const [vacancies, setVacancies] = useState([]);
+  const [status, setStatus] = useState({ loading: true, error: "" });
 
-  const filteredOpportunities = useMemo(() => {
-    return OPPORTUNITIES.filter((item) => {
-      const causeOk =
-        selectedCauses.length === 0 || selectedCauses.includes(item.cause);
-      const activityOk = selectedActivity
-        ? item.mode === selectedActivity
-        : true;
-      const cityOk = city
-        ? item.city.toLowerCase().includes(city.trim().toLowerCase())
-        : true;
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedCity(city), 400);
+    return () => clearTimeout(timer);
+  }, [city]);
 
-      return causeOk && activityOk && cityOk;
-    });
-  }, [selectedCauses, selectedActivity, city]);
+  useEffect(() => {
+    let isCurrentPage = true;
+    const params = new URLSearchParams();
+    const modality = ACTIVITY_TO_MODALITY[selectedActivity];
+    if (modality) params.set("modality", modality);
+    if (debouncedCity.trim()) params.set("city", debouncedCity.trim());
+    const qs = params.toString();
+
+    api
+      .get(`/vacancies/${qs ? `?${qs}` : ""}`)
+      .then((response) => {
+        if (isCurrentPage) {
+          setVacancies(response.data);
+          setStatus({ loading: false, error: "" });
+        }
+      })
+      .catch(() => {
+        if (isCurrentPage) {
+          setStatus({ loading: false, error: "Não foi possível carregar as oportunidades." });
+        }
+      });
+
+    return () => {
+      isCurrentPage = false;
+    };
+  }, [selectedActivity, debouncedCity]);
+
+  const isLoading = status.loading;
+  const errorMessage = status.error;
+
+  const filteredVacancies = useMemo(() => {
+    if (selectedCauses.length === 0) return vacancies;
+    const selectedBranches = selectedCauses
+      .map((cause) => branches.find((b) => b.label === cause)?.value)
+      .filter(Boolean);
+    return vacancies.filter((v) => selectedBranches.includes(v.branch));
+  }, [vacancies, selectedCauses]);
+
+  const opportunities = useMemo(
+    () => filteredVacancies.map(toOpportunityProps),
+    [filteredVacancies],
+  );
 
   const handleToggleCause = (cause) => {
     setSelectedCauses((current) =>
       current.includes(cause)
-        ? current.filter((item) => item !== cause)
+        ? current.filter((c) => c !== cause)
         : [...current, cause],
     );
   };
 
   const handleClearFilters = () => {
     setSelectedCauses([]);
-    setSelectedActivity("Presencial");
+    setSelectedActivity("");
     setCity("");
   };
 
@@ -122,18 +150,33 @@ const Opportunities = () => {
             <p>Encontre a causa perfeita para você</p>
           </header>
 
-          {filteredOpportunities.length > 0 ? (
+          {isLoading && (
+            <p className="home-page__status">Carregando oportunidades...</p>
+          )}
+
+          {errorMessage && (
+            <p
+              className="home-page__status home-page__status--error"
+              role="alert"
+            >
+              {errorMessage}
+            </p>
+          )}
+
+          {!isLoading && !errorMessage && opportunities.length === 0 && (
+            <div className="home-page__empty">
+              <p>Nenhuma oportunidade encontrada para este filtro.</p>
+            </div>
+          )}
+
+          {!isLoading && !errorMessage && opportunities.length > 0 && (
             <div className="home-page__grid">
-              {filteredOpportunities.map((opportunity) => (
+              {opportunities.map((opportunity) => (
                 <OpportunityCard
                   key={opportunity.id}
                   opportunity={opportunity}
                 />
               ))}
-            </div>
-          ) : (
-            <div className="home-page__empty">
-              <p>Nenhuma oportunidade encontrada para este filtro.</p>
             </div>
           )}
         </section>

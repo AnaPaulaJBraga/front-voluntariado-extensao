@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { api } from "../../services/api";
 import { getActiveContext, saveActiveContext, clearActiveContext } from "../../utils/activeContext";
-import userIcon from "../../assets/user_icon.png";
-import clipboard from "../../assets/clipboard-form.png";
-import plusCircle from "../../assets/plus-circle.png";
+import userIcon from "../../assets/icons/user.png";
+import about from "../../assets/icons/about.png";
+import friends from "../../assets/icons/friends.png";
+import invitation from "../../assets/icons/invitation.png";
+import members from "../../assets/icons/members.png";
+import profile from "../../assets/icons/profile.png";
+import organization from "../../assets/icons/organization.png";
+import requests from "../../assets/icons/requests.png";
+import volunteering from "../../assets/icons/volunteering.png";
+import config from "../../assets/icons/config.png";
+import lougout from "../../assets/icons/logout.png";
 import logo from "../../assets/logo.png";
 
 import "./Header.css";
@@ -117,6 +125,7 @@ const Header = ({ userName }) => {
       {isLoggedIn && (
         <>
           <div className="app-header__user-wrapper">
+
             <div
               className="app-header__user"
               aria-label="Usuario logado"
@@ -137,55 +146,107 @@ const Header = ({ userName }) => {
 
             {openMenu && (
               <div className="app-header__dropdown dropdown-menu show">
+                {membership && (
+                  <>
+                    <button
+                      type="button"
+                      className="app-header__dropdown-item dropdown-item"
+                      onClick={() => switchMode("user")}>
+                        <img
+                          src={userIcon}
+                          alt="user.png"
+                          className="dropdown-item__icon"
+                          />
+                        Conta pessoal
+                      </button>
+                  </>
+                )}
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
-                  onClick={() => {
-                    window.location.href = "/editar-perfil";
-                  }}
-                >
+                  onClick={() => {window.location.href = "/editar-perfil";}}>
                   <img
-                    src={userIcon}
+                    src={profile}
                     alt="Perfil"
-                    className="dropdown-item__icon"
+                    className="spcd-dropdown-item__icon"
                   />
-                  Ver perfil
+                  Perfil
                 </button>
                 <button
                   type="button"
+                  onClick={() => {window.location.href = "/convites";}}
                   className="app-header__dropdown-item dropdown-item"
                 >
                   <img
-                    src={clipboard}
-                    alt="Solicitações"
-                    className="dropdown-item__icon"
+                    src={invitation}
+                    alt="Convites"
+                    className="spcd-dropdown-item__icon"
                   />
-                  Solicitações
+                  Convites
                 </button>
                 {membership && (
                   <>
-                    <button type="button" className="app-header__dropdown-item dropdown-item"
-                      onClick={() => switchMode("user")}>Conta pessoal</button>
-                    <button type="button" className="app-header__dropdown-item dropdown-item"
-                      onClick={() => switchMode("entity")}>Minha entidade</button>
+                    <button
+                      type="button"
+                      className="app-header__dropdown-item dropdown-item"
+                      onClick={() => switchMode("entity")}
+                      style={{marginTop: "10px"}}>
+                      <img src={organization} alt="organization" className="dropdown-item__icon" />
+                      Organização
+                    </button>
+                    <button
+                        type="button"
+                        className="app-header__dropdown-item dropdown-item"
+                        onClick={() => {window.location.href = "/entidade/sobre";}}>
+                      <img
+                        src={about}
+                        alt="informações"
+                        className="spcd-dropdown-item__icon"/>
+                      Informações
+                    </button>
+                    <button
+                        type="button"
+                        className="app-header__dropdown-item dropdown-item"
+                        onClick={() => {window.location.href = "/entidade/solicitacoes";}}>
+                      <img
+                        src={requests}
+                        alt="Solicitações"
+                        className="spcd-dropdown-item__icon"/>
+                      Solicitações
+                    </button>
+                    <button
+                        type="button"
+                        className="app-header__dropdown-item dropdown-item"
+                        onClick={() => {window.location.href = "/entidade/membros";}}>
+                      <img
+                        src={members}
+                        alt="Membros"
+                        className="spcd-dropdown-item__icon"/>
+                      Membros
+                    </button>
+                    <button
+                        type="button"
+                        className="app-header__dropdown-item dropdown-item"
+                        onClick={() => {window.location.href = "/entidade/vagas";}}>
+                      <img
+                        src={volunteering}
+                        alt="Vagas"
+                        className="spcd-dropdown-item__icon"/>
+                      Gerenciar vagas
+                    </button>
                   </>
                 )}
-                {membership === null && (
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
-                  onClick={() => {
-                    window.location.href = "/entidade/cadastro";
-                  }}
-                >
+                  onClick={() => {window.location.href = "/configuracoes";}}
+                  style={{marginTop: "10px"}}>
                   <img
-                    src={plusCircle}
-                    alt="Perfil"
-                    className="dropdown-item__icon"
-                  />
-                  Cadastre sua ONG
+                    src={config}
+                    alt="configurations"
+                    className="dropdown-item__icon"/>
+                  Configurações
                 </button>
-                )}
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
@@ -196,6 +257,10 @@ const Header = ({ userName }) => {
                     window.location.href = "/inicio";
                   }}
                 >
+                  <img
+                    src={lougout}
+                    alt="logout"
+                    className="dropdown-item__icon"/>
                   Sair
                 </button>
               </div>

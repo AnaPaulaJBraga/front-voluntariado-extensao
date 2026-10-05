@@ -238,6 +238,7 @@
 .organization-card__button {
   display: inline-block;
   margin-top: 16px;
+  margin-right: 10px;
   border: 1px solid #5d5fe8;
   border-radius: 999px;
   background: #5d5fe8;

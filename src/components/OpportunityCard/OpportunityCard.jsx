@@ -17,7 +17,7 @@ const OpportunityCard = ({ opportunity }) => {
           <span className="opportunity-card__tag opportunity-card__tag--cause">
             {opportunity.cause}
           </span>
-          <span className="opportunity-card__tag opportunity-card__tag--mode">
+          <span className={`opportunity-card__tag ${opportunity.mode === "Remota" ? "opportunity-card__tag--remote" : "opportunity-card__tag--onsite"}`}>
             {opportunity.mode}
           </span>
         </div>
