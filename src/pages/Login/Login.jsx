@@ -111,7 +111,7 @@ const Login = () => {
         <div className="center">
           <div className="card">
             <h1>Entrar</h1>
-            <h4>Faça seu login</h4>
+            <h3>Faça seu login</h3>
 
             {message.text && (
               <p
@@ -133,7 +133,7 @@ const Login = () => {
               </p>
             )}
 
-            <form className="form" onSubmit={handleSubmit}>
+            <form className="form-container" onSubmit={handleSubmit}>
               <label>Email</label>
               <input
                 type="email"
@@ -152,7 +152,7 @@ const Login = () => {
                 placeholder="Digite sua senha"
               />
 
-              <button type="submit" disabled={isLoading}>
+              <button className="button-entrar-login" type="submit" disabled={isLoading}>
                 {isLoading ? "Entrando..." : "Entrar"}
               </button>
             </form>
