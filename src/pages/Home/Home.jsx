@@ -16,7 +16,7 @@ const Home = () => {
     const temporizador = setTimeout(() => {
       setExibirSplash(false);
       // muda o estado para false depois de 3000milisegundos
-    }, 3000);
+    }, 1500);
 
     return () => clearTimeout(temporizador);
     // caso a pessoa saia da pagina antes dos 3 segundos, o temporizador resetara a 0
