@@ -11,27 +11,29 @@
 }
 
 .card {
-  width: 400px;
-  padding: 40px;
-  border-radius: 12px;
-  background-color: #ededc5;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  width: 100%;
+  max-width: 420px;
+  padding: 22px;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .card h1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
+  text-align: center;
+  font-weight: 800;
+  font-size: 24px;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  margin-top: 8px;
+  color: #243043;
 }
 
-.card h4 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 80%;
+.card h3 {
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+  color: #6b6b6b;
+  margin-top: 12px;
 }
 
 .form {
@@ -40,14 +42,36 @@
   gap: 8px;
 }
 
-button {
+.button-entrar-login {
   width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: #fff;
-  background: linear-gradient(135deg, #6f77ff, #4f46e4);
-  font-family: "Poppins", "Trebuchet MS", sans-serif;
-  font-weight: 700;
+  margin-top: 18px;
+  padding: 10px;
+  border: 1px solid #5d5fe8;
+  border-radius: 999px;
+  background-color: #5d5fe8;
+  color: #ffffff;
   cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.button-entrar-login:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-entrar-login:not(:disabled):hover,
+.button-entrar-login:not(:disabled):focus-visible,
+.button-entrar-login:not(:disabled):active {
+  transform: translateY(-1px);
+  background-color: #5b46e3;
+  border-color: #5b46e3;
+  box-shadow: 0 8px 18px rgba(91, 70, 227, 0.28);
 }
