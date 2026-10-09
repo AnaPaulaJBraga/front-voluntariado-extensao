@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { api } from "../../services/api";
+import { useEntity } from "../../contexts/EntityContexts";
 import { getActiveContext, saveActiveContext, clearActiveContext } from "../../utils/activeContext";
 import userIcon from "../../assets/icons/user.png";
 import about from "../../assets/icons/about.png";
@@ -20,22 +20,11 @@ import "./Header.css";
 const Header = ({ userName }) => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
-  const [membership, setMembership] = useState(undefined);
+  const {membership} = useEntity();
   const activeContext = getActiveContext();
 
   const token = localStorage.getItem("access_token");
   const storedUser = localStorage.getItem("user");
-
-  useEffect(() => {
-    if (!token) return;
-    let isCurrentPage = true;
-    api.get("/entities/me", true)
-      .then((response) => {
-        if (isCurrentPage) setMembership(response.data);
-      })
-      .catch(() => {});
-    return () => { isCurrentPage = false; };
-  }, [token]);
 
   let parsedUser = null;
 

@@ -29,6 +29,8 @@ const CreateVacancy = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [selectedModality, setSelectedModality] = useState(null);
+  const [requireApproval, setRequireApproval] = useState(false);
+  const [showApprovalInfo, setShowApprovalInfo] = useState(false);
   const [estadoSelecionado, setEstadoSelecionado] = useState(null);
   const [cidadeSelecionada, setCidadeSelecionada] = useState(null);
   const [membership, setMembership] = useState(null);
@@ -37,6 +39,11 @@ const CreateVacancy = () => {
   const [accessError, setAccessError] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+
+  const options = [
+    { value: "False", label: "Não" },
+    { value: "True", label: "Sim" },
+  ]
 
   const canCreate = membership?.position === "admin" || membership?.position === "editor";
   const isInPerson = selectedModality?.value === "in_person";
@@ -145,6 +152,7 @@ const CreateVacancy = () => {
       ends_at: formData.endsAt,
       branch: selectedBranch.value,
       modality: selectedModality.value,
+      requires_approval: requireApproval
     };
     if (isInPerson) {
       body.uf = estadoSelecionado.value;
@@ -244,6 +252,30 @@ const CreateVacancy = () => {
                 onChange={handleInputChange}
               />
               {errors.endsAt && <span className={style.errorText}>{errors.endsAt}</span>}
+            </div>
+
+            <div className={style.field}>
+              <label className={style.label} htmlFor="requiresApproval" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Exigir aprovação</label>
+              <span
+                  className={style.infoIcon}
+                  onClick={() => setShowApprovalInfo(!showApprovalInfo)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && setShowApprovalInfo(!showApprovalInfo)}
+                >
+                  ℹ
+                </span>
+              <input
+                id="requiresApproval"
+                type="checkbox"
+                checked={requireApproval}
+                onChange={(e) => setRequireApproval(e.target.checked)}
+              />
+              {showApprovalInfo && (
+                <div className={style.infoBox}>
+                  Caso esta opção esteja ativa, os administradores e editores da organização deverão aceitar cada inscrição para esta vaga.
+                </div>
+              )}
             </div>
           </div>
 

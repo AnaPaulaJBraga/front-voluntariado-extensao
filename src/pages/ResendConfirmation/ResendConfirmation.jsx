@@ -18,7 +18,6 @@ const ResendConfirmation =  () => {
       const response = await api.post(path, body, false);
       setStatus(response?.status);
       setData(response?.data?.message);
-      console.log(response.data);
     } catch (error) {
       console.log(error.response?.data?.detail)
       setStatus(error?.response?.status);

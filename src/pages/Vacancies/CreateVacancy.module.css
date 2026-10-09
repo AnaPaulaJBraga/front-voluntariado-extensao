@@ -133,6 +133,30 @@
     gap: 12px;
 }
 
+.infoIcon {
+    border: 1px solid black;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.infoBox {
+    background-color: #f9fbff;
+    border: 1px solid #5d5fe8;
+    color: #2e3950;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
 .addressSection {
     margin-top: 4px;
     padding: 14px;

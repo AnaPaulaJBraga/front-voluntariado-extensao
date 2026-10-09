@@ -17,7 +17,6 @@ const Confirmation =  () => {
       const response = await api.get(path + tokenUrl)
       setStatus(response.status)
     } catch(error) {
-      console.log(error.response?.status)
       console.log(error.response?.data)
       setStatus(error.response?.status)
     }

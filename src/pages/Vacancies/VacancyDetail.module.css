@@ -35,6 +35,10 @@
   color: #b33a3a;
 }
 
+.statusSuccess {
+  color: #4cb92b;
+}
+
 .card {
   border: 1px solid #e5e9f2;
   border-radius: 16px;
@@ -99,4 +103,14 @@
   color: #3d4658;
   line-height: 1.75;
   white-space: pre-wrap;
+}
+
+.exclusionButton {
+  display: flex;
+  width: auto;
+  padding: 15px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  background: rgb(201, 18, 18);
 }

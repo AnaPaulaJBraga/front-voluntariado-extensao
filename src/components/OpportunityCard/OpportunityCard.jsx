@@ -1,7 +1,9 @@
 import "./OpportunityCard.css";
+import {useNavigate} from 'react-router-dom';
 
 const OpportunityCard = ({ opportunity }) => {
   const isLoggedIn = Boolean(localStorage.getItem("access_token"));
+  const navigate = useNavigate();
 
   return (
     <div className="opportunity-card">
@@ -29,7 +31,7 @@ const OpportunityCard = ({ opportunity }) => {
           <button
             className="btn btn-primary w-100"
             type="button"
-            onClick={() => console.log("CLICOU > quero ser voluntário")}
+            onClick={() => window.location.href = `/vagas/${opportunity.id}`}
           >
             Quero ser voluntário
           </button>
@@ -38,7 +40,11 @@ const OpportunityCard = ({ opportunity }) => {
             className="btn btn-primary w-100"
             type="button"
             onClick={() => {
-              window.location.href = "/login";
+              navigate("/login", {
+                state: {
+                  redirectTo: `/vagas/${opportunity.id}`
+                }
+              })
             }}
           >
             Faça login para ser voluntário

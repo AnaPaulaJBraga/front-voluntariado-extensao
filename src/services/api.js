@@ -60,4 +60,5 @@ export const api = {
   post: (path, body, isLogin=false, useAuth=false) => request("POST", path, body, useAuth, isLogin),
   get: (path, useAuth = false) => request("GET", path, undefined, useAuth),
   patch: (path, body, useAuth = false) => request("PATCH", path, body, useAuth),
+  delete: (path, body, useAuth = false) => request("DELETE", path, body, useAuth),
 };

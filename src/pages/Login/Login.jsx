@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { api } from "../../services/api";
 import { clearActiveContext } from "../../utils/activeContext";
@@ -7,7 +7,6 @@ import "./Login.css";
 
 const getLoginErrorMessage = (data) => {
   if (Array.isArray(data)) {
-    console.log(data)
     return "Não foi possível fazer login. Tente novamente.";
   }
 
@@ -39,6 +38,10 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+
+  const location = useLocation();
+
+  const redirectTo = location.state?.redirectTo || "/inicio"
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,7 +90,7 @@ const Login = () => {
 
       // A página inicial consulta a entidade associada a esta conta.
       setTimeout(() => {
-        window.location.href = "/inicio";
+        window.location.href = redirectTo;
       }, 2000);
     } catch (error) {
       console.error("Erro de login:", error?.response);
