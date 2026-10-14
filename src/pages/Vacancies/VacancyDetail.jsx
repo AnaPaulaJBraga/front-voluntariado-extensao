@@ -159,6 +159,11 @@ const VacancyDetail = () => {
                         onClick={handleParticipants}>
                           {participants ? "Ocultar participantes" : "Ver participantes"}
                       </button>
+                      <button
+                        style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#b91b1b", marginLeft: 10}}
+                        onClick={handleParticipants}>
+                          Excluir vaga
+                      </button>
                     </>
                   ) : (
                     <button
