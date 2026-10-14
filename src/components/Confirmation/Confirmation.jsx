@@ -1,6 +1,6 @@
 import "./Confirmation.css";
 
-const Confirmation = ({text}) => {
+const Confirmation = ({text, onResponse}) => {
   return (
     <div className="confirmation-overlay">
       <section
@@ -26,6 +26,7 @@ const Confirmation = ({text}) => {
           <button
             type="button"
             className="confirmation-card__button confirmation-card__button--cancel"
+            onClick={() => onResponse(false)}
           >
             Cancelar
           </button>
@@ -33,6 +34,7 @@ const Confirmation = ({text}) => {
           <button
             type="button"
             className="confirmation-card__button confirmation-card__button--confirm"
+            onClick={() => onResponse(true)}
           >
             Confirmar
           </button>

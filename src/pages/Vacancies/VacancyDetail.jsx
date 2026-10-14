@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, Link, useParams } from "react-router-dom";
 import Header from "../../components/Header/Header";
+import Confirmation from '../../components/Confirmation/Confirmation';
 import { useEntity } from "../../contexts/EntityContexts";
 import { api } from "../../services/api";
 import { branches } from "../../constants/branches";
@@ -13,6 +14,9 @@ const VacancyDetail = () => {
   const [ vacancy, setVacancy ] = useState();
   const [result, setResult] = useState({});
   const [participants, setParticipants] = useState(null);
+
+  const [participantToRemove, setParticipantToRemove] = useState(null);
+  const [vacancyToDelete, setVacancyToDelete] = useState(null);
 
   const {membership} = useEntity();
 
@@ -61,10 +65,6 @@ const VacancyDetail = () => {
     try {
       const response = await api.get(`/vacancies/${id}/participants`, true);
       setParticipants(response.data);
-
-      if (response.data.length === 0) {
-        setResult({ok: false, result: "Não há participantes inscritos para esta vaga"});
-      }
     } catch (error) {
       console.error("Erro na requisição: " + error);
     }
@@ -79,18 +79,36 @@ const VacancyDetail = () => {
     await fetchParticipants();
   }
 
-  const handleRemoveParticipants = async (id_participant, name_participant) => {
-    if (window.confirm("Você quer realmente remover o(a) voluntário(a) " + name_participant + "?")) {
-      try{
-        await api.delete(`/vacancies/${id}/participants/${id_participant}`, null, true);
-        await fetchParticipants();
-        setResult({ok: true, result: `${name_participant} foi expulso(a) com sucesso!`});
-      } catch(error) {
-        console.error(`Houve um erro na consulta: ${error}`);
-      }
-    } else {
-      return;
+  const onResponse = (confirm) => {
+    if (!confirm) setParticipantToRemove(null); setVacancyToDelete(null);
+
+    if(confirm && participantToRemove) deleteUser();
+    if(confirm && vacancyToDelete) deleteVacancy();
+  }
+
+  const deleteUser = async () => {
+    try {
+      await api.delete(`/vacancies/${id}/participants/${participantToRemove.user.id}`, null, true);
+      await fetchParticipants();
+      setResult({ok: true, result: `${participantToRemove.user.name} foi expulso(a) com sucesso!`});
+    } catch (error) {
+      console.error(error);
+      setResult({ok: false, result: `Houve um erro ao expulsar o(a) participante.`});
     }
+    setParticipantToRemove(null);
+  }
+
+  const deleteVacancy = async () => {
+    console.log(vacancy);
+    try {
+      const response = await api.delete(`/vacancies/${vacancy.id}`, null, true);
+      if (response.status === 200) {
+        navigation.navigate("/inicio", {replace: true});
+      }
+    } catch (error) {
+      setResult({ok: false, result: `Houve um erro ao deletar a vaga.`});
+    }
+    
   }
 
   const handleUpdate = () => {
@@ -117,6 +135,20 @@ const VacancyDetail = () => {
               {result.result}
             </p>
           }
+
+          {/* Confirmação para expulsar usuário da vaga */}
+          {participantToRemove &&
+          <Confirmation
+            text={"Você quer realmente remover o(a) voluntário(a) " + participantToRemove.user.name + "?"}
+            onResponse={onResponse}
+            />}
+
+          {/* Confirmação para deletar a vaga */}
+          {vacancyToDelete &&
+          <Confirmation
+            text={"Você quer realmente deletar a vaga " + vacancy.title + "?"}
+            onResponse={onResponse}
+            />}
 
           {vacancy && (
             <article className={styles.card}>
@@ -161,7 +193,7 @@ const VacancyDetail = () => {
                       </button>
                       <button
                         style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#b91b1b", marginLeft: 10}}
-                        onClick={handleParticipants}>
+                        onClick={() => setVacancyToDelete(vacancy)}>
                           Excluir vaga
                       </button>
                     </>
@@ -181,7 +213,15 @@ const VacancyDetail = () => {
             <article className={styles.card}>
               <header className={styles.header}>
                 <h1 className={styles.title}>Participantes</h1>
-                {participants.map(participant => (
+                {participants.length == 0
+                ? <div>
+                    <hr  />
+                    <section className={styles.body} style={{display: "flex", justifyContent: "space-between"}}>
+                      <p>Não há participantes inscritos nesta vaga</p>
+                    </section>
+                  </div>
+                
+                : participants.map(participant => (
                   <div key={participant.user.id}>
                     <hr  />
                     <section className={styles.body} style={{display: "flex", justifyContent: "space-between"}}>
@@ -191,12 +231,13 @@ const VacancyDetail = () => {
                       </div>
                       <button
                         className={styles.exclusionButton}
-                        onClick={() => handleRemoveParticipants(participant.user.id, participant.user.name)}>
+                        onClick={() => setParticipantToRemove(participant)}>
                         Remover voluntário
                       </button>
                     </section>
                   </div>
-                ))}
+                ))
+                }
               </header>
             </article>
           )}
