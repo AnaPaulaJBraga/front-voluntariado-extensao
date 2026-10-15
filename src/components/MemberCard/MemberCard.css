@@ -1,5 +1,108 @@
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid #e2e6ef;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(38, 51, 75, 0.06);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.member-card:hover {
+  border-color: #cfcaf7;
+  box-shadow: 0 10px 24px rgba(74, 65, 157, 0.1);
+  transform: translateY(-2px);
+}
+
+.member-card__avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #747cff, #5b46e3);
+  color: #ffffff;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(91, 70, 227, 0.22);
+}
+
+.member-card__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.member-card__name {
+  margin: 0 0 5px;
+  overflow: hidden;
+  color: #2d374b;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-card__position {
+  margin: 0;
+  color: #6c7588;
+  font-size: 0.9rem;
+}
+
+.member-card__position span {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #f0efff;
+  color: #5b50c9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.member-card__remove-icon {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.status {
+  color: #5f6b80;
+  font-weight: 700;
+}
+
+.statusError {
+  color: #b33a3a;
+}
+
+.statusSuccess {
+  color: #4cb92b;
+}
 
 
-.h1 {
-    font-size: 10px;
+@media (max-width: 520px) {
+  .member-card {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .member-card__avatar {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .member-card__remove-icon {
+    width: 24px;
+    height: 24px;
+  }
 }

@@ -1,0 +1,129 @@
+.members-page {
+  min-height: calc(100vh - 70px);
+  padding: 32px 20px 56px;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(96, 133, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 85% 12%, rgba(39, 198, 178, 0.1), transparent 30%),
+    #f0f3f9;
+}
+
+.members-page__panel {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 30px;
+  border: 1px solid #e3e8f1;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 16px 40px rgba(35, 48, 76, 0.1);
+}
+
+.members-page__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e7eaf1;
+}
+
+.members-page__heading-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.members-page__eyebrow {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: #6558e8;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.members-page__title {
+  margin: 0;
+  color: #273347;
+  font-family: "Poppins", "Trebuchet MS", sans-serif;
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  line-height: 1.25;
+}
+
+.members-page__subtitle {
+  margin: 8px 0 0;
+  color: #6d7689;
+  line-height: 1.6;
+}
+
+.members-page__invite-button {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  margin-top: 4px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #665cff;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(102, 92, 255, 0.24);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.members-page__invite-button:hover {
+  background: #554be0;
+  box-shadow: 0 10px 22px rgba(102, 92, 255, 0.32);
+  transform: translateY(-1px);
+}
+
+.members-page__invite-button:active {
+  transform: translateY(0);
+}
+
+.members-page__invite-button:focus-visible {
+  outline: 3px solid rgba(102, 92, 255, 0.28);
+  outline-offset: 3px;
+}
+
+.members-page__list {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.members-page__empty {
+  margin: 22px 0 0;
+  padding: 24px;
+  border: 1px dashed #ccd3e0;
+  border-radius: 14px;
+  background: #f8f9fc;
+  color: #6c7588;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .members-page {
+    padding: 20px 14px 40px;
+  }
+
+  .members-page__panel {
+    padding: 22px 16px;
+    border-radius: 14px;
+  }
+
+  .members-page__heading {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .members-page__invite-button {
+    width: 100%;
+  }
+}
