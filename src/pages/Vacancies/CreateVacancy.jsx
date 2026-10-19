@@ -11,8 +11,14 @@ import { saveActiveContext } from "../../utils/activeContext";
 import style from "./CreateVacancy.module.css";
 
 const initialFormData = {
-  title: "", description: "", startsAt: "", endsAt: "",
-  cep: "", number: "", thoroughfare: "", details: "",
+  title: "",
+  description: "",
+  startsAt: "",
+  endsAt: "",
+  cep: "",
+  number: "",
+  thoroughfare: "",
+  details: "",
 };
 
 const getBackendMessage = (error) => {
@@ -39,49 +45,114 @@ const CreateVacancy = () => {
   const [accessError, setAccessError] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+  const [isCheckingCep, setIsCheckingCep] = useState(false);
 
-  const options = [
-    { value: "False", label: "Não" },
-    { value: "True", label: "Sim" },
-  ]
-
-  const canCreate = membership?.position === "admin" || membership?.position === "editor";
+  const canCreate =
+    membership?.position === "admin" || membership?.position === "editor";
   const isInPerson = selectedModality?.value === "in_person";
 
   // O backend confirma a entidade e a posição do usuário autenticado.
   useEffect(() => {
     let isCurrentPage = true;
-    api.get("/entities/me", true)
+    api
+      .get("/entities/me", true)
       .then((response) => {
         if (!isCurrentPage) return;
         const currentMembership = response.data;
         setMembership(currentMembership);
-        if (currentMembership?.entity) {
-          setEstadoSelecionado(getEstadoOption(currentMembership.entity.uf));
-          setCidadeSelecionada({
-            value: currentMembership.entity.city,
-            label: currentMembership.entity.city,
-          });
-        }
       })
       .catch((error) => {
         if (!isCurrentPage) return;
-        setAccessError(error?.response?.status === 401
-          ? "Faça login para criar uma vaga."
-          : "Não foi possível carregar sua entidade. Tente novamente.");
+        setAccessError(
+          error?.response?.status === 401
+            ? "Faça login para criar uma vaga."
+            : "Não foi possível carregar sua entidade. Tente novamente.",
+        );
       })
       .finally(() => {
         if (isCurrentPage) setIsLoadingEntity(false);
       });
-    return () => { isCurrentPage = false; };
+    return () => {
+      isCurrentPage = false;
+    };
   }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const newValue = name === "cep" ? value.replace(/\D/g, "").slice(0, 8) : value;
+    const newValue =
+      name === "cep" ? value.replace(/\D/g, "").slice(0, 8) : value;
+
     setFormData((currentData) => ({ ...currentData, [name]: newValue }));
     setErrors((currentErrors) => ({ ...currentErrors, [name]: "" }));
     setMessage("");
+
+    if (name === "cep") {
+      if (newValue.length === 0) {
+        setEstadoSelecionado(null);
+        setCidadeSelecionada(null);
+        setErrors((currentErrors) => ({ ...currentErrors, cep: "" }));
+        setFormData((currentData) => ({
+          ...currentData,
+          thoroughfare: "",
+        }));
+        return;
+      }
+
+      if (newValue.length === 8) {
+        setIsCheckingCep(true);
+        fetch(`https://viacep.com.br/ws/${newValue}/json/`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.erro) {
+              setErrors((currentErrors) => ({
+                ...currentErrors,
+                cep: "CEP não encontrado.",
+              }));
+              setEstadoSelecionado(null);
+              setCidadeSelecionada(null);
+              setFormData((currentData) => ({
+                ...currentData,
+                thoroughfare: "",
+              }));
+              return;
+            }
+
+            const uf = data.uf;
+            const cidade = data.localidade;
+            const logradouro = data.logradouro || "";
+
+            setErrors((currentErrors) => ({ ...currentErrors, cep: "" }));
+
+            if (uf) {
+              setEstadoSelecionado(getEstadoOption(uf));
+            }
+
+            if (cidade) {
+              setCidadeSelecionada({ value: cidade, label: cidade });
+            }
+
+            if (logradouro) {
+              setFormData((currentData) => ({
+                ...currentData,
+                thoroughfare: logradouro,
+              }));
+            }
+          })
+          .catch(() => {
+            setErrors((currentErrors) => ({
+              ...currentErrors,
+              cep: "Não foi possível consultar o CEP.",
+            }));
+            setEstadoSelecionado(null);
+            setCidadeSelecionada(null);
+            setFormData((currentData) => ({
+              ...currentData,
+              thoroughfare: "",
+            }));
+          })
+          .finally(() => setIsCheckingCep(false));
+      }
+    }
   };
 
   const handleBranchChange = (branch) => {
@@ -96,7 +167,11 @@ const CreateVacancy = () => {
     setMessage("");
     if (modality?.value === "remote") {
       setFormData((currentData) => ({
-        ...currentData, cep: "", number: "", thoroughfare: "", details: "",
+        ...currentData,
+        cep: "",
+        number: "",
+        thoroughfare: "",
+        details: "",
       }));
     }
   };
@@ -114,25 +189,38 @@ const CreateVacancy = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (formData.title.trim().length < 3) newErrors.title = "Digite um título com pelo menos 3 caracteres.";
-    if (!formData.description.trim()) newErrors.description = "Digite uma descrição.";
-    if (!formData.startsAt) newErrors.startsAt = "Escolha a data e hora de início.";
-    if (!formData.endsAt) newErrors.endsAt = "Escolha a data e hora de término.";
+    if (formData.title.trim().length < 3)
+      newErrors.title = "Digite um título com pelo menos 3 caracteres.";
+    if (!formData.description.trim())
+      newErrors.description = "Digite uma descrição.";
+    if (!formData.startsAt)
+      newErrors.startsAt = "Escolha a data e hora de início.";
+    if (!formData.endsAt)
+      newErrors.endsAt = "Escolha a data e hora de término.";
     if (!selectedBranch) newErrors.branch = "Escolha um ramo.";
     if (!selectedModality) newErrors.modality = "Escolha uma modalidade.";
 
     // datetime-local não informa fuso; aqui os horários são de Brasília.
-    if (formData.startsAt && new Date(`${formData.startsAt}-03:00`).getTime() <= Date.now()) {
+    if (
+      formData.startsAt &&
+      new Date(`${formData.startsAt}-03:00`).getTime() <= Date.now()
+    ) {
       newErrors.startsAt = "A data de início deve estar no futuro.";
     }
-    if (formData.startsAt && formData.endsAt && formData.endsAt <= formData.startsAt) {
+    if (
+      formData.startsAt &&
+      formData.endsAt &&
+      formData.endsAt <= formData.startsAt
+    ) {
       newErrors.endsAt = "O término deve ser posterior ao início.";
     }
     if (isInPerson) {
       if (!estadoSelecionado) newErrors.state = "Escolha um estado.";
       if (!cidadeSelecionada) newErrors.city = "Escolha uma cidade.";
-      if (!formData.thoroughfare.trim()) newErrors.thoroughfare = "Digite o nome da rua ou avenida.";
-      if (formData.cep && formData.cep.length !== 8) newErrors.cep = "O CEP deve ter 8 dígitos.";
+      if (!formData.thoroughfare.trim())
+        newErrors.thoroughfare = "Digite o nome da rua ou avenida.";
+      if (formData.cep && formData.cep.length !== 8)
+        newErrors.cep = "O CEP deve ter 8 dígitos.";
     }
 
     setErrors(newErrors);
@@ -152,7 +240,7 @@ const CreateVacancy = () => {
       ends_at: formData.endsAt,
       branch: selectedBranch.value,
       modality: selectedModality.value,
-      requires_approval: requireApproval
+      requires_approval: requireApproval,
     };
     if (isInPerson) {
       body.uf = estadoSelecionado.value;
@@ -184,19 +272,39 @@ const CreateVacancy = () => {
         </main>
       ) : !canCreate ? (
         <main className={style.form}>
-          <p className={`${style.feedback} ${style.feedbackError}`} role="alert">{accessError || (membership
-            ? "Somente administradores e editores podem criar vagas."
-            : "Você precisa participar de uma entidade para criar vagas.")}</p>
-          <Link className={style.secondaryLink} to="/inicio">Voltar ao início</Link>
+          <p
+            className={`${style.feedback} ${style.feedbackError}`}
+            role="alert"
+          >
+            {accessError ||
+              (membership
+                ? "Somente administradores e editores podem criar vagas."
+                : "Você precisa participar de uma entidade para criar vagas.")}
+          </p>
+          <Link className={style.secondaryLink} to="/inicio">
+            Voltar ao início
+          </Link>
         </main>
       ) : (
         <form className={style.form} onSubmit={handleSubmit} noValidate>
           <h1 className={style.title}>Criar vaga voluntária</h1>
-          <p className={style.subtitle}>Preencha os campos para publicar uma nova oportunidade da sua entidade.</p>
-          {message && <p className={`${style.feedback} ${style.feedbackError}`} role="alert">{message}</p>}
+          <p className={style.subtitle}>
+            Preencha os campos para publicar uma nova oportunidade da sua
+            entidade.
+          </p>
+          {message && (
+            <p
+              className={`${style.feedback} ${style.feedbackError}`}
+              role="alert"
+            >
+              {message}
+            </p>
+          )}
 
           <div className={style.field}>
-            <label className={style.label} htmlFor="title">Título da vaga</label>
+            <label className={style.label} htmlFor="title">
+              Título da vaga
+            </label>
             <input
               className={`${style.input} ${errors.title ? style.inputError : ""}`}
               id="title"
@@ -207,11 +315,15 @@ const CreateVacancy = () => {
               onChange={handleInputChange}
               placeholder="Título da vaga"
             />
-            {errors.title && <span className={style.errorText}>{errors.title}</span>}
+            {errors.title && (
+              <span className={style.errorText}>{errors.title}</span>
+            )}
           </div>
 
           <div className={style.field}>
-            <label className={style.label} htmlFor="description">Descrição da vaga</label>
+            <label className={style.label} htmlFor="description">
+              Descrição da vaga
+            </label>
             <textarea
               className={`${style.input} ${style.textarea} ${errors.description ? style.inputError : ""}`}
               id="description"
@@ -221,15 +333,21 @@ const CreateVacancy = () => {
               onChange={handleInputChange}
               placeholder="Descrição da vaga"
             />
-            <span className={`${style.charCount} ${255 - formData.description.length <= 20 ? style.charCountWarning : ""}`}>
+            <span
+              className={`${style.charCount} ${255 - formData.description.length <= 20 ? style.charCountWarning : ""}`}
+            >
               {255 - formData.description.length} caracteres restantes
             </span>
-            {errors.description && <span className={style.errorText}>{errors.description}</span>}
+            {errors.description && (
+              <span className={style.errorText}>{errors.description}</span>
+            )}
           </div>
 
           <div className={style.rowTwoCols}>
             <div className={style.field}>
-              <label className={style.label} htmlFor="startsAt">Data de início</label>
+              <label className={style.label} htmlFor="startsAt">
+                Data de início
+              </label>
               <input
                 className={`${style.input} ${errors.startsAt ? style.inputError : ""}`}
                 id="startsAt"
@@ -238,11 +356,15 @@ const CreateVacancy = () => {
                 value={formData.startsAt}
                 onChange={handleInputChange}
               />
-              {errors.startsAt && <span className={style.errorText}>{errors.startsAt}</span>}
+              {errors.startsAt && (
+                <span className={style.errorText}>{errors.startsAt}</span>
+              )}
             </div>
 
             <div className={style.field}>
-              <label className={style.label} htmlFor="endsAt">Data de término</label>
+              <label className={style.label} htmlFor="endsAt">
+                Data de término
+              </label>
               <input
                 className={`${style.input} ${errors.endsAt ? style.inputError : ""}`}
                 id="endsAt"
@@ -251,20 +373,30 @@ const CreateVacancy = () => {
                 value={formData.endsAt}
                 onChange={handleInputChange}
               />
-              {errors.endsAt && <span className={style.errorText}>{errors.endsAt}</span>}
+              {errors.endsAt && (
+                <span className={style.errorText}>{errors.endsAt}</span>
+              )}
             </div>
 
             <div className={style.field}>
-              <label className={style.label} htmlFor="requiresApproval" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Exigir aprovação</label>
+              <label
+                className={style.label}
+                htmlFor="requiresApproval"
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                Exigir aprovação
+              </label>
               <span
-                  className={style.infoIcon}
-                  onClick={() => setShowApprovalInfo(!showApprovalInfo)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === 'Enter' && setShowApprovalInfo(!showApprovalInfo)}
-                >
-                  ℹ
-                </span>
+                className={style.infoIcon}
+                onClick={() => setShowApprovalInfo(!showApprovalInfo)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && setShowApprovalInfo(!showApprovalInfo)
+                }
+              >
+                ℹ
+              </span>
               <input
                 id="requiresApproval"
                 type="checkbox"
@@ -273,14 +405,17 @@ const CreateVacancy = () => {
               />
               {showApprovalInfo && (
                 <div className={style.infoBox}>
-                  Caso esta opção esteja ativa, os administradores e editores da organização deverão aceitar cada inscrição para esta vaga.
+                  Caso esta opção esteja ativa, os administradores e editores da
+                  organização deverão aceitar cada inscrição para esta vaga.
                 </div>
               )}
             </div>
           </div>
 
           <div className={style.field}>
-            <label className={style.label} htmlFor="branch">Ramo</label>
+            <label className={style.label} htmlFor="branch">
+              Ramo
+            </label>
             <Select
               inputId="branch"
               classNamePrefix="register-select"
@@ -289,11 +424,15 @@ const CreateVacancy = () => {
               onChange={handleBranchChange}
               placeholder="Escolha um ramo"
             />
-            {errors.branch && <span className={style.errorText}>{errors.branch}</span>}
+            {errors.branch && (
+              <span className={style.errorText}>{errors.branch}</span>
+            )}
           </div>
 
           <div className={style.field}>
-            <label className={style.label} htmlFor="modality">Modalidade</label>
+            <label className={style.label} htmlFor="modality">
+              Modalidade
+            </label>
             <Select
               inputId="modality"
               classNamePrefix="register-select"
@@ -302,12 +441,38 @@ const CreateVacancy = () => {
               onChange={handleModalityChange}
               placeholder="Escolha uma modalidade"
             />
-            {errors.modality && <span className={style.errorText}>{errors.modality}</span>}
+            {errors.modality && (
+              <span className={style.errorText}>{errors.modality}</span>
+            )}
           </div>
 
           {isInPerson && (
             <section className={style.addressSection}>
-              <h2 className={style.addressTitle}>Endereço da vaga presencial</h2>
+              <h2 className={style.addressTitle}>
+                Endereço da vaga presencial
+              </h2>
+
+              <div className={style.field}>
+                <label className={style.label} htmlFor="cep">
+                  CEP (opcional)
+                </label>
+                <input
+                  className={`${style.input} ${errors.cep ? style.inputError : ""}`}
+                  id="cep"
+                  type="text"
+                  name="cep"
+                  inputMode="numeric"
+                  maxLength={8}
+                  value={formData.cep}
+                  onChange={handleInputChange}
+                  placeholder="CEP"
+                />
+                {isCheckingCep ? (
+                  <span className={style.cepText}>Buscando CEP...</span>
+                ) : (
+                  errors.cep && <span className={style.errorText}>{errors.cep}</span>
+                )}
+              </div>
               <CidadeEstado
                 estadoSelecionado={estadoSelecionado}
                 cidadeSelecionada={cidadeSelecionada}
@@ -316,25 +481,32 @@ const CreateVacancy = () => {
                 errors={errors}
               />
 
-              <div className={style.rowTwoCols}>
-                <div className={style.field}>
-                  <label className={style.label} htmlFor="cep">CEP (opcional)</label>
-                  <input
-                    className={`${style.input} ${errors.cep ? style.inputError : ""}`}
-                    id="cep"
-                    type="text"
-                    name="cep"
-                    inputMode="numeric"
-                    maxLength={8}
-                    value={formData.cep}
-                    onChange={handleInputChange}
-                    placeholder="CEP"
-                  />
-                  {errors.cep && <span className={style.errorText}>{errors.cep}</span>}
-                </div>
+              <div className={style.field}>
+                <label className={style.label} htmlFor="thoroughfare">
+                  Logradouro
+                </label>
+                <input
+                  className={`${style.input} ${errors.thoroughfare ? style.inputError : ""}`}
+                  id="thoroughfare"
+                  type="text"
+                  name="thoroughfare"
+                  maxLength={100}
+                  value={formData.thoroughfare}
+                  onChange={handleInputChange}
+                  placeholder="Nome da rua ou avenida"
+                />
+                {errors.thoroughfare && (
+                  <span className={style.errorText}>{errors.thoroughfare}</span>
+                )}
+              </div>
+
+               <div className={style.rowTwoCols}>
+               
 
                 <div className={style.field}>
-                  <label className={style.label} htmlFor="number">Número (opcional)</label>
+                  <label className={style.label} htmlFor="number">
+                    Número (opcional)
+                  </label>
                   <input
                     className={style.input}
                     id="number"
@@ -349,22 +521,9 @@ const CreateVacancy = () => {
               </div>
 
               <div className={style.field}>
-                <label className={style.label} htmlFor="thoroughfare">Logradouro</label>
-                <input
-                  className={`${style.input} ${errors.thoroughfare ? style.inputError : ""}`}
-                  id="thoroughfare"
-                  type="text"
-                  name="thoroughfare"
-                  maxLength={100}
-                  value={formData.thoroughfare}
-                  onChange={handleInputChange}
-                  placeholder="Nome da rua ou avenida"
-                />
-                {errors.thoroughfare && <span className={style.errorText}>{errors.thoroughfare}</span>}
-              </div>
-
-              <div className={style.field}>
-                <label className={style.label} htmlFor="details">Complemento (opcional)</label>
+                <label className={style.label} htmlFor="details">
+                  Complemento (opcional)
+                </label>
                 <input
                   className={style.input}
                   id="details"
@@ -379,7 +538,11 @@ const CreateVacancy = () => {
             </section>
           )}
 
-          <button className={style.submitButton} type="submit" disabled={isSubmitting}>
+          <button
+            className={style.submitButton}
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Criando vaga..." : "Criar vaga"}
           </button>
         </form>

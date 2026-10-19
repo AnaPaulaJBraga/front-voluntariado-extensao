@@ -23,6 +23,7 @@ import ListVacancies from "../pages/Vacancies/ListVacancies";
 import CreateVacancy from "../pages/Vacancies/CreateVacancy";
 import EditVacancy from "../pages/Vacancies/EditVacancy";
 import VacancyDetail from "../pages/Vacancies/VacancyDetail";
+import Notifications from "../pages/Notifications/notifications";
 
 const AppRoutes = () => {
   return (
@@ -41,19 +42,19 @@ const AppRoutes = () => {
       <Route path="/organizacoes" element={<Organizations />} />
       <Route path="/oportunidades" element={<Opportunities />} />
       <Route path="/configuracoes" element={<Configurations />} />
-      
 
       <Route path="/entidade/cadastro" element={<Entity />} />
-      <Route path="/entidade/:slug/sobre" element={<Informations />} />
+      <Route path="/entidade/sobre/:slug" element={<Informations />} />
       <Route path="/entidade/solicitacoes" element={<Requests />} />
       <Route path="/entidade/membros" element={<Members />} />
       <Route path="/entidade/vagas" element={<Volunteering />} />
-
 
       <Route path="/vagas" element={<ListVacancies />} />
       <Route path="/vagas/cadastro" element={<CreateVacancy />} />
       <Route path="/vagas/:id" element={<VacancyDetail />} />
       <Route path="/vagas/:id/editar" element={<EditVacancy />} />
+
+      <Route path="/notificacoes" element={<Notifications />} />
     </Routes>
   );
 };

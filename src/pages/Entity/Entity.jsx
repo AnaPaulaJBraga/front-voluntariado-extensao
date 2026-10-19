@@ -6,6 +6,7 @@ import { api } from "../../services/api";
 import { normalizeSlug } from "../../utils/validations";
 import { saveActiveContext } from "../../utils/activeContext";
 import "./Entity.css";
+import Header from "../../components/Header/Header";
 
 const initialFormData = {
   name: "",
@@ -190,7 +191,7 @@ const Entity = () => {
 
   return (
     <div className="register-page">
-
+ <Header />
       <main className="register-layout">
 
         <section

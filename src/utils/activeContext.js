@@ -10,12 +10,18 @@ export const getActiveContext = () => {
 };
 
 export const saveActiveContext = (mode, entityId = null) => {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({ mode, entityId }),
-  );
+  const context = { mode, entityId };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(context));
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("active-context-updated", { detail: context }));
+  }
 };
 
 export const clearActiveContext = () => {
   localStorage.removeItem(STORAGE_KEY);
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("active-context-updated", { detail: null }));
+  }
 };
