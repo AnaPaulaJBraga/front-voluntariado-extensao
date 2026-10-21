@@ -13,6 +13,7 @@ const Members = () => {
 
     const [members, setMembers] = useState([]);
     const [isInviteOpen, setIsInviteOpen] = useState(false);
+    const [result, setResult] = useState({});
     
     const {membership, isLoading}  = useEntity();
     const entityId = membership?.entity?.id;
@@ -44,8 +45,27 @@ const Members = () => {
 
     }, [entityId, isLoading]);
 
-    const inviteMember = (email) => {
-        console.log(email)
+    const inviteMember = async (email) => {
+        try {
+            const body = {
+                "recipient_email": email,
+                "invitation_type": "entity",
+                "target_id": entityId
+            }
+
+            const response = await api.post("/invitations", body, false, true);
+
+            if(response.status === 202) {
+                setResult({ok: true, result: response.data.message});
+            }
+
+            setIsInviteOpen(false);
+        } catch (error) {
+            setResult({ok: false, result: error.response.data.detail});
+            console.error(error.response.data);
+            setIsInviteOpen(false);
+        }
+
     }
 
 
@@ -62,7 +82,6 @@ const Members = () => {
                                 Consulte os usuários que fazem parte da sua organização.
                             </p>
                         </div>
-
                         <button
                             className="members-page__invite-button"
                             type="button"
@@ -71,6 +90,14 @@ const Members = () => {
                             + Convidar para entidade
                         </button>
                     </header>
+                     {result && (
+                            <p
+                                style={result?.ok
+                                    ? {color: "green", marginTop: 10}
+                                    : {color: "red", marginTop: 10}
+                                }
+                            >{result.result}</p>
+                        )}
 
                     {isInviteOpen && (
                         <EntityInviteModal

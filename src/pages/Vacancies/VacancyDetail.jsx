@@ -11,14 +11,14 @@ import styles from "./VacancyDetail.module.css";
 const VacancyDetail = () => {
   const { state } = useLocation();
   const { id } = useParams();
-  const [ vacancy, setVacancy ] = useState();
+  const [vacancy, setVacancy] = useState();
   const [result, setResult] = useState({});
   const [participants, setParticipants] = useState(null);
 
   const [participantToRemove, setParticipantToRemove] = useState(null);
   const [vacancyToDelete, setVacancyToDelete] = useState(null);
 
-  const {membership} = useEntity();
+  const { membership } = useEntity();
 
   const getVacancyDetails = async () => {
     const response = await api.get(`/vacancies?id=${id}`);
@@ -54,10 +54,10 @@ const VacancyDetail = () => {
   const handleSubmit = async () => {
     try {
       const response = await api.post(`/vacancies/${vacancy.id}/join-requests`, null, false, true);
-      setResult({"ok": true, result: "Inscrição realizada com sucesso!"})
+      setResult({ "ok": true, result: "Inscrição realizada com sucesso!" })
     } catch (error) {
       console.log("Erro: " + error);
-      setResult({"ok": false, result: error.response?.data?.detail})
+      setResult({ "ok": false, result: error.response?.data?.detail })
     }
   }
 
@@ -82,18 +82,18 @@ const VacancyDetail = () => {
   const onResponse = (confirm) => {
     if (!confirm) setParticipantToRemove(null); setVacancyToDelete(null);
 
-    if(confirm && participantToRemove) deleteUser();
-    if(confirm && vacancyToDelete) deleteVacancy();
+    if (confirm && participantToRemove) deleteUser();
+    if (confirm && vacancyToDelete) deleteVacancy();
   }
 
   const deleteUser = async () => {
     try {
       await api.delete(`/vacancies/${id}/participants/${participantToRemove.user.id}`, null, true);
       await fetchParticipants();
-      setResult({ok: true, result: `${participantToRemove.user.name} foi expulso(a) com sucesso!`});
+      setResult({ ok: true, result: `${participantToRemove.user.name} foi expulso(a) com sucesso!` });
     } catch (error) {
       console.error(error);
-      setResult({ok: false, result: `Houve um erro ao expulsar o(a) participante.`});
+      setResult({ ok: false, result: `Houve um erro ao expulsar o(a) participante.` });
     }
     setParticipantToRemove(null);
   }
@@ -103,12 +103,12 @@ const VacancyDetail = () => {
     try {
       const response = await api.delete(`/vacancies/${vacancy.id}`, null, true);
       if (response.status === 200) {
-        navigation.navigate("/inicio", {replace: true});
+        navigation.navigate("/inicio", { replace: true });
       }
     } catch (error) {
-      setResult({ok: false, result: `Houve um erro ao deletar a vaga.`});
+      setResult({ ok: false, result: `Houve um erro ao deletar a vaga.` });
     }
-    
+
   }
 
   const handleUpdate = () => {
@@ -128,26 +128,26 @@ const VacancyDetail = () => {
             </p>
           )}
           {result?.ok
-          ? <p className={`${styles.status} ${styles.statusSuccess}`} role="alert">
+            ? <p className={`${styles.status} ${styles.statusSuccess}`} role="alert">
               {result.result}
             </p>
-          : <p className={`${styles.status} ${styles.statusError}`} role="alert">
+            : <p className={`${styles.status} ${styles.statusError}`} role="alert">
               {result.result}
             </p>
           }
 
           {/* Confirmação para expulsar usuário da vaga */}
           {participantToRemove &&
-          <Confirmation
-            text={"Você quer realmente remover o(a) voluntário(a) " + participantToRemove.user.name + "?"}
-            onResponse={onResponse}
+            <Confirmation
+              text={"Você quer realmente remover o(a) voluntário(a) " + participantToRemove.user.name + "?"}
+              onResponse={onResponse}
             />}
 
           {/* Confirmação para deletar a vaga */}
           {vacancyToDelete &&
-          <Confirmation
-            text={"Você quer realmente deletar a vaga " + vacancy.title + "?"}
-            onResponse={onResponse}
+            <Confirmation
+              text={"Você quer realmente deletar a vaga " + vacancy.title + "?"}
+              onResponse={onResponse}
             />}
 
           {vacancy && (
@@ -166,9 +166,9 @@ const VacancyDetail = () => {
                     <span>Data de término: {formatDateTime(vacancy.ends_at)}</span>
                   </p>
                   {
-                  vacancy.requires_approval
-                    ? <p className={styles.modalityOnsite}>Exige aprovação de responsáveis</p>
-                    : <p className={styles.modalityRemote}>Não exige aprovação de responsáveis</p>
+                    vacancy.requires_approval
+                      ? <p className={styles.modalityOnsite}>Exige aprovação de responsáveis</p>
+                      : <p className={styles.modalityRemote}>Não exige aprovação de responsáveis</p>
                   }
                 </div>
               </header>
@@ -179,31 +179,31 @@ const VacancyDetail = () => {
                 <p>Postado em: {formatDateTime(vacancy.posted_at)}</p>
                 {
                   membership?.entity?.id == vacancy?.entity?.id
-                  ? (
-                    <>
-                      <button
-                        style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B"}}
-                        onClick={handleSubmit}>
+                    ? (
+                      <>
+                        <button
+                          style={{ width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B" }}
+                          onClick={handleSubmit}>
                           Editar vaga
-                      </button>
-                      <button
-                        style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B", marginLeft: 10}}
-                        onClick={handleParticipants}>
+                        </button>
+                        <button
+                          style={{ width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B", marginLeft: 10 }}
+                          onClick={handleParticipants}>
                           {participants ? "Ocultar participantes" : "Ver participantes"}
-                      </button>
-                      <button
-                        style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#b91b1b", marginLeft: 10}}
-                        onClick={() => setVacancyToDelete(vacancy)}>
+                        </button>
+                        <button
+                          style={{ width: "auto", borderRadius: "10px", marginTop: 20, background: "#b91b1b", marginLeft: 10 }}
+                          onClick={() => setVacancyToDelete(vacancy)}>
                           Excluir vaga
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      style={{width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B"}}
-                      onClick={handleSubmit}>
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        style={{ width: "auto", borderRadius: "10px", marginTop: 20, background: "#1F8D5B" }}
+                        onClick={handleSubmit}>
                         Inscrever-se na vaga
                       </button>
-                  )
+                    )
                 }
               </section>
             </article>
@@ -214,29 +214,29 @@ const VacancyDetail = () => {
               <header className={styles.header}>
                 <h1 className={styles.title}>Participantes</h1>
                 {participants.length == 0
-                ? <div>
-                    <hr  />
-                    <section className={styles.body} style={{display: "flex", justifyContent: "space-between"}}>
+                  ? <div>
+                    <hr />
+                    <section className={styles.body} style={{ display: "flex", justifyContent: "space-between" }}>
                       <p>Não há participantes inscritos nesta vaga</p>
                     </section>
                   </div>
-                
-                : participants.map(participant => (
-                  <div key={participant.user.id}>
-                    <hr  />
-                    <section className={styles.body} style={{display: "flex", justifyContent: "space-between"}}>
-                      <div>
-                        <h2 className={styles.sectionTitle}>{participant.user.name}</h2>
-                        <p className={styles.desc}>Entrou em: {formatDateTime(participant.joined_at)} </p>
-                      </div>
-                      <button
-                        className={styles.exclusionButton}
-                        onClick={() => setParticipantToRemove(participant)}>
-                        Remover voluntário
-                      </button>
-                    </section>
-                  </div>
-                ))
+
+                  : participants.map(participant => (
+                    <div key={participant.user.id}>
+                      <hr />
+                      <section className={styles.body} style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div>
+                          <h2 className={styles.sectionTitle}>{participant.user.name}</h2>
+                          <p className={styles.desc}>Entrou em: {formatDateTime(participant.joined_at)} </p>
+                        </div>
+                        <button
+                          className={styles.exclusionButton}
+                          onClick={() => setParticipantToRemove(participant)}>
+                          Remover voluntário
+                        </button>
+                      </section>
+                    </div>
+                  ))
                 }
               </header>
             </article>

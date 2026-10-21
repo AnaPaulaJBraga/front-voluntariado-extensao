@@ -1,21 +1,30 @@
 import "./Confirmation.css";
 
-const Confirmation = ({text, onResponse}) => {
+const modes = {
+  warning: { icon: "!", title: "Atenção!" },
+  info: { icon: "i", title: "Confirme para continuar" },
+  confirm: { icon: "✓", title: "Confirmar?" },
+};
+
+const Confirmation = ({ text, onResponse, mode = "warning" }) => {
+  const selectedMode = Object.hasOwn(modes, mode) ? mode : "warning";
+  const { icon, title } = modes[selectedMode];
+
   return (
     <div className="confirmation-overlay">
       <section
-        className="confirmation-card"
+        className={`confirmation-card confirmation-card--${selectedMode}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirmation-title"
         aria-describedby="confirmation-description"
       >
         <div className="confirmation-card__icon" aria-hidden="true">
-          !
+          {icon}
         </div>
 
         <h2 id="confirmation-title" className="confirmation-card__title">
-          Deseja confirmar?
+          {title}
         </h2>
 
         <p id="confirmation-description" className="confirmation-card__text">

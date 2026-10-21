@@ -1,3 +1,5 @@
+import {clearActiveContext} from "../utils/activeContext";
+
 const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
 
 const getAuthHeaders = () => {
@@ -35,6 +37,14 @@ const request = async (method, path, body, useAuth = false, isLogin) => {
     : await response.text();
 
   if (!response.ok) {
+    if(response.status === 401 && useAuth) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("token_type");
+      localStorage.removeItem("user");
+      clearActiveContext();
+
+      window.dispatchEvent(new CustomEvent("session-expired"));
+    }
     const error = new Error("Erro na requisição.");
     error.response = {
       status: response.status,
@@ -42,13 +52,6 @@ const request = async (method, path, body, useAuth = false, isLogin) => {
     };
     throw error;
   }
-
-  console.log("[API RESPONSE]", {
-    method,
-    url: path,
-    status: response.status,
-    data,
-  });
 
   return {
     data,
