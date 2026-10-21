@@ -57,7 +57,6 @@ const Home = () => {
           localStorage.removeItem("access_token");
           localStorage.removeItem("user");
           clearActiveContext();
-          window.location.href = "/login";
           return;
         }
         setErrorMessage("Não foi possível carregar sua entidade. Tente novamente.");
