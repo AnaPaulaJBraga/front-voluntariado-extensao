@@ -72,32 +72,32 @@ const Home = () => {
   if (errorMessage) return <p role="alert">{errorMessage}</p>;
   if (activeMode === "entity" && entityMembership) {
     // caso o usuario for de uma entidade e tiver vinculo, mostra o painel da entidade 
-    return(
+    return (
       <>
-      {/* tela que somente aparece caso a exibicao da animacao seja TRUE */}
+        {/* tela que somente aparece caso a exibicao da animacao seja TRUE */}
         {exibirSplash && (
           <div className="animacao-transicao">
             <h1 className="texto-animado">Início</h1>
           </div>
         )}
         {/* tela inicial para entidades */}
-      <EntityDashboard membership={entityMembership} />;
+        <EntityDashboard membership={entityMembership} />;
       </>
     );
   }
 
   // agora para pessoas normais usuarios comuns
-  return(
-  <>
-  {/* somente exibira caso funcao seja TRUE */}
-    {exibirSplash && (
-      <div className="animacao-transicao">
-        <h1 className="texto-animado">Início</h1>
-      </div>
-    )}
-    {/* somente depois da animacao que aparecem as oportunidades */}
-    <Opportunities />
-  </>
+  return (
+    <>
+      {/* somente exibira caso funcao seja TRUE */}
+      {exibirSplash && (
+        <div className="animacao-transicao">
+          <h1 className="texto-animado">Início</h1>
+        </div>
+      )}
+      {/* somente depois da animacao que aparecem as oportunidades */}
+      <Opportunities />
+    </>
   );
 }
 
