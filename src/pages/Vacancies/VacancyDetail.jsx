@@ -103,7 +103,7 @@ const VacancyDetail = () => {
     try {
       const response = await api.delete(`/vacancies/${vacancy.id}`, null, true);
       if (response.status === 200) {
-        navigation.navigate("/inicio", { replace: true });
+        navigation.navigate("/entidade/vagas", { replace: true });
       }
     } catch (error) {
       setResult({ ok: false, result: `Houve um erro ao deletar a vaga.` });
