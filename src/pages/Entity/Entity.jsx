@@ -299,14 +299,8 @@ const Entity = () => {
                   className="button-criar"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Criando conta..." : "Criar conta"}
+                  {isLoading ? "Criando entidade..." : "Criar entidade"}
                 </button>
-
-                <p className="ja-possui-conta">Já possui uma conta?</p>
-
-                <Link to="/login" className="button-entrar">
-                  Entrar
-                </Link>
               </form>
             )}
           </div>

@@ -4,9 +4,9 @@ export const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Validação de senha (mínimo 8 caracteres)
+// Validação de senha (mínimo 6 caracteres)
 export const isValidPassword = (password) => {
-  return password.length >= 8;
+  return password.length >= 6;
 };
 
 // Validação de nome completo

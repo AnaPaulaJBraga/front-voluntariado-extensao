@@ -81,7 +81,7 @@ const Home = () => {
           </div>
         )}
         {/* tela inicial para entidades */}
-      <EntityDashboard membership={entityMembership} />;
+        <EntityDashboard key={entityMembership.entity.id} membership={entityMembership} />
       </>
     );
   }

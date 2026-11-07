@@ -196,7 +196,7 @@ const EditProfile = () => {
     }
 
     if (!isValidPassword(passwordData.newPassword)) {
-      newErrors.newPassword = "A nova senha deve ter pelo menos 8 caracteres.";
+      newErrors.newPassword = "A nova senha deve ter pelo menos 6 caracteres.";
     }
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -391,6 +391,23 @@ const EditProfile = () => {
                 }}
               >
                 Alterar Senha
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("password")}
+                style={{
+                  flex: 1,
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccd3df",
+                  background: activeTab === "password" ? "#5d5fe8" : "#ffffff",
+                  color: activeTab === "password" ? "#ffffff" : "#384152",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                Excluir conta
               </button>
             </div>
 

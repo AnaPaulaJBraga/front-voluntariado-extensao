@@ -122,7 +122,7 @@ const Register = () => {
     }
 
     if (!isValidPassword(formData.password)) {
-      newErrors.password = "A senha deve ter pelo menos 8 caracteres.";
+      newErrors.password = "A senha deve ter pelo menos 6 caracteres.";
     }
 
     if (formData.password !== formData.confirmPassword) {
