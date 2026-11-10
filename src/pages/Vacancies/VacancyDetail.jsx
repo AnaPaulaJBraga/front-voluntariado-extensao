@@ -120,7 +120,7 @@ const VacancyDetail = () => {
       <Header />
       <main className={styles.page}>
         <div className={styles.layout}>
-          <Link className={styles.back} to="/inicio">← Voltar</Link>
+          <Link className={styles.back} to={state?.from ?? "/inicio"}>← Voltar</Link>
 
           {!vacancy && (
             <p className={`${styles.status} ${styles.statusError}`} role="alert">
