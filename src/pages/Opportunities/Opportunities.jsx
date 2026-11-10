@@ -93,7 +93,14 @@ const Opportunities = () => {
       .get(`/vacancies/${qs ? `?${qs}` : ""}`)
       .then((response) => {
         if (isCurrentPage) {
-          setVacancies(response.data);
+          // Exibe apenas oportunidades vigentes (que ainda não terminaram).
+          const now = Date.now();
+          setVacancies(
+            response.data.filter((vacancy) => {
+              const endsAt = new Date(vacancy.ends_at).getTime();
+              return Number.isNaN(endsAt) || endsAt > now;
+            }),
+          );
           setStatus({ loading: false, error: "" });
         }
       })

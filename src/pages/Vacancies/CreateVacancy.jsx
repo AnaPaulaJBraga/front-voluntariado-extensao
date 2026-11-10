@@ -379,30 +379,29 @@ const CreateVacancy = () => {
             </div>
 
             <div className={style.field}>
-              <label
-                className={style.label}
-                htmlFor="requiresApproval"
-                style={{ display: "flex", alignItems: "center", gap: "4px" }}
-              >
-                Exigir aprovação
-              </label>
-              <span
-                className={style.infoIcon}
-                onClick={() => setShowApprovalInfo(!showApprovalInfo)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && setShowApprovalInfo(!showApprovalInfo)
-                }
-              >
-                ℹ
-              </span>
-              <input
-                id="requiresApproval"
-                type="checkbox"
-                checked={requireApproval}
-                onChange={(e) => setRequireApproval(e.target.checked)}
-              />
+              <div className={style.checkboxRow}>
+                <input
+                  id="requiresApproval"
+                  type="checkbox"
+                  checked={requireApproval}
+                  onChange={(e) => setRequireApproval(e.target.checked)}
+                />
+                <label className={style.label} htmlFor="requiresApproval">
+                  Exigir aprovação
+                </label>
+                <span
+                  className={style.infoIcon}
+                  onClick={() => setShowApprovalInfo(!showApprovalInfo)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Mais informações sobre exigir aprovação"
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && setShowApprovalInfo(!showApprovalInfo)
+                  }
+                >
+                  ℹ
+                </span>
+              </div>
               {showApprovalInfo && (
                 <div className={style.infoBox}>
                   Caso esta opção esteja ativa, os administradores e editores da

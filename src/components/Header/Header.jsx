@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
 import { useEntity } from "../../contexts/EntityContexts";
 import {
   getActiveContext,
@@ -24,11 +25,64 @@ import "./Header.css";
 
 const Header = ({ userName }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
   const [openMenu, setOpenMenu] = useState(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
+  const [unreadItems, setUnreadItems] = useState(null);
+  const [notificationsError, setNotificationsError] = useState(false);
   const [activeContext, setActiveContext] = useState(getActiveContext());
   const { membership } = useEntity();
 
   const menuRef = useRef(null);
+  const notificationsRef = useRef(null);
+
+  useEffect(() => {
+    if (!openNotifications) return;
+
+    const handleClickOutside = (event) => {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
+        setOpenNotifications(false);
+      }
+    };
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setOpenNotifications(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openNotifications]);
+
+  const toggleNotifications = async () => {
+    const willOpen = !openNotifications;
+    setOpenNotifications(willOpen);
+    if (!willOpen) return;
+
+    setOpenMenu(false);
+    setNotificationsError(false);
+    try {
+      const response = await api.get(
+        "/notifications?unread_only=true&limit=5",
+        true,
+      );
+      setUnreadItems(response.data.items);
+      setUnreadCount(response.data.unread_count ?? 0);
+    } catch {
+      setNotificationsError(true);
+    }
+  };
+
+  const goToNotifications = () => {
+    setOpenNotifications(false);
+    navigate("/notificacoes");
+  };
 
   useEffect(() => {
     if (!openMenu) return;
@@ -79,6 +133,31 @@ const Header = ({ userName }) => {
   const displayName = sessionUserName || "Usuario";
   const isLoggedIn = Boolean(token);
 
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    let cancelled = false;
+
+    const loadUnread = async () => {
+      try {
+        const response = await api.get("/notifications?limit=1", true);
+        if (!cancelled) setUnreadCount(response.data.unread_count ?? 0);
+      } catch {
+        /* contador é opcional; falhas são ignoradas */
+      }
+    };
+    const handleUpdate = (event) => {
+      if (typeof event.detail === "number") setUnreadCount(event.detail);
+      else loadUnread();
+    };
+
+    loadUnread();
+    window.addEventListener("notifications-updated", handleUpdate);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("notifications-updated", handleUpdate);
+    };
+  }, [isLoggedIn, location.pathname]);
+
   const switchMode = (mode) => {
     saveActiveContext(mode, mode === "entity" ? membership.entity.id : null);
     window.location.href = "/inicio";
@@ -95,6 +174,7 @@ const Header = ({ userName }) => {
   const activePage = getActivePage();
 
   const toggleMenu = () => {
+    setOpenNotifications(false);
     setOpenMenu((prev) => !prev);
   };
 
@@ -153,21 +233,80 @@ const Header = ({ userName }) => {
       {isLoggedIn && (
         <>
           <div ref={menuRef} className="app-header__user-wrapper">
-            <button
-              type="button"
-              className="header-notifications"
-              onMouseDown={(event) => event.stopPropagation()}
-              onClick={(event) => {
-                event.stopPropagation();
-                setOpenMenu(false);
-                window.location.href = "/notificacoes";
-              }}
-              aria-label="Notificações"
-            >
-              <img src={notification} alt="" />
+            <div ref={notificationsRef} className="header-notifications-wrapper">
+              <button
+                type="button"
+                className="header-notifications"
+                onClick={toggleNotifications}
+                aria-haspopup="true"
+                aria-expanded={openNotifications}
+                aria-label={
+                  unreadCount > 0
+                    ? `Notificações (${unreadCount} não lidas)`
+                    : "Notificações"
+                }
+              >
+                <img src={notification} alt="" />
 
-              <span className="header-notifications__badge" />
-            </button>
+                {unreadCount > 0 && (
+                  <span className="header-notifications__badge" />
+                )}
+              </button>
+
+              {openNotifications && (
+                <div
+                  className="header-notifications__dropdown"
+                  role="region"
+                  aria-label="Resumo das notificações"
+                >
+                  <p className="header-notifications__dropdown-title">
+                    Notificações
+                  </p>
+
+                  {notificationsError ? (
+                    <p className="header-notifications__empty" role="alert">
+                      Não foi possível carregar.
+                    </p>
+                  ) : unreadItems === null ? (
+                    <p className="header-notifications__empty" role="status">
+                      Carregando…
+                    </p>
+                  ) : unreadItems.length > 0 ? (
+                    <ul className="header-notifications__list">
+                      {unreadItems.map((item) => (
+                        <li key={item.id}>
+                          <button
+                            type="button"
+                            className="header-notifications__item"
+                            onClick={goToNotifications}
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="header-notifications__item-dot"
+                            />
+                            {item.title}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="header-notifications__empty">
+                      Nenhuma notificação nova
+                    </p>
+                  )}
+
+                  <button
+                    type="button"
+                    className="header-notifications__link"
+                    onClick={goToNotifications}
+                  >
+                    {unreadCount > unreadItems?.length
+                      ? `Ver todas (${unreadCount} não lidas)`
+                      : "Ver todas as notificações"}
+                  </button>
+                </div>
+              )}
+            </div>
 
             <div
               className="app-header__user"

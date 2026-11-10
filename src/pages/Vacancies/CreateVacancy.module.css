@@ -139,8 +139,26 @@
     gap: 12px;
 }
 
+.checkboxRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkboxRow input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkboxRow .label {
+    cursor: pointer;
+}
+
 .infoIcon {
-    border: 1px solid black;
+    border: 1px solid #5d5fe8;
+    color: #5d5fe8;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
