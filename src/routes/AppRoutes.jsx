@@ -23,7 +23,7 @@ import ListVacancies from "../pages/Vacancies/ListVacancies";
 import CreateVacancy from "../pages/Vacancies/CreateVacancy";
 import EditVacancy from "../pages/Vacancies/EditVacancy";
 import VacancyDetail from "../pages/Vacancies/VacancyDetail";
-import Notifications from "../pages/Notifications/notifications";
+import Notifications from "../pages/Notifications/Notifications";
 
 const AppRoutes = () => {
   return (

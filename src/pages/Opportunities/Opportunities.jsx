@@ -5,6 +5,7 @@ import OpportunityCard from "../../components/OpportunityCard/OpportunityCard";
 import { branches } from "../../constants/branches";
 import { modalities } from "../../constants/modalities";
 import { api } from "../../services/api";
+import "../../App.css";
 import "./Opportunities.css";
 
 import animalsImagem from "../../assets/branches/animals.png";
@@ -66,6 +67,14 @@ const Opportunities = () => {
   const [debouncedCity, setDebouncedCity] = useState("");
   const [vacancies, setVacancies] = useState([]);
   const [status, setStatus] = useState({ loading: true, error: "" });
+
+  // trava o scrol no topo
+  useEffect(() => {
+    if ('scrollRestoration' in window.history){
+      window.history.scrollRestoration = 'manual';//indenpendente de antes estar em alguma posicao
+    }
+    window.scrollTo(0,0); /*zera*/
+}, [])
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedCity(city), 400);
@@ -130,7 +139,7 @@ const Opportunities = () => {
   };
 
   return (
-    <div className="home-page">
+    <div className="home-page pagina-animada">
       <Header />
 
       <main className="home-page__layout">
@@ -171,11 +180,13 @@ const Opportunities = () => {
 
           {!isLoading && !errorMessage && opportunities.length > 0 && (
             <div className="home-page__grid">
-              {opportunities.map((opportunity) => (
-                <OpportunityCard
+              {opportunities.map((opportunity, index) => (
+                <div
                   key={opportunity.id}
-                  opportunity={opportunity}
-                />
+                    className={`card-animado stagger-${(index % 6) + 1}`}
+                >
+                <OpportunityCard opportunity={opportunity} />
+            </div>
               ))}
             </div>
           )}
