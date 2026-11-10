@@ -40,7 +40,7 @@
   color: #697288;
 }
 
-.home-page__grid {
+.home-page__grid .card-animado{
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
