@@ -7,6 +7,31 @@
   border: 1px solid #e5e9f2;
   border-radius: 14px;
   padding: 18px;
+  width: 260px;
+  transition: all 0.4s ease-in-out;
+  overflow: hidden; /*para os textos nao sairem da caixa quando crescer abaixo*/
+  &:hover{
+    width: 270px;
+    height: 650px;
+    & span, h3{
+      font-size: 19px;
+      transition: all 0.4s ease-in-out;
+    }
+    & h2{
+    font-weight: 600;
+    /* gradiente abaixo */
+      transition: all 0.8s ease-in-out;
+    background: linear-gradient(90deg, #9692e3, #272e39);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* gradiente */
+    }
+    & button{
+      font-size: 19px;
+      font-weight: 700;
+      transition: all 0.8s ease-in-out;
+    }
+  }
 }
 
 .filter-sidebar__head {

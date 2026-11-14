@@ -16,7 +16,7 @@
   box-sizing: border-box;
 }
 
-.home-page__content {
+.home-page__content .card-animado {
   border-radius: 16px;
   border: 1px solid #e5e9f2;
   background: rgba(255, 255, 255, 0.9);
@@ -40,7 +40,8 @@
   color: #697288;
 }
 
-.home-page__grid .card-animado{
+.home-page__grid,
+.card-animado{
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
