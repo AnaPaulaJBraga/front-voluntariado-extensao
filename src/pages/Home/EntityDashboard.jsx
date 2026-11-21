@@ -412,7 +412,7 @@ const EntityDashboard = ({ membership }) => {
               </div>
             </div>
 
-            <Link
+            {canManageVacancies && <Link
               to="/entidade/solicitacoes"
               className={`entity-dashboard-page__kpi-card ${
                 pendingRequestsSummary.total > 0
@@ -461,7 +461,7 @@ const EntityDashboard = ({ membership }) => {
                   ↗
                 </span>
               </div>
-            </Link>
+            </Link>}
           </section>
 
           {nextUpcomingVacancy && (

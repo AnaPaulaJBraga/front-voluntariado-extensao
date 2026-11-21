@@ -1,0 +1,17 @@
+export const entitySectors = [
+  "Animais",
+  "Educação",
+  "Alimentação",
+  "Crianças e adolescentes",
+  "Idosos",
+  "Saúde",
+  "Inclusão e Acessibilidade",
+  "Meio ambiente",
+  "Moradia e comunidade",
+  "Doações e distribuição",
+  "Assistência Social",
+  "Esporte e lazer",
+  "Cultura e Arte",
+  "Tecnologia",
+  "Ações Humanitárias",
+];

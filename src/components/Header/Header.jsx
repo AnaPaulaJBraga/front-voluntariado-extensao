@@ -345,6 +345,7 @@ const Header = ({ userName }) => {
                   </button>
                 )}
 
+
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
@@ -423,7 +424,7 @@ const Header = ({ userName }) => {
                       Informações
                     </button>
 
-                    <button
+                    {["admin", "editor"].includes(membership.position) && <button
                       type="button"
                       className="app-header__dropdown-item dropdown-item"
                       onClick={() => {
@@ -436,7 +437,7 @@ const Header = ({ userName }) => {
                         className="spcd-dropdown-item__icon"
                       />
                       Solicitações
-                    </button>
+                    </button>}
 
                     <button
                       type="button"
@@ -470,13 +471,15 @@ const Header = ({ userName }) => {
                   </>
                 )}
 
+                <button type="button" className="app-header__dropdown-item dropdown-item" style={{ marginTop: "10px" }} onClick={() => { setOpenMenu(false); navigate("/minhas-solicitacoes"); }}>
+                  <img src={requests} alt="" className="spcd-dropdown-item__icon" />Minhas solicitações
+                </button>
                 <button
                   type="button"
                   className="app-header__dropdown-item dropdown-item"
                   onClick={() => {
                     window.location.href = "/configuracoes";
                   }}
-                  style={{ marginTop: "10px" }}
                 >
                   <img
                     src={config}

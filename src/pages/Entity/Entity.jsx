@@ -7,6 +7,7 @@ import { normalizeSlug } from "../../utils/validations";
 import { saveActiveContext } from "../../utils/activeContext";
 import "./Entity.css";
 import Header from "../../components/Header/Header";
+import { entitySectors as setores } from "../../constants/entitySectors";
 
 const initialFormData = {
   name: "",
@@ -14,24 +15,6 @@ const initialFormData = {
   sector: "",
   description: "",
 };
-
-const setores = [
-  "Animais",
-  "Educação",
-  "Alimentação",
-  "Crianças e adolescentes",
-  "Idosos",
-  "Saúde",
-  "Inclusão e Acessibilidade",
-  "Meio ambiente",
-  "Moradia e comunidade",
-  "Doações e distribuição",
-  "Assistência Social",
-  "Esporte e lazer",
-  "Cultura e Arte",
-  "Tecnologia",
-  "Ações Humanitárias",
-];
 
 // IA: Página completa de cadastro.
 // Metodologia: Register controla formulário, layout, validação e envio; RegisterHeader fica só com o cabeçalho.

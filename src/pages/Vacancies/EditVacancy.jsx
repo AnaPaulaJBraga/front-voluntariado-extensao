@@ -1,5 +1,7 @@
-const EditVacancy = () => {
-  return <div>Página de edição de vaga de voluntariado</div>;
-};
+import { useParams } from "react-router-dom";
+import CreateVacancy from "./CreateVacancy";
 
-export default EditVacancy;
+export default function EditVacancy() {
+  const { id } = useParams();
+  return <CreateVacancy key={id} vacancyId={id} />;
+}

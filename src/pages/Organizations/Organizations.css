@@ -182,7 +182,7 @@
   gap: 12px;
 }
 
-.organization-card__heading h2 {
+.organization-card__title {
   margin: 0;
   color: #273347;
   font-family: "Poppins", "Trebuchet MS", sans-serif;
@@ -257,6 +257,7 @@
 .organization-card__button:focus-visible {
   transform: translateY(-1px);
   background: #5b46e3;
+  color: #ffffff;
   box-shadow: 0 8px 18px rgba(91, 70, 227, 0.24);
 }
 
@@ -277,6 +278,7 @@
   transform: none;
   background: #eef1f6;
   box-shadow: none;
+  color: #7a8498;
 }
 
 /* IA: Bloco da seção de referências bibliográficas (ABNT).
@@ -346,4 +348,32 @@
   .organization-card {
     flex-direction: column;
   }
+}
+
+.organizations-page__section-heading { margin-top: 30px; }
+.organizations-page__section-heading h2 { margin: 0; color: #273347; font-family: "Poppins", "Trebuchet MS", sans-serif; font-size: 1.4rem; line-height: 1.4; }
+.organizations-page__section-heading p { margin: 8px 0 0; color: #697288; line-height: 1.7; max-width: 780px; }
+.organizations-page .organizations-page__public-filters { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 18px; padding: 22px; }
+.organizations-page__public-filters label { display: grid; gap: 8px; font-size: .9rem; }
+.organizations-page__public-filters :is(input, select) { box-sizing: border-box; width: 100%; min-width: 0; height: 46px; margin: 0; padding: 10px 12px; border: 1px solid #ccd3df; border-radius: 9px; background: #fff; color: #243043; font: inherit; font-weight: 400; }
+.organizations-page__filter-footer { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.organizations-page__filter-footer p { margin: 0; color: #697288; font-size: .82rem; line-height: 1.6; }
+.organizations-page .organizations-page__clear { width: auto; margin: 0; padding: 9px 14px; border: 1px solid #d8d3f3; border-radius: 9px; background: #fff; color: #5b50c9; font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer; }
+.organizations-page .organizations-page__clear:hover { background: #554be0; border-color: #554be0; color: #fff; }
+.organizations-page :is(button, input, select, a, summary):focus-visible { outline: 3px solid #bdb6ff; outline-offset: 3px; }
+.organization-card__content { flex: 1; }
+.organization-card__title, .organization-card p { overflow-wrap: anywhere; }
+.organizations-page__discover { margin-top: 38px; padding-top: 28px; border-top: 1px solid #d9deec; }
+.organizations-page__discover .organizations-page__section-heading { margin-top: 0; }
+.organizations-page__eyebrow { display: block; margin-bottom: 8px; color: #6558e8; font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.organizations-page__references summary { color: #4f5a70; font-weight: 700; cursor: pointer; }
+@media (max-width: 1000px) {
+  .organizations-page .organizations-page__public-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .organizations-page .organizations-page__public-filters { grid-template-columns: 1fr; padding: 18px; }
+  .organizations-page__hero h1 { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .organizations-page :is(input, .organization-card, .organization-card__button) { transition: none; }
 }

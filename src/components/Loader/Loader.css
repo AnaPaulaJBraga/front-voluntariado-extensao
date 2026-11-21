@@ -1,0 +1,4 @@
+.action-loader { display: inline-flex; align-items: center; justify-content: center; gap: 9px; font: inherit; }
+.action-loader__spinner { width: 16px; height: 16px; flex: 0 0 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: action-spin 750ms linear infinite; }
+@keyframes action-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .action-loader__spinner { animation: none; border-style: dotted; } }

@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./SessionExpiredBanner.css";
 
-const SessionExpiredBanner = () => {
+const SessionExpiredNotice = ({ location }) => {
   const [isExpired, setIsExpired] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const handleSessionExpired = () => {
@@ -16,12 +15,6 @@ const SessionExpiredBanner = () => {
       window.removeEventListener("session-expired", handleSessionExpired);
     };
   }, []);
-
-  useEffect(() => {
-    if (location.pathname === "/login") {
-      setIsExpired(false);
-    }
-  }, [location.pathname]);
 
   if (!isExpired) return null;
 
@@ -58,4 +51,7 @@ const SessionExpiredBanner = () => {
   );
 };
 
-export default SessionExpiredBanner;
+export default function SessionExpiredBanner() {
+  const location = useLocation();
+  return location.pathname === "/login" ? null : <SessionExpiredNotice location={location} />;
+}

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import RegisterHeader from "../components/RegisterHeader/RegisterHeader";
 import CidadeEstado from "../components/CityState/CidadeEstado";
 import Header from "../components/Header/Header";
 import img from "../assets/wallpaper.png";

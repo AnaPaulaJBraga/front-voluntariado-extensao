@@ -12,6 +12,7 @@
 }
 
 .entity-invite-modal__card {
+  box-sizing: border-box;
   width: min(100%, 440px);
   max-height: calc(100vh - 48px);
   overflow-y: auto;
@@ -66,6 +67,7 @@
 }
 
 .entity-invite-modal__input {
+  box-sizing: border-box;
   width: 100%;
   padding: 12px 14px;
   border: 1px solid #d5dbe7;
@@ -90,12 +92,12 @@
 
 .entity-invite-modal__actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 12px;
   margin-top: 26px;
 }
 
-.entity-invite-modal__button {
+.entity-invite-modal__card .entity-invite-modal__button {
   width: auto;
   min-width: 112px;
   padding: 11px 18px;
@@ -125,25 +127,27 @@
   opacity: 0.65;
 }
 
-.entity-invite-modal__button--cancel {
+.entity-invite-modal__card .entity-invite-modal__button--cancel {
   border-color: #dce1eb;
   background: #ffffff;
   color: #4f5a70;
 }
 
-.entity-invite-modal__button--cancel:hover:not(:disabled) {
+.entity-invite-modal__card .entity-invite-modal__button--cancel:hover:not(:disabled) {
   background: #f5f7fb;
   border-color: #cbd2df;
+  color: #4f5a70;
 }
 
-.entity-invite-modal__button--submit {
+.entity-invite-modal__card .entity-invite-modal__button--submit {
   background: #665cff;
   color: #ffffff;
   box-shadow: 0 8px 18px rgba(102, 92, 255, 0.24);
 }
 
-.entity-invite-modal__button--submit:hover:not(:disabled) {
+.entity-invite-modal__card .entity-invite-modal__button--submit:hover:not(:disabled) {
   background: #554be0;
+  color: #fff;
   box-shadow: 0 10px 22px rgba(102, 92, 255, 0.32);
 }
 
@@ -174,12 +178,20 @@
   }
 
   .entity-invite-modal__actions {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
-  .entity-invite-modal__button {
+  .entity-invite-modal__card .entity-invite-modal__button {
     width: 100%;
   }
+}
+
+.entity-invite-modal__error {
+  padding: 12px;
+  border-radius: 9px;
+  background: #fff0f0;
+  color: #a9323e;
+  line-height: 1.6;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -188,7 +200,7 @@
     animation: none;
   }
 
-  .entity-invite-modal__button {
+  .entity-invite-modal__card .entity-invite-modal__button {
     transition: none;
   }
 }

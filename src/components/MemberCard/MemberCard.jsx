@@ -1,76 +1,17 @@
-import { useState } from "react";
-import { api } from '../../services/api';
-import { useEntity } from "../../contexts/EntityContexts";
-
-import Confirmation from '../../components/Confirmation/Confirmation';
-
-import trashIcon from "../../assets/icons/trash.png";
-
+import { roleLabels } from "../../utils/management";
 import "./MemberCard.css";
 
-const MemberCard = ({ user, position }) => {
-
-    const [userToRemove, setUserToRemove] = useState(null);
-    const [result, setResult] = useState({});
-
-
-    const { membership, isLoading } = useEntity();
-    const idEntity = membership?.entity?.id;
-
-    const onResponse = async (response) => {
-        if (response) {
-            try {
-                const response = await api.delete(`/entities/${idEntity}/members/${user.id}`, null, true);
-                setResult({ ok: true, result: `O usuário ${user.name} foi removido com sucesso!` });
-            } catch (error) {
-                console.error(error.response.data.detail);
-                setResult({ ok: false, result: error.response.data.detail });
-            }
-        }
-        setUserToRemove(null);
-    }
-
-
-    return (
-        <>
-            {userToRemove &&
-                <Confirmation key={user.id}
-                    text={"Deseja remover o usuário " + user.name + " da entidade?"}
-                    onResponse={onResponse} />
-            }
-
-            {result?.ok
-                ? <p className={`status statusSuccess`} role="alert">
-                    {result.result}
-                </p>
-                : <p className={`status statusError`} role="alert">
-                    {result.result}
-                </p>
-            }
-            <article className="member-card">
-                <div className="member-card__avatar" aria-hidden="true">
-                    {user.name?.charAt(0).toUpperCase()}
-                </div>
-
-                <div className="member-card__content">
-                    <h2 className="member-card__name">{user.name}</h2>
-                    <p className="member-card__position">
-                        Posição: <span>{position}</span>
-                    </p>
-                </div>
-
-                <span
-                    style={{ padding: 10, borderRadius: "100%", background: "#ff3c3c", cursor: "pointer" }}
-                    onClick={() => { setUserToRemove(user) }}>
-                    <img
-                        className="member-card__remove-icon"
-                        src={trashIcon}
-                        alt="Remover membro"
-                    />
-                </span>
-            </article>
-        </>
-    );
-};
-
-export default MemberCard;
+export default function MemberCard({ user, position, canManage, isSelf, busy, onChangeRole, onRemove }) {
+  return <article className="member-card" aria-busy={busy}>
+    <div className="member-card__avatar" aria-hidden="true">{user.name?.charAt(0).toUpperCase()}</div>
+    <div className="member-card__content">
+      <h2 className="member-card__name">{user.name}{isSelf ? " (você)" : ""}</h2>
+      {canManage ? <label className="member-card__position">Cargo de {user.name}
+        <select aria-label={"Cargo de " + user.name} value={position} disabled={busy} onChange={e => onChangeRole(e.target.value)}>
+          {Object.entries(roleLabels).map(([value, label]) => <option key={value} value={value}>{label.charAt(0).toUpperCase() + label.slice(1)}</option>)}
+        </select>
+      </label> : <p className="member-card__position">Cargo: <span>{roleLabels[position] ?? position}</span></p>}
+    </div>
+    {canManage && !isSelf && <button type="button" className="member-card__remove" disabled={busy} onClick={onRemove} aria-label={"Remover " + user.name}>Remover</button>}
+  </article>;
+}

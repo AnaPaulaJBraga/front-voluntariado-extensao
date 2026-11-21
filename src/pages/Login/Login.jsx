@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { api } from "../../services/api";
 import { clearActiveContext } from "../../utils/activeContext";
+import { useFlashMessage } from "../../components/FlashMessage/FlashMessage";
 import "./Login.css";
 
 const getLoginErrorMessage = (data) => {
@@ -38,10 +39,20 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const inFlight = useRef(false);
+  const showFlashMessage = useFlashMessage();
+  const navigate = useNavigate();
 
   const location = useLocation();
 
   const redirectTo = location.state?.redirectTo || "/inicio"
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const timer = setTimeout(() => navigate(redirectTo, { replace: true }), 800);
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, navigate, redirectTo]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,6 +64,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (inFlight.current) return;
     setMessage({ type: "", text: "" });
 
     if (!formData.email.trim() || !formData.senha.trim()) {
@@ -64,6 +76,7 @@ const Login = () => {
     }
 
     setIsLoading(true);
+    inFlight.current = true;
 
     try {
       const body = {
@@ -83,15 +96,8 @@ const Login = () => {
         typeof user === "string" ? user : JSON.stringify(user),
       );
 
-      setMessage({
-        type: "success",
-        text: "Login realizado com sucesso.",
-      });
-
-      // A página inicial consulta a entidade associada a esta conta.
-      setTimeout(() => {
-        window.location.href = redirectTo;
-      }, 2000);
+      setIsAuthenticated(true);
+      showFlashMessage("Login realizado com sucesso.");
     } catch (error) {
       console.error("Erro de login:", error?.response);
       const backendMessage = getLoginErrorMessage(error?.response?.data);
@@ -100,7 +106,7 @@ const Login = () => {
         type: "error",
         text: backendMessage,
       });
-    } finally {
+      inFlight.current = false;
       setIsLoading(false);
     }
   };
@@ -118,7 +124,7 @@ const Login = () => {
             {message.text && (
               <p
                 style={{
-                  color: message.type === "success" ? "#1b5e20" : "#b71c1c",
+                  color: "#b71c1c",
                   marginBottom: "12px",
                   fontSize: "14px",
                   alignSelf: "center"
@@ -155,7 +161,7 @@ const Login = () => {
               />
 
               <button className="button-entrar-login" type="submit" disabled={isLoading}>
-                {isLoading ? "Entrando..." : "Entrar"}
+                {isAuthenticated ? "Redirecionando..." : isLoading ? "Entrando..." : "Entrar"}
               </button>
             </form>
           </div>

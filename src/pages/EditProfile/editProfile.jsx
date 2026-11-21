@@ -15,6 +15,7 @@ import {
   maskName,
 } from "../../utils/validations";
 import "./editProfile.css";
+import DeleteAccountPanel from "./DeleteAccountPanel";
 
 const initialFormData = {
   fullName: "",
@@ -394,14 +395,14 @@ const EditProfile = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setActiveTab("password")}
+                onClick={() => setActiveTab("delete")}
                 style={{
                   flex: 1,
                   padding: "8px",
                   borderRadius: "6px",
                   border: "1px solid #ccd3df",
-                  background: activeTab === "password" ? "#5d5fe8" : "#ffffff",
-                  color: activeTab === "password" ? "#ffffff" : "#384152",
+                  background: activeTab === "delete" ? "#5d5fe8" : "#ffffff",
+                  color: activeTab === "delete" ? "#ffffff" : "#384152",
                   fontWeight: 700,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
@@ -565,6 +566,7 @@ const EditProfile = () => {
               </form>
             )}
 
+            {activeTab === "delete" && <DeleteAccountPanel />}
             <p className="ja-possui-conta">Prefere sair sem mudar nada?</p>
 
             <button

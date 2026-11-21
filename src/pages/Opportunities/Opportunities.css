@@ -11,16 +11,19 @@
   margin: 0 auto;
   display: grid;
   gap: 18px;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 280px minmax(0, 1fr);
   padding: 18px;
   box-sizing: border-box;
 }
 
-.home-page__content .card-animado {
-  border-radius: 16px;
-  border: 1px solid #e5e9f2;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 16px;
+.home-page__content {
+  min-width: 0;
+}
+
+.home-page__grid > .card-animado {
+  display: block;
+  min-width: 0;
+  height: 100%;
 }
 
 .home-page__title-wrap {
@@ -40,8 +43,7 @@
   color: #697288;
 }
 
-.home-page__grid,
-.card-animado{
+.home-page__grid {
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));

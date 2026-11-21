@@ -146,7 +146,7 @@ const Opportunities = () => {
   };
 
   return (
-    <div className="home-page pagina-animada">
+    <div className="home-page">
       <Header />
 
       <main className="home-page__layout">

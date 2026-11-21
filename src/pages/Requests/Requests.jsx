@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Header from "../../components/Header/Header";
+import ManagementLayout from "../../components/ManagementLayout/ManagementLayout";
 import Confirmation from "../../components/Confirmation/Confirmation";
 import requestsIcon from "../../assets/icons/requests.png";
 import organizationIcon from "../../assets/icons/organization.png";
 import volunteeringIcon from "../../assets/icons/volunteering.png";
 import { useEntity } from "../../contexts/EntityContexts";
 import { api } from "../../services/api";
+import { requestLabels } from "../../utils/management";
 import "./Requests.css";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
@@ -38,6 +39,7 @@ const Requests = () => {
   const { membership, isLoading } = useEntity();
   const entityId = membership?.entity?.id;
   const isAdmin = membership?.position === "admin";
+  const canManage = isAdmin || membership?.position === "editor";
 
   const { state } = useLocation();
   const fromNotification = Boolean(state?.fromNotification);
@@ -48,6 +50,11 @@ const Requests = () => {
   const [feedback, setFeedback] = useState(null);
   const [pendingDecision, setPendingDecision] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [view, setView] = useState("pending");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [reload, setReload] = useState(0);
+  const inFlight = useRef(false);
 
   const fetchRequests = useCallback(async () => {
     const vacanciesResponse = await api.get(
@@ -58,7 +65,7 @@ const Requests = () => {
     const lists = await Promise.all(
       vacancies.map((vacancy) =>
         api
-          .get(`/vacancies/${vacancy.id}/join-requests`, true)
+          .get(`/vacancies/${vacancy.id}/join-requests?pending_only=false`, true)
           .then((response) => response.data),
       ),
     );
@@ -66,7 +73,7 @@ const Requests = () => {
     let entity = [];
     if (isAdmin) {
       const response = await api.get(
-        `/entities/${entityId}/join-requests`,
+        `/entities/${entityId}/join-requests?pending_only=false`,
         true,
       );
       entity = response.data ?? [];
@@ -75,7 +82,7 @@ const Requests = () => {
   }, [entityId, isAdmin]);
 
   useEffect(() => {
-    if (!entityId) return;
+    if (!entityId || !canManage) return;
     let cancelled = false;
 
     fetchRequests()
@@ -95,12 +102,12 @@ const Requests = () => {
     return () => {
       cancelled = true;
     };
-  }, [entityId, fetchRequests]);
+  }, [entityId, canManage, fetchRequests, reload]);
 
   const handleDecision = async (confirmed) => {
+    if (inFlight.current) return;
     const decision = pendingDecision;
-    setPendingDecision(null);
-    if (!confirmed || !decision) return;
+    if (!confirmed || !decision) { setPendingDecision(null); return; }
 
     const { kind, request, status } = decision;
     const path =
@@ -108,13 +115,15 @@ const Requests = () => {
         ? `/entities/${entityId}/join-requests/${request.id}`
         : `/vacancies/${request.vacancy.id}/join-requests/${request.id}`;
 
+    inFlight.current = true;
     setIsSubmitting(true);
     setFeedback(null);
     try {
-      await api.patch(path, { status }, true);
-      const remove = (list) => list.filter((item) => item.id !== request.id);
-      if (kind === "entity") setEntityRequests(remove);
-      else setVacancyRequests(remove);
+      const response = await api.patch(path, { status }, true);
+      setPendingDecision(null);
+      const update = list => list.map(item => item.id === request.id ? response.data : item);
+      if (kind === "entity") setEntityRequests(update);
+      else setVacancyRequests(update);
       setFeedback({
         ok: true,
         text:
@@ -125,11 +134,13 @@ const Requests = () => {
     } catch (error) {
       setFeedback({ ok: false, text: getErrorMessage(error) });
     } finally {
+      inFlight.current = false;
       setIsSubmitting(false);
     }
   };
 
   const askDecision = (kind, request, status) => {
+    setFeedback(null);
     const target =
       kind === "entity"
         ? `na entidade ${request.entity?.name ?? ""}`
@@ -146,34 +157,10 @@ const Requests = () => {
   };
 
   const renderShell = (content) => (
-    <>
-      <Header />
-      <main className="requests-page">
-        <section
-          className="requests-page__panel"
-          aria-labelledby="requests-title"
-        >
-          <header className="requests-page__heading">
-            <span className="requests-page__heading-icon" aria-hidden="true">
-              <img src={requestsIcon} alt="" />
-            </span>
-            <div>
-              <span className="requests-page__eyebrow">
-                {membership?.entity?.name ?? "Entidade"}
-              </span>
-              <h1 id="requests-title" className="requests-page__title">
-                Solicitações
-              </h1>
-              <p className="requests-page__subtitle">
-                Autorize ou recuse quem pediu para participar das vagas e da
-                sua organização.
-              </p>
-            </div>
-          </header>
-          {content}
-        </section>
-      </main>
-    </>
+    <ManagementLayout className="requests-page" title="Solicitações da entidade"
+      subtitle={membership?.entity?.name ?? "Analise os pedidos de participação na sua organização."}>
+      {content}
+    </ManagementLayout>
   );
 
   if (isLoading) {
@@ -201,13 +188,18 @@ const Requests = () => {
   }
 
   const tabs = [
-    { id: "vacancies", label: "Vagas", list: vacancyRequests },
+    { id: "vacancies", label: "Vagas voluntárias", list: vacancyRequests },
     ...(isAdmin
-      ? [{ id: "entity", label: "Entidade", list: entityRequests }]
+      ? [{ id: "entity", label: "Entrada na entidade", list: entityRequests }]
       : []),
   ];
   const activeTab = tabs.find((item) => item.id === tab) ?? tabs[0];
-  const list = activeTab.list;
+  const normalize = value => (value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
+  const matchesView = request => view === "pending" ? request.status === "pending" : request.status !== "pending";
+  const list = activeTab.list === null ? null : activeTab.list.filter(request =>
+    matchesView(request) && (view === "pending" || statusFilter === "all" || request.status === statusFilter) &&
+    normalize(`${request.user.name} ${request.vacancy?.title ?? ""}`).includes(normalize(search.trim())),
+  ).sort((a, b) => new Date(b.reviewed_at ?? b.created_at) - new Date(a.reviewed_at ?? a.created_at));
 
   return (
     <>
@@ -218,6 +210,8 @@ const Requests = () => {
               mode="confirm"
               text={pendingDecision.text}
               onResponse={handleDecision}
+              isLoading={isSubmitting}
+              error={feedback?.ok === false ? feedback.text : null}
             />
           )}
 
@@ -239,10 +233,19 @@ const Requests = () => {
               >
                 {item.label}
                 <span className="requests-page__tab-count">
-                  {item.list?.length ?? 0}
+                  {item.list?.filter(matchesView).length ?? 0}
                 </span>
               </button>
             ))}
+          </div>
+
+          <div className="requests-page__views" role="group" aria-label="Exibir solicitações">
+            <button type="button" className="management-button" aria-pressed={view === "pending"} disabled={isSubmitting} onClick={() => setView("pending")}>Pendentes</button>
+            <button type="button" className="management-button" aria-pressed={view === "history"} disabled={isSubmitting} onClick={() => setView("history")}>Histórico</button>
+          </div>
+          <div className="management-toolbar">
+            <label className="management-field">Buscar solicitante ou vaga<input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Digite um nome ou título" /></label>
+            {view === "history" && <label className="management-field">Status<select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">Todos os encerrados</option>{Object.entries(requestLabels).filter(([value]) => value !== "pending").map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>}
           </div>
 
           {feedback && (
@@ -258,10 +261,15 @@ const Requests = () => {
             </p>
           )}
 
+          <div className="requests-page__list-heading">
+            <h2>{activeTab.id === "entity" ? "Pedidos de entrada" : "Pedidos para vagas"}</h2>
+            {list !== null && <span>{list.length} {view === "pending" ? "aguardando análise" : "no histórico"}</span>}
+          </div>
           <div className="requests-page__list">
             {errorMessage ? (
               <p className="requests-page__feedback" role="alert">
                 {errorMessage}
+                <button className="management-button management-button--secondary" onClick={() => setReload(n => n + 1)}>Tentar novamente</button>
               </p>
             ) : list === null ? (
               <p className="requests-page__feedback" role="status">
@@ -290,12 +298,12 @@ const Requests = () => {
                         </span>
                         <h2>{request.user.name}</h2>
                       </div>
-                      <span className="request-card__status">
+                      <span className={`request-card__status request-card__status--${request.status}`}>
                         <span
                           aria-hidden="true"
                           className="request-card__status-dot"
                         />
-                        Pendente
+                        {requestLabels[request.status] ?? request.status}
                       </span>
                     </div>
 
@@ -315,7 +323,8 @@ const Requests = () => {
                           {formatDate(request.created_at)}
                         </time>
                       </span>
-                      <div className="request-card__actions">
+                      {request.reviewed_at && <span className="request-card__date"><span>{request.status === "canceled" ? "Encerrado em" : "Respondido em"}</span><time dateTime={request.reviewed_at}>{formatDate(request.reviewed_at)}</time>{request.reviewed_by && <span>Por {request.reviewed_by.name}</span>}</span>}
+                      {request.status === "pending" && <div className="request-card__actions">
                         <button
                           type="button"
                           className="request-card__button request-card__button--decline"
@@ -344,7 +353,7 @@ const Requests = () => {
                         >
                           Autorizar <span aria-hidden="true">→</span>
                         </button>
-                      </div>
+                      </div>}
                     </footer>
                   </article>
                 );
@@ -354,12 +363,12 @@ const Requests = () => {
                 <span className="requests-page__icon" aria-hidden="true">
                   <img src={requestsIcon} alt="" />
                 </span>
-                <h2>Nenhuma solicitação pendente</h2>
+                <div><h2>{view === "history" || search ? "Nenhuma solicitação encontrada" : "Tudo em dia por aqui"}</h2>
                 <p>
-                  {fromNotification
+                  {view === "history" ? "As solicitações aceitas, recusadas ou canceladas aparecem aqui. Se você aplicou filtros, experimente alterá-los." : search ? "Tente buscar por outro nome ou título de vaga." : fromNotification
                     ? "A solicitação desta notificação já foi respondida por você ou por outro responsável."
-                    : "Quando alguém pedir para participar, a solicitação aparecerá aqui para você autorizar."}
-                </p>
+                    : "Nenhum pedido pendente nesta categoria. As novas solicitações aparecerão aqui."}
+                </p></div>
               </div>
             )}
           </div>

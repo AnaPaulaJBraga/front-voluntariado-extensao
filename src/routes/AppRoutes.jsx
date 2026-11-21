@@ -1,4 +1,5 @@
 import { Navigate, Routes, Route } from "react-router-dom";
+import PageTransition from "../components/PageTransition/PageTransition";
 import Opportunities from "../pages/Opportunities/Opportunities";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register";
@@ -16,6 +17,8 @@ import Invitations from "../pages/Invitations/Invitations";
 import Entity from "../pages/Entity/Entity";
 import Informations from "../pages/Informations/Informations";
 import Requests from "../pages/Requests/Requests";
+import MyRequests from "../pages/Requests/MyRequests";
+import EditEntity from "../pages/Entity/EditEntity";
 import Members from "../pages/Members/Members";
 import Volunteering from "../pages/Volunteering/Volunteering";
 
@@ -27,6 +30,7 @@ import Notifications from "../pages/Notifications/Notifications";
 
 const AppRoutes = () => {
   return (
+    <PageTransition>
     <Routes>
       <Route path="/" element={<Navigate to="/inicio" replace />} />
       <Route path="/login" element={<Login />} />
@@ -37,6 +41,8 @@ const AppRoutes = () => {
       <Route path="/editar-perfil" element={<EditProfile />} />
       <Route path="/sobre" element={<About />} />
       <Route path="/convites" element={<Invitations />} />
+      <Route path="/minhas-solicitacoes" element={<MyRequests />} />
+      <Route path="/entidade/editar" element={<EditEntity />} />
 
       <Route path="/inicio" element={<Home />} />
       <Route path="/organizacoes" element={<Organizations />} />
@@ -56,6 +62,7 @@ const AppRoutes = () => {
 
       <Route path="/notificacoes" element={<Notifications />} />
     </Routes>
+    </PageTransition>
   );
 };
 

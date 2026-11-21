@@ -1,0 +1,33 @@
+.management-page { min-height: calc(100vh - 70px); padding: 32px 20px 56px; background: radial-gradient(circle at 15% 5%, rgba(96,133,255,.16), transparent 38%), radial-gradient(circle at 85% 12%, rgba(39,198,178,.1), transparent 30%), #f0f3f9; }
+.management-panel { box-sizing: border-box; width: min(100%, 900px); margin: 0 auto; padding: 30px; border: 1px solid #e3e8f1; border-radius: 18px; background: rgba(255,255,255,.94); box-shadow: 0 16px 40px rgba(35,48,76,.1); }
+.management-heading { padding-bottom: 22px; border-bottom: 1px solid #e7eaf1; margin-bottom: 22px; }
+.management-heading h1 { margin: 0; color: #273347; font-family: "Poppins", "Trebuchet MS", sans-serif; font-size: clamp(1.4rem,2.4vw,1.8rem); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.management-heading p { margin: 8px 0 0; color: #6d7689; line-height: 1.6; }
+.management-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+.management-panel .management-button { display: inline-flex; align-items: center; justify-content: center; width: auto; margin: 0; padding: 11px 16px; border: 1px solid #665cff; border-radius: 10px; background: #665cff; color: white; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; transition: background-color 160ms ease, transform 160ms ease; }
+.management-panel .management-button:is(:hover, :focus-visible):not(:disabled) { background: #554be0; border-color: #554be0; color: #fff; transform: translateY(-1px); }
+.management-panel .management-button--secondary { background: white; color: #5b50c9; border-color: #d8d3f3; }
+.management-panel .management-button--danger { background: #b33a3a; border-color: #b33a3a; color: white; }
+.management-panel .management-button--danger:is(:hover, :focus-visible):not(:disabled) { background: #922d2d; border-color: #922d2d; color: #fff; }
+.management-panel .management-button--danger-outline { background: #fff; border-color: #ebc3c8; color: #a9323e; }
+.management-panel .management-button--danger-outline:is(:hover, :focus-visible):not(:disabled) { background: #a9323e; border-color: #a9323e; color: #fff; }
+.management-back { display: inline-flex; margin-bottom: 20px; color: #5b50c9; font-weight: 700; text-decoration: none; }
+.management-back:hover { color: #4434a3; }
+.management-panel button:disabled { opacity: .6; cursor: wait; }
+.management-panel :is(button,input,select,textarea,a):focus-visible { outline: 3px solid #bdb6ff; outline-offset: 3px; }
+.management-field { display: grid; gap: 7px; margin: 16px 0; color: #384152; font-weight: 600; }
+.management-field :is(input,select,textarea) { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #ccd3df; border-radius: 9px; background: white; color: #273347; font: inherit; }
+.management-field textarea { min-height: 130px; resize: vertical; }
+.management-field .field-error { color: #b33a3a; font-size: .85rem; }
+.management-feedback { padding: 12px 14px; border-radius: 9px; background: #edf0ff; color: #4f44c4; line-height: 1.6; }
+.management-feedback--error { background: #fff0f0; color: #a32e3a; }
+.management-feedback--success { background: #e8f8f0; color: #207044; }
+.management-list { display: grid; gap: 14px; margin-top: 20px; }
+.management-item { padding: 20px; border: 1px solid #e2e6ef; border-radius: 14px; background: white; box-shadow: 0 6px 18px rgba(38,51,75,.06); }
+.management-item h2 { color: #273347; margin: 0 0 8px; font-size: 1.1rem; }
+.management-item p { margin: 8px 0; color: #6d7689; line-height: 1.65; overflow-wrap: anywhere; }
+.management-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #f0efff; color: #5b50c9; font-weight: 700; font-size: .85rem; }
+.management-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; }
+.management-toolbar .management-field { flex: 1 1 180px; }
+@media (max-width:600px) { .management-page { padding: 20px 14px 40px; } .management-panel { padding: 22px 16px; } .management-actions > * { flex: 1; } }
+@media (prefers-reduced-motion: reduce) { .management-panel .management-button { transition: none; } .management-panel .management-button:hover { transform: none; } }

@@ -1,6 +1,6 @@
-import {clearActiveContext} from "../utils/activeContext";
+import {clearActiveContext} from "../utils/activeContext.js";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/v1";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("access_token");
@@ -13,7 +13,7 @@ const getAuthHeaders = () => {
   return headers;
 };
 
-const request = async (method, path, body, useAuth = false, isLogin) => {
+const request = async (method, path, body, useAuth = false, isLogin, keepSessionOnUnauthorized = false) => {
 
   const headers = isLogin
   ? {"Content-Type": "application/x-www-form-urlencoded"}
@@ -37,7 +37,7 @@ const request = async (method, path, body, useAuth = false, isLogin) => {
     : await response.text();
 
   if (!response.ok) {
-    if(response.status === 401 && useAuth) {
+    if(response.status === 401 && useAuth && !keepSessionOnUnauthorized) {
       localStorage.removeItem("access_token");
       localStorage.removeItem("token_type");
       localStorage.removeItem("user");
@@ -63,5 +63,5 @@ export const api = {
   post: (path, body, isLogin=false, useAuth=false) => request("POST", path, body, useAuth, isLogin),
   get: (path, useAuth = false) => request("GET", path, undefined, useAuth),
   patch: (path, body, useAuth = false) => request("PATCH", path, body, useAuth),
-  delete: (path, body, useAuth = false) => request("DELETE", path, body, useAuth),
+  delete: (path, body, useAuth = false, options = {}) => request("DELETE", path, body, useAuth, false, options.keepSessionOnUnauthorized),
 };

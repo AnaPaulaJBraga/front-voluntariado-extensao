@@ -9,6 +9,7 @@ import { getEstadoOption } from "../../constants/estados";
 import { api } from "../../services/api";
 import { saveActiveContext } from "../../utils/activeContext";
 import style from "./CreateVacancy.module.css";
+import Loader from "../../components/Loader/Loader";
 
 const initialFormData = {
   title: "",
@@ -28,8 +29,10 @@ const getBackendMessage = (error) => {
   return "Não foi possível criar a vaga. Tente novamente.";
 };
 
-const CreateVacancy = () => {
+const CreateVacancy = ({ vacancyId }) => {
   const navigate = useNavigate();
+  const isEditing = Boolean(vacancyId);
+  const [existingVacancy, setExistingVacancy] = useState(null);
 
   // Os campos de texto ficam juntos, como no formulário de registro.
   const [formData, setFormData] = useState(initialFormData);
@@ -48,18 +51,35 @@ const CreateVacancy = () => {
   const [isCheckingCep, setIsCheckingCep] = useState(false);
 
   const canCreate =
-    membership?.position === "admin" || membership?.position === "editor";
+    (membership?.position === "admin" || membership?.position === "editor") &&
+    (!isEditing || existingVacancy?.entity?.id === membership?.entity?.id);
   const isInPerson = selectedModality?.value === "in_person";
 
   // O backend confirma a entidade e a posição do usuário autenticado.
   useEffect(() => {
     let isCurrentPage = true;
-    api
-      .get("/entities/me", true)
-      .then((response) => {
+    Promise.all([api.get("/entities/me", true), isEditing ? api.get("/vacancies?id=" + vacancyId) : Promise.resolve({ data: [] })])
+      .then(([response, vacanciesResponse]) => {
         if (!isCurrentPage) return;
         const currentMembership = response.data;
         setMembership(currentMembership);
+        if (isEditing) {
+          const vacancy = vacanciesResponse.data[0];
+          if (!vacancy) { setAccessError("Vaga não encontrada."); return; }
+          setExistingVacancy(vacancy);
+          setFormData({
+            title: vacancy.title, description: vacancy.description,
+            startsAt: vacancy.starts_at.slice(0, 16), endsAt: vacancy.ends_at.slice(0, 16),
+            cep: vacancy.cep ?? "", number: vacancy.number ?? "",
+            thoroughfare: vacancy.thoroughfare ?? "", details: vacancy.details ?? "",
+          });
+          setSelectedBranch(branches.find(option => option.value === vacancy.branch));
+          setSelectedModality(modalities.find(option => option.value === vacancy.modality));
+          setRequireApproval(vacancy.requires_approval);
+          setEstadoSelecionado(getEstadoOption(vacancy.uf));
+          setCidadeSelecionada(vacancy.city ? { value: vacancy.city, label: vacancy.city } : null);
+          if (currentMembership?.entity?.id !== vacancy.entity.id) setAccessError("Você só pode editar vagas da própria entidade.");
+        }
       })
       .catch((error) => {
         if (!isCurrentPage) return;
@@ -75,7 +95,7 @@ const CreateVacancy = () => {
     return () => {
       isCurrentPage = false;
     };
-  }, []);
+  }, [isEditing, vacancyId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -193,22 +213,22 @@ const CreateVacancy = () => {
       newErrors.title = "Digite um título com pelo menos 3 caracteres.";
     if (!formData.description.trim())
       newErrors.description = "Digite uma descrição.";
-    if (!formData.startsAt)
+    if (!isEditing && !formData.startsAt)
       newErrors.startsAt = "Escolha a data e hora de início.";
-    if (!formData.endsAt)
+    if (!isEditing && !formData.endsAt)
       newErrors.endsAt = "Escolha a data e hora de término.";
     if (!selectedBranch) newErrors.branch = "Escolha um ramo.";
     if (!selectedModality) newErrors.modality = "Escolha uma modalidade.";
 
     // datetime-local não informa fuso; aqui os horários são de Brasília.
     if (
-      formData.startsAt &&
+      !isEditing && formData.startsAt &&
       new Date(`${formData.startsAt}-03:00`).getTime() <= Date.now()
     ) {
       newErrors.startsAt = "A data de início deve estar no futuro.";
     }
     if (
-      formData.startsAt &&
+      !isEditing && formData.startsAt &&
       formData.endsAt &&
       formData.endsAt <= formData.startsAt
     ) {
@@ -230,18 +250,20 @@ const CreateVacancy = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
-    if (!canCreate || !validateForm()) return;
+    if (isSubmitting || !canCreate || !validateForm()) return;
 
     const body = {
       title: formData.title.trim(),
       description: formData.description.trim(),
-      id_entity: membership.entity.id,
-      starts_at: formData.startsAt,
-      ends_at: formData.endsAt,
       branch: selectedBranch.value,
       modality: selectedModality.value,
       requires_approval: requireApproval,
     };
+    if (!isEditing) {
+      body.id_entity = membership.entity.id;
+      body.starts_at = formData.startsAt;
+      body.ends_at = formData.endsAt;
+    }
     if (isInPerson) {
       body.uf = estadoSelecionado.value;
       body.city = cidadeSelecionada.value;
@@ -253,9 +275,10 @@ const CreateVacancy = () => {
 
     setIsSubmitting(true);
     try {
-      await api.post("/vacancies", body, false, true);
+      if (isEditing) await api.patch("/vacancies/" + vacancyId, body, true);
+      else await api.post("/vacancies", body, false, true);
       saveActiveContext("entity", membership.entity.id);
-      navigate("/inicio", { replace: true });
+      navigate(isEditing ? "/vagas/" + vacancyId : "/inicio", { replace: true });
     } catch (error) {
       setMessage(getBackendMessage(error));
     } finally {
@@ -287,10 +310,10 @@ const CreateVacancy = () => {
         </main>
       ) : (
         <form className={style.form} onSubmit={handleSubmit} noValidate>
-          <h1 className={style.title}>Criar vaga voluntária</h1>
+          <fieldset disabled={isSubmitting} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+          <h1 className={style.title}>{isEditing ? "Editar vaga voluntária" : "Criar vaga voluntária"}</h1>
           <p className={style.subtitle}>
-            Preencha os campos para publicar uma nova oportunidade da sua
-            entidade.
+            {isEditing ? "Atualize as informações da oportunidade. As datas de início e término permanecem as cadastradas." : "Preencha os campos para publicar uma nova oportunidade da sua entidade."}
           </p>
           {message && (
             <p
@@ -351,6 +374,7 @@ const CreateVacancy = () => {
               <input
                 className={`${style.input} ${errors.startsAt ? style.inputError : ""}`}
                 id="startsAt"
+                disabled={isEditing}
                 type="datetime-local"
                 name="startsAt"
                 value={formData.startsAt}
@@ -368,6 +392,7 @@ const CreateVacancy = () => {
               <input
                 className={`${style.input} ${errors.endsAt ? style.inputError : ""}`}
                 id="endsAt"
+                disabled={isEditing}
                 type="datetime-local"
                 name="endsAt"
                 value={formData.endsAt}
@@ -542,8 +567,10 @@ const CreateVacancy = () => {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Criando vaga..." : "Criar vaga"}
+            {isSubmitting ? <Loader label={isEditing ? "Salvando..." : "Criando vaga..."} /> : isEditing ? "Salvar alterações" : "Criar vaga"}
           </button>
+          <Link className={style.secondaryLink} to={isEditing ? "/vagas/" + vacancyId : "/inicio"}>Cancelar</Link>
+          </fieldset>
         </form>
       )}
     </div>
