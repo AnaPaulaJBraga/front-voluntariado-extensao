@@ -289,15 +289,13 @@ export function advanceWordBoundary(text, currentPos, wordsToAdvance = 1) {
     while (pos < total && /\s/.test(text[pos])) {
       pos += 1;
     }
-    if (text[pos] === "[") {
-      const rest = text.slice(pos);
-      const linkMatch = rest.match(
-        /^\[[^\]\n]+?\]\(\s*`?\/[a-z0-9:_-]+(?:\/[a-z0-9:_-]+)*`?\s*\)/i,
-      );
-      if (linkMatch) {
-        pos += linkMatch[0].length;
-        continue;
-      }
+    const rest = text.slice(pos);
+    const chipMatch = rest.match(
+      /^(?:`?\[[^\]\n]+?\]\(\s*`?\/[a-z0-9:_-]+(?:\/[a-z0-9:_-]+)*`?\s*\)`?|\*\*[^*\n]+?\*\*\s*(?:\(\s*`?\/[a-z0-9:_-]+(?:\/[a-z0-9:_-]+)*`?\s*\)|`\/[a-z0-9:_-]+(?:\/[a-z0-9:_-]+)*`|\/[a-z0-9:_-]+(?:\/[a-z0-9:_-]+)*(?=$|[\s.,;:!?)]|$)))/i,
+    );
+    if (chipMatch) {
+      pos += chipMatch[0].length;
+      continue;
     }
     while (pos < total && !/\s/.test(text[pos])) {
       pos += 1;

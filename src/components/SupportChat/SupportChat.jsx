@@ -178,6 +178,16 @@ function renderRichBlocks(text, onNavigateRoute, animateWords = false) {
   );
 }
 
+function getWordRevealDelay(revealedSlice, totalChars) {
+  const approxWords = Math.ceil(totalChars / 6);
+  const baseMs = approxWords > 100 ? 48 : approxWords > 50 ? 58 : 68;
+  const trimmed = revealedSlice.trimEnd();
+  if (revealedSlice.includes("\n")) return baseMs + 120;
+  if (/[.!?]$/.test(trimmed)) return baseMs + 110;
+  if (/[,;:]$/.test(trimmed)) return baseMs + 45;
+  return baseMs;
+}
+
 function StreamedAssistantMessage({
   text,
   isStreaming,
@@ -217,6 +227,7 @@ function StreamedAssistantMessage({
     }
 
     let rafId = null;
+    let doneTimer = null;
     let nextTickAt = performance.now();
 
     const step = (now) => {
@@ -225,23 +236,19 @@ function StreamedAssistantMessage({
       const streamingActive = isStreamingRef.current;
 
       if (currentLen < fullText.length) {
+        if (doneTimer !== null) {
+          window.clearTimeout(doneTimer);
+          doneTimer = null;
+        }
         if (now >= nextTickAt) {
-          const backlog = fullText.length - currentLen;
-          const wordsStep = backlog > 140 ? 3 : backlog > 65 ? 2 : 1;
-          const intervalMs = backlog > 100 ? 16 : backlog > 40 ? 24 : 34;
-
-          const nextLen = advanceWordBoundary(fullText, currentLen, wordsStep);
-          const sliceRevealed = fullText.slice(currentLen, nextLen).trimEnd();
-          const punctuationPause = /[.!?]$/.test(sliceRevealed)
-            ? 45
-            : sliceRevealed.includes("\n")
-              ? 55
-              : 0;
+          const nextLen = advanceWordBoundary(fullText, currentLen, 1);
+          const sliceRevealed = fullText.slice(currentLen, nextLen);
+          const delayMs = getWordRevealDelay(sliceRevealed, fullText.length);
 
           displayedLengthRef.current = nextLen;
           setDisplayedLength(nextLen);
           onProgressRef.current?.();
-          nextTickAt = now + intervalMs + (backlog > 60 ? 0 : punctuationPause);
+          nextTickAt = now + delayMs;
         }
         rafId = window.requestAnimationFrame(step);
         return;
@@ -252,13 +259,20 @@ function StreamedAssistantMessage({
         return;
       }
 
-      onCompleteRef.current?.();
+      if (doneTimer === null) {
+        doneTimer = window.setTimeout(() => {
+          onCompleteRef.current?.();
+        }, 620);
+      }
     };
 
     rafId = window.requestAnimationFrame(step);
     return () => {
       if (rafId !== null) {
         window.cancelAnimationFrame(rafId);
+      }
+      if (doneTimer !== null) {
+        window.clearTimeout(doneTimer);
       }
     };
   }, [shouldSmooth]);
