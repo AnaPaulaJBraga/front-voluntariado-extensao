@@ -36,3 +36,56 @@ test("204 responses are accepted without trying to parse JSON", async () => {
   globalThis.fetch = async () => new Response(null, { status: 204 });
   assert.equal((await api.delete("/vacancies/1/participants/me", null, true)).status, 204);
 });
+
+test("streamPost parses fragmented SSE events and sends Bearer authorization", async () => {
+  let capturedOptions;
+  const encoder = new TextEncoder();
+  const chunks = [
+    'event: status\ndata: {"phase":"thinking","label":"Pensando..."}\n\nevent: del',
+    'ta\ndata: {"text":"Olá, "}\n\nevent: delta\ndata: {"text":"mundo!"}\n\n',
+    'event: done\ndata: {"interaction_id":"int_42","reply":"Olá, mundo!"}\n\n',
+  ];
+
+  globalThis.fetch = async (_url, options) => {
+    capturedOptions = options;
+    const stream = new ReadableStream({
+      start(controller) {
+        for (const part of chunks) {
+          controller.enqueue(encoder.encode(part));
+        }
+        controller.close();
+      },
+    });
+    return new Response(stream, {
+      status: 200,
+      headers: { "content-type": "text/event-stream" },
+    });
+  };
+
+  const received = [];
+  await api.streamPost(
+    "/assistant/messages/stream",
+    { message: "Oi" },
+    {
+      useAuth: true,
+      onEvent: (ev) => received.push(ev),
+    },
+  );
+
+  assert.equal(capturedOptions.headers.Authorization, "Bearer test-token");
+  assert.equal(capturedOptions.headers.Accept, "text/event-stream");
+  assert.deepEqual(received, [
+    { event: "status", data: { phase: "thinking", label: "Pensando..." } },
+    { event: "delta", data: { text: "Olá, " } },
+    { event: "delta", data: { text: "mundo!" } },
+    { event: "done", data: { interaction_id: "int_42", reply: "Olá, mundo!" } },
+  ]);
+});
+
+test("streamPost clears expired session on 401 before streaming", async () => {
+  await assert.rejects(
+    api.streamPost("/assistant/messages/stream", { message: "Oi" }, { useAuth: true }),
+  );
+  assert.equal(storage.has("access_token"), false);
+  assert.ok(events.includes("session-expired"));
+});
